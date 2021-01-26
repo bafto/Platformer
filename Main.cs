@@ -9,6 +9,7 @@ namespace Platformer
         public GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
         public static Texture2D solid;
+        public static SpriteFont font;
         public Main()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -27,6 +28,7 @@ namespace Platformer
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             solid = Content.Load<Texture2D>("solid");
+            font = Content.Load<SpriteFont>("font");
             // TODO: use this.Content to load your game content here
         }
 
@@ -43,8 +45,10 @@ namespace Platformer
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
             spriteBatch.Begin();
             spriteBatch.Draw(solid, new Rectangle(0, 0, 300, 200), Color.Red);
+            spriteBatch.DrawString(font, "sex", new Vector2(40, 100), Color.Black);
             spriteBatch.End();
             // TODO: Add your drawing code here
 
