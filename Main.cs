@@ -4,14 +4,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Platformer
 {
-    public class Game1 : Game
+    public class Main : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-
-        public Game1()
+        public GraphicsDeviceManager graphics;
+        public static SpriteBatch spriteBatch;
+        public static Texture2D solid;
+        public Main()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -25,8 +25,8 @@ namespace Platformer
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            solid = Content.Load<Texture2D>("solid");
             // TODO: use this.Content to load your game content here
         }
 
@@ -43,7 +43,9 @@ namespace Platformer
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            spriteBatch.Begin();
+            spriteBatch.Draw(solid, new Rectangle(0, 0, 300, 200), Color.Red);
+            spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
