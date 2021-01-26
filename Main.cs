@@ -7,7 +7,6 @@ namespace Platformer
 {
     public class Main : Game
     {
-        // game stuff
         //Engine Stuff
         public GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
@@ -28,6 +27,7 @@ namespace Platformer
 
         //Game Stuff
         public Player player;
+
         public Main()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -38,6 +38,7 @@ namespace Platformer
 
             System.Windows.Forms.Form form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(Window.Handle);
             form.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+
             player = new Player();
         }
 
@@ -63,8 +64,9 @@ namespace Platformer
                 Exit();
 
             // TODO: Add your update logic here
-            player.Update(gameTime);
             UpdateMouse();
+
+            player.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -74,8 +76,6 @@ namespace Platformer
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(solid, new Rectangle(0, 0, 300, 200), Color.Red);
-            spriteBatch.DrawString(font, "sex", new Vector2(40, 100), Color.Black);
 
             player.Draw();
 
