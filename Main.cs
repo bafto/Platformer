@@ -6,19 +6,25 @@ namespace Platformer
 {
     public class Main : Game
     {
+        //Engine Stuff
         public GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
         public static Texture2D solid;
+
+        //Game Stuff
+        public Player player;
         public Main()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            player = new Player();
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            player.Initialize();
 
             base.Initialize();
         }
@@ -36,6 +42,7 @@ namespace Platformer
                 Exit();
 
             // TODO: Add your update logic here
+            player.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -44,7 +51,9 @@ namespace Platformer
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            spriteBatch.Draw(solid, new Rectangle(0, 0, 300, 200), Color.Red);
+
+            player.Draw();
+
             spriteBatch.End();
             // TODO: Add your drawing code here
 
