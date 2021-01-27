@@ -7,17 +7,17 @@ namespace Platformer
 {
     public class Main : Game
     {
-        //Engine Stuff
-        public GraphicsDeviceManager graphics;
-        public static SpriteBatch spriteBatch;
-        public static Texture2D solid;
-        public static SpriteFont font;
-        public static Main instance;
-        public static int screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-        public static int screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-        // mouse stuff
+        // Engine Stuff
+        public static GraphicsDeviceManager graphics { get; private set; }
+        public static SpriteBatch spriteBatch { get; private set; }
+        public static Texture2D solid { get; private set; }
+        public static SpriteFont font { get; private set; }
+        public static Rectangle screen;
+        public static float deltaTime { get; private set; }
+        // input stuff
         public static MouseState mouse = Mouse.GetState();
         public static MouseState lastmouse;
+        public static KeyboardState keyboard;
         public static bool LeftHeld;
         public static bool RightHeld;
         public static bool LeftReleased;
@@ -34,10 +34,11 @@ namespace Platformer
             instance = this;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            Window.Title = "Platformer test";
-            IsMouseVisible = true;
-            Window.AllowUserResizing = true;
+            Window.Title = "Platformer test"; // title
+            IsMouseVisible = true; // mouse is visible
+            Window.AllowUserResizing = true; // user can resize window
 
+            // Maximize Window
             System.Windows.Forms.Form form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(Window.Handle);
             form.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 
@@ -46,7 +47,6 @@ namespace Platformer
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             player.Initialize();
 
             base.Initialize();
@@ -57,7 +57,6 @@ namespace Platformer
             spriteBatch = new SpriteBatch(GraphicsDevice);
             solid = Content.Load<Texture2D>("solid");
             font = Content.Load<SpriteFont>("font");
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -65,11 +64,18 @@ namespace Platformer
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            UpdateMouse();
+            // Update Screen variable
+            var sex = System.Windows.Forms.Control.FromHandle(Window.Handle).Bounds;
+            screen = new Rectangle(sex.X, sex.Y, sex.Width, sex.Height);
 
+            // Update deltaTime
+            deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            // Update Mouse variables
+            UpdateInput();
+
+            // Update Player
             player.Update(gameTime);
-
             base.Update(gameTime);
         }
 
@@ -78,18 +84,18 @@ namespace Platformer
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-
-            player.Draw();
+            // Draw Player
+            player.Draw(spriteBatch);
 
             spriteBatch.End();
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
-        private void UpdateMouse()
+        private void UpdateInput()
         {
             lastmouse = mouse;
             mouse = Mouse.GetState();
+            keyboard = Keyboard.GetState();
             mouseMoved = mouse.Position != lastmouse.Position;
 
             LeftHeld = mouse.LeftButton == ButtonState.Pressed;
