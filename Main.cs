@@ -8,6 +8,7 @@ namespace Platformer
     public class Main : Game
     {
         // Engine Stuff
+        public static Main instance; //{ get; private set; } what does it do?
         public static GraphicsDeviceManager graphics { get; private set; }
         public static SpriteBatch spriteBatch { get; private set; }
         public static Texture2D solid { get; private set; }
@@ -106,6 +107,7 @@ namespace Platformer
             RightClick = RightReleased && lastmouse.RightButton == ButtonState.Pressed;
         }
 
+        //Loading a Texture in another class
         public static Texture2D loadTexture(string path)
         {
             return instance.Content.Load<Texture2D>(path);

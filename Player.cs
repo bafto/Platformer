@@ -34,7 +34,10 @@ namespace Platformer
         public void Update(GameTime gameTime)
         {
             Velocity.Y += 0.1f; // gravity
-            moveTimer += 0.2f; // increment timer. value represents how fast the player will reach maxSpeed
+            if (Velocity.X != 0)
+                Velocity.X += 0.1f * -(Velocity.X / Math.Abs(Velocity.X)); //very bad slowdown sideways. needs improvement
+            moveTimer += 0.15f * Main.deltaTime; // increment timer. value represents how fast the player will reach maxSpeed
+
             if (Main.keyboard.IsKeyDown(Keys.A))
             {
                 Velocity.X -= MathHelper.Lerp(Velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
@@ -61,6 +64,28 @@ namespace Platformer
             // set position
             lastPosition = position;
             position += Velocity;
+
+            //Keeping Player on Screen. Removed later with greater World
+            if (position.X + rect.Width > Main.screen.Width)
+            {
+                position.X = Main.screen.Width - rect.Width;
+                Velocity.X = 0;
+            }
+            else if (position.X < 0)
+            {
+                position.X = 0;
+                Velocity.X = 0;
+            }
+            if (position.Y + rect.Height > Main.screen.Height)
+            {
+                position.Y = Main.screen.Height - rect.Height;
+                Velocity.Y = 0;
+            }
+            else if (position.Y < 0)
+            {
+                position.Y = 0;
+                Velocity.Y = 0;
+            }
         }
         public void Draw(SpriteBatch spriteBatch)
         {
