@@ -24,7 +24,7 @@ namespace Platformer
             position = new Vector2(0, 0);
             rect = new Rectangle(0, 0, 50, 50);
             color = Color.Red;
-            speed = 50;
+            speed = 200;
         }
 
         public void Update(GameTime gameTime)
