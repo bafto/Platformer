@@ -11,16 +11,18 @@ namespace Platformer
     {
         public Rectangle rect;
         public int TileID;
-        public Tile(Vector2 pos, int tileID)
+        private Texture2D texture;
+        public Tile(Vector2 pos, int tileID, Texture2D tex = null)
         {
             rect = new Rectangle((int)pos.X, (int)pos.Y, 50, 50);
             TileID = tileID;
+            texture = tex;
         }
 
         public void Draw()
         {
             if (TileID != 0)
-                Main.spriteBatch.Draw(Main.solid, rect, Color.Black);
+                Main.spriteBatch.Draw(texture, rect, Color.White);
         }
     }
 }
