@@ -1,20 +1,24 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace Platformer
 {
     public class Main : Game
     {
         // Engine Stuff
-        public static Main instance; //{ get; private set; } what does it do?
+        public static Main instance { get; private set; } 
         public static GraphicsDeviceManager graphics { get; private set; }
         public static SpriteBatch spriteBatch { get; private set; }
         public static Texture2D solid { get; private set; }
         public static SpriteFont font { get; private set; }
         public static Rectangle screen;
         public static float deltaTime { get; private set; }
+        public static string currentDirectory => Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+
         // input stuff
         public static MouseState mouse = Mouse.GetState();
         public static MouseState lastmouse;
@@ -28,7 +32,8 @@ namespace Platformer
         public static bool mouseMoved;
 
         //Game Stuff
-        public Player player;
+        public static Player player;
+        public static Tilemap tilemap;
 
         public Main()
         {
@@ -44,11 +49,13 @@ namespace Platformer
             form.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 
             player = new Player();
+            tilemap = new Tilemap();
         }
 
         protected override void Initialize()
         {
             player.Initialize();
+            tilemap.Initialize("");
 
             base.Initialize();
         }
@@ -85,8 +92,11 @@ namespace Platformer
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
+
             // Draw Player
             player.Draw(spriteBatch);
+            // Draw Tiles
+            tilemap.Draw(spriteBatch);
 
             spriteBatch.End();
 
