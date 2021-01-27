@@ -10,17 +10,17 @@ namespace Platformer
     public class Tile
     {
         public Rectangle rect;
-        private Texture2D texture;
-
-        public Tile(Vector2 pos, Texture2D tex)
+        public int TileID;
+        public Tile(Vector2 pos, int tileID)
         {
             rect = new Rectangle((int)pos.X, (int)pos.Y, 50, 50);
-            texture = tex;
+            TileID = tileID;
         }
 
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch)
         {
-            Main.spriteBatch.Draw(texture, rect, Color.White);
+            if (TileID != 0)
+                spriteBatch.Draw(Main.solid, rect, Color.Black);
         }
     }
 }
