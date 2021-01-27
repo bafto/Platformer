@@ -77,11 +77,11 @@ namespace Platformer
             lastPosition = position;
             position += Velocity;
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             rect.X = (int)position.X;
             rect.Y = (int)position.Y;
-            spriteBatch.Draw(Main.solid, rect, color);
+            Main.spriteBatch.Draw(Main.solid, rect, color);
         }
     }
 }

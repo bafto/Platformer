@@ -93,10 +93,10 @@ namespace Platformer
 
             spriteBatch.Begin();
 
+            // Draw Tiles (before player, or he is covered by the background)
+            tilemap.Draw();
             // Draw Player
-            player.Draw(spriteBatch);
-            // Draw Tiles
-            tilemap.Draw(spriteBatch);
+            player.Draw();
 
             spriteBatch.End();
 

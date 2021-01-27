@@ -37,13 +37,13 @@ namespace Platformer
         {
 
         }
-        public void Draw(SpriteBatch spriteBatch) //can't be used yet, tiles need to be constructed
+        public void Draw() //can't be used yet, tiles need to be constructed
         {
             for(int x = 0; x < 40; x++)
             {
                 for(int y = 0; y < 22; y++)
                 {
-                    tiles[x, y].Draw(spriteBatch);
+                    tiles[x, y].Draw();
                 }
             }
         }

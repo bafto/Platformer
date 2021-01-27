@@ -17,10 +17,10 @@ namespace Platformer
             TileID = tileID;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             if (TileID != 0)
-                spriteBatch.Draw(Main.solid, rect, Color.Black);
+                Main.spriteBatch.Draw(Main.solid, rect, Color.Black);
         }
     }
 }
