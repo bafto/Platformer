@@ -33,7 +33,7 @@ namespace Platformer
 
         public void Update()
         {
-            Velocity.Y += 0.1f; // gravity
+            Velocity.Y += 8f * Main.deltaTime; // gravity
             if (Velocity.X != 0)
                 Velocity.X += 0.1f * -(Velocity.X / Math.Abs(Velocity.X)); //very bad slowdown sideways. needs improvement
             moveTimer += 0.15f * Main.deltaTime; // increment timer. value represents how fast the player will reach maxSpeed
