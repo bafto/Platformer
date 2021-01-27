@@ -12,10 +12,10 @@ namespace Platformer
         public Rectangle rect;
         private Texture2D texture;
 
-        public Tile(Vector2 pos,String texPath)
+        public Tile(Vector2 pos, Texture2D tex)
         {
             rect = new Rectangle((int)pos.X, (int)pos.Y, 50, 50);
-            texture = Main.loadTexture(texPath);
+            texture = tex;
         }
 
         public void Draw()

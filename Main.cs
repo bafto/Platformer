@@ -76,7 +76,7 @@ namespace Platformer
             UpdateInput();
 
             // Update Player
-            player.Update(gameTime);
+            player.Update();
             base.Update(gameTime);
         }
 

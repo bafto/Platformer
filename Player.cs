@@ -31,7 +31,7 @@ namespace Platformer
             acceleration = 2f;
         }
 
-        public void Update(GameTime gameTime)
+        public void Update()
         {
             Velocity.Y += 0.1f; // gravity
             if (Velocity.X != 0)
