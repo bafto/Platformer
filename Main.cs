@@ -37,7 +37,8 @@ namespace Platformer
         public static Camera camera;
 
         //Test Stuff revert later
-        private static Texture2D testTex;
+
+
         public Main()
         {
             instance = this;
@@ -58,7 +59,6 @@ namespace Platformer
             tilemap = new Tilemap(currentDirectory + @"\level0.level");
             camera = new Camera();
 
-            testTex = LoadTexturePart("Tileset", new Rectangle(10, 0, 25, 25)); //Test code, revert later
             base.Initialize();
         }
 
@@ -106,8 +106,6 @@ namespace Platformer
             tilemap.Draw();
             // Draw Player
             player.Draw();
-
-            spriteBatch.Draw(testTex, new Rectangle(0, 0, 25, 25), Color.White); //Test code, revert later
 
             spriteBatch.End();
 
