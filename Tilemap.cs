@@ -34,15 +34,13 @@ namespace Platformer
             {
                 for(int x = 0; x < 40; x++)
                 {
-                    if ((int)char.GetNumericValue(lines[lines.Length - 22 + y][x]) != 0)//with texture (in textures)
+                    if ((int)char.GetNumericValue(lines[lines.Length - 22 + y][x]) != 0) //with texture (in textures)
                     {
                         tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - 22 + y][x]), textures[(int)char.GetNumericValue(lines[lines.Length - 22 + y][x])]);
-                        Debug.WriteLine("x: " + x + ", y: " + y + ", TileID: " + lines[y][x]);
                     }
-                    else//without texture (0)
+                    else //without texture (0)
                     {
                         tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - 22 + y][x]));
-                        Debug.WriteLine(y);
                     }
                 }
             }

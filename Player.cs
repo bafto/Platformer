@@ -39,10 +39,11 @@ namespace Platformer
             Velocity.Y += 5f * Main.deltaTime; // gravity
             if (Velocity.X != 0) 
             {
-                Velocity = Vector2.Lerp(Velocity, Vector2.Zero, moveTimer / drag); //very bad slowdown sideways. needs improvement
+                Velocity = Vector2.Lerp(Velocity, Vector2.Zero, moveTimer / drag);
             }
 
-            moveTimer += Main.deltaTime * 10; // increment timer. value represents how fast the player will reach maxSpeed
+            // increment timer. value represents how fast the player will reach maxSpeed
+            moveTimer += Main.deltaTime * 10; 
 
             // Handle input
             if (Main.keyboard.IsKeyDown(Keys.A))
@@ -74,6 +75,20 @@ namespace Platformer
             if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.screen.Width - 50, Main.screen.Height - 90)))
             {
                 Velocity = Vector2.Zero;
+            }
+
+            // go though all tiles
+            for (int x = 0; x < 40; x++)
+            {
+                for (int y = 0; y < 22; y++)
+                {
+                    // check if the tile is not air and if the player is inside a tile
+                    if (Main.tilemap.tiles[x, y].TileID != 0 && rect.Intersects(Main.tilemap.tiles[x, y].rect))
+                    {
+                        Velocity = Vector2.Zero;
+                        position = lastPosition;
+                    }
+                }
             }
 
             // set position
