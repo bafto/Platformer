@@ -82,6 +82,9 @@ namespace Platformer
             // Update Mouse variables
             UpdateInput();
 
+            //Update Tilemap...Does nothing, but maybe we will add that later
+            tilemap.Update();
+
             // Update Player
             player.Update();
             base.Update(gameTime);
