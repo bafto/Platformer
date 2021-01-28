@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace Platformer
 {
@@ -10,12 +11,13 @@ namespace Platformer
         public Vector2 lastPosition;
         public Color color;
         public float maxSpeed;
-        public Vector2 Velocity;
+        public Vector2 velocity;
         private float moveTimer;
         public float acceleration;
         public float drag;
         public bool grounded;
         public float jumpspeed;
+        public Vector2 spawnpoint;
 
         public Player()
         {
@@ -23,7 +25,8 @@ namespace Platformer
         }
         public void Initialize()
         {
-            position = new Vector2(100, 100);
+            spawnpoint = new Vector2(300, 490);
+            position = spawnpoint;
             rect = new Rectangle(0, 0, 50, 50);
             color = Color.Red;
             maxSpeed = 10f;
@@ -34,10 +37,10 @@ namespace Platformer
 
         public void Update()
         {
-            Velocity.Y += 5f * Main.deltaTime; // gravity
-            if (Velocity.X != 0)
+            velocity.Y += 5f * Main.deltaTime; // gravity
+            if (velocity.X != 0)
             {
-                Velocity = Vector2.Lerp(Velocity, Vector2.Zero, moveTimer / drag);
+                velocity = Vector2.Lerp(velocity, Vector2.Zero, moveTimer / drag);
             }
 
             // increment timer. value represents how fast the player will reach maxSpeed
@@ -46,34 +49,28 @@ namespace Platformer
             // Handle input
             if (Main.keyboard.IsKeyDown(Keys.A))
             {
-                Velocity.X -= MathHelper.Lerp(Velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
+                velocity.X -= MathHelper.Lerp(velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
             }
             if (Main.keyboard.IsKeyDown(Keys.D))
             {
-                Velocity.X += MathHelper.Lerp(Velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
+                velocity.X += MathHelper.Lerp(velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
             }
-            if (grounded && Main.keyboard.IsKeyDown(Keys.W))
+            if (grounded && Main.keyboard.JustPressed(Keys.W))
             {
-                Velocity.Y -= jumpspeed * Main.deltaTime;
+                velocity.Y -= jumpspeed * Main.deltaTime;
                 grounded = false;
-            }
-            if (Main.keyboard.IsKeyDown(Keys.S))
-            {
-                Velocity.Y += MathHelper.Lerp(Velocity.Y, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
             }
             if (moveTimer >= 1)
             {
                 moveTimer = 0;
             }
-
             // Clamp Velocity
-            Velocity = Vector2.Clamp(Velocity, new Vector2(-maxSpeed), new Vector2(maxSpeed));
+            velocity = Vector2.Clamp(velocity, new Vector2(-maxSpeed), new Vector2(maxSpeed));
 
             // Keep player in level bounds
-            position = Vector2.Clamp(position, Vector2.Zero, new Vector2(Main.screen.Width - 50, Main.screen.Height - 90));
             if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.screen.Width - 50, Main.screen.Height - 90)))
             {
-                Velocity = Vector2.Zero;
+                position = spawnpoint;
             }
 
             // go though all tiles
@@ -84,7 +81,7 @@ namespace Platformer
                     // check if the tile is not air and if the player is inside a tile
                     if (Main.tilemap.tiles[x, y].TileID != 0 && rect.Intersects(Main.tilemap.tiles[x, y].rect))
                     {
-                        Velocity = Vector2.Zero;
+                        velocity = Vector2.Zero;
                         position = lastPosition;
                         grounded = true;
                     }
@@ -93,7 +90,7 @@ namespace Platformer
 
             // set position
             lastPosition = position;
-            position += Velocity;
+            position += velocity;
         }
         public void Draw()
         {
@@ -103,7 +100,7 @@ namespace Platformer
         }
         public override string ToString()
         {
-            return $"pos: {position}, vel: {Velocity}, moveTimer: {moveTimer}";
+            return $"pos: {position}, vel: {velocity}, moveTimer: {moveTimer}";
         }
     }
 }

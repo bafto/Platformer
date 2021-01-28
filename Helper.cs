@@ -1,11 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace Platformer
 {
-    static class Helper
+    static class Extentions
     {
         // for extention or helper methods
-
+        /// <summary>
+        /// returns true if the key has just been pressed
+        /// </summary>
+        public static bool JustPressed(this KeyboardState s, Keys key)
+        {
+            return Main.lastKeyboard.IsKeyUp(key) && Main.keyboard.IsKeyDown(key);
+        }
+    }
+    static class Helper
+    {
         /// <summary>
         /// Checks if a Clamp would occur
         /// </summary>

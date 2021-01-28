@@ -24,7 +24,6 @@ namespace Platformer
             for (int i = 0; lines[i] != "map:"; i++)
             {
                 string[] line = lines[i].Split(' ');
-                Debug.WriteLine(line[1]);
                 textures.Add(int.Parse(line[0]), Main.LoadTexture(line[1]));
             }
             //Read Map from File and construct tiles

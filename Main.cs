@@ -22,6 +22,7 @@ namespace Platformer
         public static MouseState mouse = Mouse.GetState();
         public static MouseState lastmouse;
         public static KeyboardState keyboard;
+        public static KeyboardState lastKeyboard;
         public static bool LeftHeld;
         public static bool RightHeld;
         public static bool LeftReleased;
@@ -114,6 +115,7 @@ namespace Platformer
         {
             lastmouse = mouse;
             mouse = Mouse.GetState();
+            lastKeyboard = keyboard;
             keyboard = Keyboard.GetState();
             mouseMoved = mouse.Position != lastmouse.Position;
 
