@@ -14,6 +14,8 @@ namespace Platformer
         private float moveTimer;
         public float acceleration;
         public float drag;
+        public bool grounded;
+        public float jumpspeed;
 
         public Player()
         {
@@ -27,6 +29,7 @@ namespace Platformer
             maxSpeed = 10f;
             acceleration = 2f;
             drag = 20;
+            jumpspeed = 400f;
         }
 
         public void Update()
@@ -49,9 +52,10 @@ namespace Platformer
             {
                 Velocity.X += MathHelper.Lerp(Velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
             }
-            if (Main.keyboard.IsKeyDown(Keys.W))
+            if (grounded && Main.keyboard.IsKeyDown(Keys.W))
             {
-                Velocity.Y -= MathHelper.Lerp(Velocity.Y, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
+                Velocity.Y -= jumpspeed * Main.deltaTime;
+                grounded = false;
             }
             if (Main.keyboard.IsKeyDown(Keys.S))
             {
@@ -82,6 +86,7 @@ namespace Platformer
                     {
                         Velocity = Vector2.Zero;
                         position = lastPosition;
+                        grounded = true;
                     }
                 }
             }
