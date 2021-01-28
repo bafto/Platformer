@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Platformer
@@ -37,13 +32,13 @@ namespace Platformer
         public void Update()
         {
             Velocity.Y += 5f * Main.deltaTime; // gravity
-            if (Velocity.X != 0) 
+            if (Velocity.X != 0)
             {
                 Velocity = Vector2.Lerp(Velocity, Vector2.Zero, moveTimer / drag);
             }
 
             // increment timer. value represents how fast the player will reach maxSpeed
-            moveTimer += Main.deltaTime * 10; 
+            moveTimer += Main.deltaTime * 10;
 
             // Handle input
             if (Main.keyboard.IsKeyDown(Keys.A))

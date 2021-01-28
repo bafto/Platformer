@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace Platformer
@@ -10,7 +9,7 @@ namespace Platformer
     public class Main : Game
     {
         // Engine Stuff
-        public static Main instance { get; private set; } 
+        public static Main instance { get; private set; }
         public static GraphicsDeviceManager graphics { get; private set; }
         public static SpriteBatch spriteBatch { get; private set; }
         public static Texture2D solid { get; private set; }

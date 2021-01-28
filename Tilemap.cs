@@ -1,11 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 
 namespace Platformer
 {
@@ -16,7 +13,7 @@ namespace Platformer
 
         public Tilemap()
         {
-            tiles = new Tile[40,22];
+            tiles = new Tile[40, 22];
             textures = new Dictionary<int, Texture2D>();
         }
         public void Initialize(string file)
@@ -30,9 +27,9 @@ namespace Platformer
                 textures.Add(int.Parse(line[0]), Main.LoadTexture(line[1]));
             }
             //Read Map from File and construct tiles
-            for(int y = 0; y < 22; y++)
+            for (int y = 0; y < 22; y++)
             {
-                for(int x = 0; x < 40; x++)
+                for (int x = 0; x < 40; x++)
                 {
                     if ((int)char.GetNumericValue(lines[lines.Length - 22 + y][x]) != 0) //with texture (in textures)
                     {
@@ -51,9 +48,9 @@ namespace Platformer
         }
         public void Draw()
         {
-            for(int x = 0; x < 40; x++)
+            for (int x = 0; x < 40; x++)
             {
-                for(int y = 0; y < 22; y++)
+                for (int y = 0; y < 22; y++)
                 {
                     tiles[x, y].Draw();
                 }
