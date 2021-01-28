@@ -11,11 +11,10 @@ namespace Platformer
     {
         private Vector2 ViewportSize;
 
-        private float maxOffsetX;
-        private float maxOffsetY;
+        private Vector2 maxOffset;
 
-        private float camX;
-        private float camY;
+        //the offset that will be applied to everything
+        private Vector2 camOffset;
 
         public Camera()
         {
@@ -27,29 +26,24 @@ namespace Platformer
             ViewportSize.X = Main.graphics.GraphicsDevice.Viewport.Width;
             ViewportSize.Y = Main.graphics.GraphicsDevice.Viewport.Height;
 
-            maxOffsetX = 5000 - ViewportSize.X;
-            maxOffsetY = 5000 - ViewportSize.Y;
+            maxOffset.X = 5000 - ViewportSize.X;
+            maxOffset.Y = 5000 - ViewportSize.Y;
         }
 
         public void Update()
         {
-            camX = Main.player.position.X - ViewportSize.X - Main.player.rect.Width / 2;
-            camY = Main.player.position.Y - ViewportSize.Y - Main.player.rect.Height / 2;
+            //calculate the offset
+            camOffset.X = Main.player.position.X - ViewportSize.X - Main.player.rect.Width / 2;
+            camOffset.Y = Main.player.position.Y - ViewportSize.Y - Main.player.rect.Height / 2;
 
-            if (camX > maxOffsetX)
-                camX = maxOffsetX;
-            else if (camX < 0)
-                camX = 0;
-            if (camY > maxOffsetY)
-                camY = maxOffsetY;
-            else if (camY < 0)
-                camY = 0;
+            //clamp it to world coordinates
+            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, maxOffset);
         }
 
         public Rectangle Translate(Rectangle rect)
         {
-            rect.X += -(int)camX;
-            rect.Y += -(int)camY;
+            rect.X += -(int)camOffset.X;
+            rect.Y += -(int)camOffset.Y;
             return rect;
         }
     }
