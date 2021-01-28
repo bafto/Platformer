@@ -13,7 +13,7 @@ namespace Platformer
 
         public Camera()
         {
-
+            Initialize();
         }
 
         public void Initialize()

@@ -52,8 +52,8 @@ namespace Platformer
         protected override void Initialize()
         {
             player = new Player();
-            camera = new Camera();
             tilemap = new Tilemap(currentDirectory + @"\level0.level");
+            camera = new Camera();
             base.Initialize();
         }
 
