@@ -21,7 +21,7 @@ namespace Platformer
         }
         public void Initialize(string file)
         {
-            string[] lines = File.ReadAllLines(Main.currentDirectory + @"\level0.txt");
+            string[] lines = File.ReadAllLines(file);
             //Load Textures from File
             for (int i = 0; lines[i] != "map:"; i++)
             {
