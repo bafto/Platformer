@@ -12,15 +12,19 @@ namespace Platformer
     public class Tilemap
     {
         public Tile[,] tiles;
-        private Dictionary<int, Texture2D> textures;
 
         public Tilemap()
         {
             tiles = new Tile[40,22];
             textures = new Dictionary<int, Texture2D>();
         }
-        public void Initialize(String file)
+        public void Initialize(string file)
         {
+<<<<<<< HEAD
+            //Read Map from File and construct tiles
+            string[] lines = File.ReadAllLines(file);
+            for(int y = 0; y < lines.Length; y++)
+=======
             string[] lines = File.ReadAllLines(Main.currentDirectory + @"\level0.txt");
             //Load Textures from File
             for (int i = 0; lines[i] != "map:"; i++)
@@ -31,9 +35,14 @@ namespace Platformer
             }
             //Read Map from File and construct tiles
             for(int y = 0; y < 22; y++)
+>>>>>>> 7d413d5d0a905bd8d8cdad7084c276fbcc7e96d6
             {
                 for(int x = 0; x < 40; x++)
                 {
+<<<<<<< HEAD
+                    tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[y][x]));
+                    Debug.WriteLine(tiles[x, y]);
+=======
                     if ((int)char.GetNumericValue(lines[lines.Length - 22 + y][x]) != 0)
                     {
                         tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - 22 + y][x]), textures[(int)char.GetNumericValue(lines[lines.Length - 22 + y][x])]);
@@ -44,6 +53,7 @@ namespace Platformer
                         tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - 22 + y][x]));
                         Debug.WriteLine(y);
                     }
+>>>>>>> 7d413d5d0a905bd8d8cdad7084c276fbcc7e96d6
                 }
             }
         }
@@ -51,7 +61,11 @@ namespace Platformer
         {
 
         }
+<<<<<<< HEAD
+        public void Draw(SpriteBatch spriteBatch)
+=======
         public void Draw()
+>>>>>>> 7d413d5d0a905bd8d8cdad7084c276fbcc7e96d6
         {
             for(int x = 0; x < 40; x++)
             {

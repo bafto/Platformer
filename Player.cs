@@ -36,10 +36,13 @@ namespace Platformer
 
         public void Update()
         {
-            Velocity.Y += 8f * Main.deltaTime; // gravity
-            if (Velocity.X != 0)
-                Velocity.X += 0.1f * -(Velocity.X / Math.Abs(Velocity.X)); //very bad slowdown sideways. needs improvement
-            moveTimer += 0.15f * Main.deltaTime; // increment timer. value represents how fast the player will reach maxSpeed
+            Velocity.Y += 5f * Main.deltaTime; // gravity
+            if (Velocity.X != 0) 
+            {
+                Velocity = Vector2.Lerp(Velocity, Vector2.Zero, moveTimer / drag); //very bad slowdown sideways. needs improvement
+            }
+
+            moveTimer += Main.deltaTime * 10; // increment timer. value represents how fast the player will reach maxSpeed
 
             // Handle input
             if (Main.keyboard.IsKeyDown(Keys.A))
@@ -68,7 +71,7 @@ namespace Platformer
 
             // Keep player in level bounds
             position = Vector2.Clamp(position, Vector2.Zero, new Vector2(Main.screen.Width - 50, Main.screen.Height - 90));
-            if (Helper.isClamp(position, Vector2.Zero, new Vector2(Main.screen.Width - 50, Main.screen.Height - 90)))
+            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.screen.Width - 50, Main.screen.Height - 90)))
             {
                 Velocity = Vector2.Zero;
             }
@@ -77,11 +80,15 @@ namespace Platformer
             lastPosition = position;
             position += Velocity;
         }
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch)
         {
             rect.X = (int)position.X;
             rect.Y = (int)position.Y;
-            Main.spriteBatch.Draw(Main.solid, rect, color);
+            spriteBatch.Draw(Main.solid, rect, color);
+        }
+        public override string ToString()
+        {
+            return $"pos: {position}, vel: {Velocity}, moveTimer: {moveTimer}";
         }
     }
 }
