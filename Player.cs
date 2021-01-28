@@ -71,7 +71,7 @@ namespace Platformer
 
             // Keep player in level bounds
             position = Vector2.Clamp(position, Vector2.Zero, new Vector2(Main.screen.Width - 50, Main.screen.Height - 90));
-            if (Helper.isClamp(position, Vector2.Zero, new Vector2(Main.screen.Width - 50, Main.screen.Height - 90)))
+            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.screen.Width - 50, Main.screen.Height - 90)))
             {
                 Velocity = Vector2.Zero;
             }
@@ -85,6 +85,10 @@ namespace Platformer
             rect.X = (int)position.X;
             rect.Y = (int)position.Y;
             spriteBatch.Draw(Main.solid, rect, color);
+        }
+        public override string ToString()
+        {
+            return $"pos: {position}, vel: {Velocity}, moveTimer: {moveTimer}";
         }
     }
 }

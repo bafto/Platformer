@@ -55,7 +55,7 @@ namespace Platformer
         protected override void Initialize()
         {
             player.Initialize();
-            tilemap.Initialize("");
+            tilemap.Initialize(currentDirectory + @"\level0.level");
 
             base.Initialize();
         }
@@ -118,7 +118,7 @@ namespace Platformer
         }
 
         //Loading a Texture in another class
-        public static Texture2D loadTexture(string path)
+        public static Texture2D LoadTexture(string path)
         {
             return instance.Content.Load<Texture2D>(path);
         }
