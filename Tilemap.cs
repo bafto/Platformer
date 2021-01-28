@@ -12,7 +12,7 @@ namespace Platformer
     public class Tilemap
     {
         public Tile[,] tiles;
-        private Dictionary<int, Texture2D> textures;
+        private Dictionary<int, Texture2D> textures; //textures which the map holds, so we dont always load all the textures
 
         public Tilemap()
         {
@@ -34,12 +34,12 @@ namespace Platformer
             {
                 for(int x = 0; x < 40; x++)
                 {
-                    if ((int)char.GetNumericValue(lines[lines.Length - 22 + y][x]) != 0)
+                    if ((int)char.GetNumericValue(lines[lines.Length - 22 + y][x]) != 0)//with texture (in textures)
                     {
                         tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - 22 + y][x]), textures[(int)char.GetNumericValue(lines[lines.Length - 22 + y][x])]);
                         Debug.WriteLine("x: " + x + ", y: " + y + ", TileID: " + lines[y][x]);
                     }
-                    else
+                    else//without texture (0)
                     {
                         tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - 22 + y][x]));
                         Debug.WriteLine(y);
