@@ -141,7 +141,12 @@ namespace Platformer
             return instance.Content.Load<Texture2D>(path);
         }
 
-        //Loads only a Part of a Texture specified by srcRect
+        /// <summary>
+        /// Loads a part of a Texture from path defined by a sourceRectangle
+        /// </summary>
+        /// <param name="path">absolute file path</param>
+        /// <param name="srcRect">source Rectangle which defines what Part of the Texture is loaded</param>
+        /// <returns>A Texture2D containing the specified part</returns>
         public static Texture2D LoadTexturePart(string path, Rectangle srcRect)
         {
             Texture2D wholeTex = instance.Content.Load<Texture2D>(path);

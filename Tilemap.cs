@@ -9,7 +9,7 @@ namespace Platformer
     public class Tilemap
     {
         public Tile[,] tiles;
-        private TextureMap texMap; //textures which the map holds, so we dont always load all the textures
+        private TextureMap texMap;//Holds all the Textures and handles loading them in
 
         public Tilemap(string file)
         {
@@ -20,7 +20,7 @@ namespace Platformer
         public void Initialize(string file)
         {
             string[] lines = File.ReadAllLines(file);
-            //Load Textures from File
+            //Load Textures from File (texMap handles this)
             texMap.Initialize(Main.currentDirectory + @"\\" + lines[0]);
             //Read Map from File and construct tiles
             for (int y = 0; y < 22; y++)
