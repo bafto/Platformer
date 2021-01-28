@@ -24,7 +24,7 @@ namespace Platformer
         public void Draw()
         {
             if (TileID != 0)
-                Main.spriteBatch.Draw(texture, rect, Color.White);
+                Main.spriteBatch.Draw(texture, Main.camera.Translate(rect), Color.White);
         }
         public override string ToString()
         {

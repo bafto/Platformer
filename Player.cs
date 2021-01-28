@@ -84,7 +84,7 @@ namespace Platformer
         {
             rect.X = (int)position.X;
             rect.Y = (int)position.Y;
-            Main.spriteBatch.Draw(Main.solid, rect, color);
+            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(rect), color);
         }
         public override string ToString()
         {

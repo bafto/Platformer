@@ -34,6 +34,7 @@ namespace Platformer
         //Game Stuff
         public static Player player;
         public static Tilemap tilemap;
+        public static Camera camera;
 
         public Main()
         {
@@ -50,12 +51,14 @@ namespace Platformer
 
             player = new Player();
             tilemap = new Tilemap();
+            camera = new Camera();
         }
 
         protected override void Initialize()
         {
             player.Initialize();
             tilemap.Initialize(currentDirectory + @"\level0.level");
+            camera.Initialize();
 
             base.Initialize();
         }
@@ -87,6 +90,10 @@ namespace Platformer
 
             // Update Player
             player.Update();
+
+            //Update Camera
+            camera.Update();
+
             base.Update(gameTime);
         }
 
