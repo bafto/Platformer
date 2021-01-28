@@ -36,6 +36,8 @@ namespace Platformer
         public static Tilemap tilemap;
         public static Camera camera;
 
+        //Test Stuff revert later
+        private static Texture2D testTex;
         public Main()
         {
             instance = this;
@@ -55,6 +57,8 @@ namespace Platformer
             player = new Player();
             tilemap = new Tilemap(currentDirectory + @"\level0.level");
             camera = new Camera();
+
+            testTex = LoadTexturePart("Tileset", new Rectangle(10, 0, 25, 25)); //Test code, revert later
             base.Initialize();
         }
 
@@ -103,6 +107,8 @@ namespace Platformer
             // Draw Player
             player.Draw();
 
+            spriteBatch.Draw(testTex, new Rectangle(0, 0, 25, 25), Color.White); //Test code, revert later
+
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -135,6 +141,17 @@ namespace Platformer
         public static Texture2D LoadTexture(string path)
         {
             return instance.Content.Load<Texture2D>(path);
+        }
+
+        //Loads only a Part of a Texture specified by srcRect
+        public static Texture2D LoadTexturePart(string path, Rectangle srcRect)
+        {
+            Texture2D wholeTex = instance.Content.Load<Texture2D>(path);
+            Texture2D returnTex = new Texture2D(instance.GraphicsDevice, srcRect.Width, srcRect.Height);
+            Color[] data = new Color[srcRect.Width * srcRect.Height];
+            wholeTex.GetData(0, srcRect, data, 0, data.Length);
+            returnTex.SetData(data);
+            return returnTex;
         }
     }
 }
