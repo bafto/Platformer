@@ -8,7 +8,7 @@ namespace Platformer
     static class Helper
     {
         // for extention or helper methods
-        public static bool isClamp(Vector2 value, Vector2 min, Vector2 max)
+        public static bool IsClamp(Vector2 value, Vector2 min, Vector2 max)
         {
             if (value.X < min.X || value.Y < min.Y)
             {

@@ -19,7 +19,7 @@ namespace Platformer
             tiles = new Tile[40,22];
             textures = new Dictionary<int, Texture2D>();
         }
-        public void Initialize(String file)
+        public void Initialize(string file)
         {
             string[] lines = File.ReadAllLines(Main.currentDirectory + @"\level0.txt");
             //Load Textures from File
