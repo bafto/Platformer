@@ -35,6 +35,11 @@ namespace Platformer
             camOffset = Vector2.Clamp(camOffset, Vector2.Zero, maxOffset);
         }
 
+        /// <summary>
+        /// Apply Camera offset to the Rectangle
+        /// </summary>
+        /// <param name="rect">Rectangle to apply to</param>
+        /// <returns>new Rectangle</returns>
         public Rectangle Translate(Rectangle rect)
         {
             rect.X += -(int)camOffset.X;

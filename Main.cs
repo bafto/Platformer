@@ -47,18 +47,13 @@ namespace Platformer
             // Maximize Window
             System.Windows.Forms.Form form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(Window.Handle);
             form.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-
-            player = new Player();
-            tilemap = new Tilemap();
-            camera = new Camera();
         }
 
         protected override void Initialize()
         {
-            player.Initialize();
-            tilemap.Initialize(currentDirectory + @"\level0.level");
-            camera.Initialize();
-
+            player = new Player();
+            camera = new Camera();
+            tilemap = new Tilemap(currentDirectory + @"\level0.level");
             base.Initialize();
         }
 
@@ -111,6 +106,10 @@ namespace Platformer
 
             base.Draw(gameTime);
         }
+
+        /// <summary>
+        /// Updates input variables
+        /// </summary>
         private void UpdateInput()
         {
             lastmouse = mouse;
@@ -125,8 +124,12 @@ namespace Platformer
             LeftClick = LeftReleased && lastmouse.LeftButton == ButtonState.Pressed;
             RightClick = RightReleased && lastmouse.RightButton == ButtonState.Pressed;
         }
-
-        //Loading a Texture in another class
+        
+        /// <summary>
+        /// Loads texture from file
+        /// </summary>
+        /// <param name="path">absolute file path</param>
+        /// <returns>the loaded Texture</returns>
         public static Texture2D LoadTexture(string path)
         {
             return instance.Content.Load<Texture2D>(path);

@@ -11,10 +11,11 @@ namespace Platformer
         public Tile[,] tiles;
         private Dictionary<int, Texture2D> textures; //textures which the map holds, so we dont always load all the textures
 
-        public Tilemap()
+        public Tilemap(string file)
         {
             tiles = new Tile[40, 22];
             textures = new Dictionary<int, Texture2D>();
+            Initialize(file);
         }
         public void Initialize(string file)
         {

@@ -17,7 +17,7 @@ namespace Platformer
 
         public Player()
         {
-
+            Initialize();
         }
         public void Initialize()
         {
