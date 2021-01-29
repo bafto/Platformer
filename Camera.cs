@@ -4,8 +4,10 @@ namespace Platformer
 {
     public class Camera
     {
+        //basically screen size for our purposes
         private Vector2 ViewportSize;
 
+        //maximum offset (basically the world size)
         private Vector2 MaxOffset => new Vector2(5000, 5000) - ViewportSize;
 
         //the offset that will be applied to everything

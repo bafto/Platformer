@@ -9,12 +9,14 @@ namespace Platformer
     public class Tilemap
     {
         public Tile[,] tiles;
+        public List<Rectangle> hitboxes;
         private TextureMap texMap;//Holds all the Textures and handles loading them in
 
         public Tilemap(string file)
         {
             tiles = new Tile[40, 22];
             texMap = new TextureMap();
+            hitboxes = new List<Rectangle>();
             Initialize(file);
         }
         public void Initialize(string file)
@@ -35,6 +37,16 @@ namespace Platformer
                     {
                         tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - 22 + y][x]));
                     }
+                }
+            }
+        }
+        private void MakeHitboxes()//merging all tile hitboxes together so we have fewer big ones
+        {
+            for(int y = 0; y < 22; y++)
+            {
+                for(int x = 0; x < 40; x++)
+                {
+
                 }
             }
         }
