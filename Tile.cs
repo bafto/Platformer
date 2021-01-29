@@ -22,9 +22,13 @@ namespace Platformer
             if (TileID != 0)
                 Main.spriteBatch.Draw(texture, Main.camera.Translate(rect), Color.White);
         }
+        public static Tile GetTileAtPos(Vector2 pos)
+        {
+            return Main.tilemap.tiles[(int)(pos.X / 50), (int)(pos.Y / 50)];
+        }
         public override string ToString()
         {
-            return Position + ", ID: " + TileID;
+            return Position + ", ID: " + TileID + ", index: " + (int)(Position.X / 50) + ", " +  (int)(Position.Y / 50);
         }
     }
 }

@@ -10,10 +10,12 @@ namespace Platformer
     {
         public Tile[,] tiles;
         private TextureMap texMap;//Holds all the Textures and handles loading them in
+        public readonly int width = 40;
+        public readonly int height = 22;
 
         public Tilemap(string file)
         {
-            tiles = new Tile[40, 22];
+            tiles = new Tile[width, height];
             texMap = new TextureMap();
             Initialize(file);
         }
@@ -29,11 +31,11 @@ namespace Platformer
                 {
                     if ((int)char.GetNumericValue(lines[lines.Length - 22 + y][x]) != 0) //with texture (in textures)
                     {
-                        tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - 22 + y][x]), texMap.textures[(int)char.GetNumericValue(lines[lines.Length - 22 + y][x])]);
+                        tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - height + y][x]), texMap.textures[(int)char.GetNumericValue(lines[lines.Length - height + y][x])]);
                     }
                     else //without texture (0)
                     {
-                        tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - 22 + y][x]));
+                        tiles[x, y] = new Tile(new Vector2(x * 50, y * 50), (int)char.GetNumericValue(lines[lines.Length - height + y][x]));
                     }
                 }
             }
