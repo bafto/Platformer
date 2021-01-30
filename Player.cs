@@ -49,7 +49,7 @@ namespace Platformer
                     }
                 }
             }
-            grounded = Tile.GetTileAtPos(rect.Center.ToVector2() - new Vector2(0, -50)).TileID != 0;
+            grounded = Tilemap.GetTileAtPos(rect.Center.ToVector2() - new Vector2(0, -50)).TileID != 0;
 
             if (!grounded)
             {
