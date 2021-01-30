@@ -8,7 +8,7 @@ namespace Platformer
         private Vector2 ViewportSize;
 
         //maximum offset (basically the world size)
-        private Vector2 MaxOffset => new Vector2(Main.tilemap.width * 50, Main.tilemap.height * 50) - ViewportSize;
+        private Vector2 MaxOffset => new Vector2(Main.tilemap.width * Tile.TileSize.X, Main.tilemap.height * Tile.TileSize.Y) - ViewportSize;
 
         //the offset that will be applied to everything
         private Vector2 camOffset;

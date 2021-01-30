@@ -37,12 +37,9 @@ namespace Platformer
 
         public void Update()
         {
-            grounded = Tilemap.GetTileAtPos(rect.Center.ToVector2() - new Vector2(0, -50)).TileID != 0;
+            lastPosition = position;
 
-            //if (!grounded)
-            {
-                velocity.Y += 15f * Main.deltaTime; // gravity
-            }
+            velocity.Y += 15f * Main.deltaTime; // gravity
 
             if (velocity.X != 0)
             {
@@ -54,20 +51,9 @@ namespace Platformer
             // Clamp Velocity
             velocity = Vector2.Clamp(velocity, new Vector2(-maxSpeed), new Vector2(maxSpeed));
 
-            // Keep player in level bounds
-            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.tilemap.width * 50 - 50, Main.tilemap.height * 50 - 90)))
-            {
-                position = spawnpoint;
-            }
-            if (Collides())
-            {
-                velocity = -velocity;
-            }
-            // set position
-            lastPosition = position;
-            position += velocity;
+            HandleCollision();//resolve collision and set position
         }
-        public void HandleInput()
+        private void HandleInput()
         {
             // increment timer. value represents how fast the player will reach maxSpeed
             moveTimer += Main.deltaTime * 10;
@@ -81,16 +67,16 @@ namespace Platformer
             {
                 velocity.X += MathHelper.Lerp(velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
             }
-            if (grounded && Main.keyboard.JustPressed(Keys.W))
+            if (/*grounded && */Main.keyboard.JustPressed(Keys.W))
             {
-                velocity.Y -= jumpspeed + velocity.X * Main.deltaTime;
+                velocity.Y -= jumpspeed * Main.deltaTime;
             }
             if (moveTimer >= 1)
             {
                 moveTimer = 0;
             }
         }
-        public bool Collides()
+        private bool Collides()//check if the player collides with any tile
         {
             //go though all tiles
             for (int x = 0; x < Main.tilemap.width; x++)
@@ -105,6 +91,56 @@ namespace Platformer
                 }
             }
             return false;
+        }
+        private void HandleCollision()
+        {
+            // Keep player in level bounds
+            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.tilemap.width * 50 - 50, Main.tilemap.height * 50 - 90)))
+            {
+                position = spawnpoint;
+                velocity = Vector2.Zero;
+            }
+            else
+            {
+                RectangleF playerRect = new RectangleF((position + velocity).X, (position + velocity).Y, 50, 50);
+                for (int x = 0; x < Main.tilemap.width; x++)
+                {
+                    for (int y = 0; y < Main.tilemap.height; y++)
+                    {
+                        if (Main.tilemap.tiles[x, y].TileID != 0 && playerRect.Intersects(Main.tilemap.tiles[x, y].rect))
+                        {
+                            bool XorY = false;
+                            playerRect.position.X -= velocity.X;
+                            if (playerRect.Intersects(Main.tilemap.tiles[x, y].rect))
+                            {
+                                playerRect.position.X += velocity.X;
+                                playerRect.position.Y -= velocity.Y;
+                                if (playerRect.Intersects(Main.tilemap.tiles[x, y].rect))
+                                {
+                                    playerRect.position.Y += velocity.Y;
+                                }
+                                else
+                                {
+                                    XorY = true;
+                                }
+                            }
+                            else
+                            {
+                                XorY = true;
+                            }
+                            if (!XorY)
+                            {
+                                playerRect.position.X -= velocity.X;
+                                playerRect.position.Y -= velocity.Y;
+                            }
+                        }
+                    }
+                }
+                Vector2 oldVelocity = velocity;
+                velocity.X = playerRect.position.X - lastPosition.X;
+                velocity.Y = playerRect.position.Y - lastPosition.Y;
+                position += velocity;
+            }
         }
         public void Draw()
         {
