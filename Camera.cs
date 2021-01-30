@@ -8,7 +8,7 @@ namespace Platformer
         private Vector2 ViewportSize;
 
         //maximum offset (basically the world size)
-        private Vector2 MaxOffset => new Vector2(5000, 5000) - ViewportSize;
+        private Vector2 MaxOffset => new Vector2(Main.tilemap.width * 50, Main.tilemap.height * 50) - ViewportSize;
 
         //the offset that will be applied to everything
         private Vector2 camOffset;
@@ -24,7 +24,7 @@ namespace Platformer
             camOffset = Main.player.position - ViewportSize - Main.player.rect.Size.ToVector2() / 2;
 
             //clamp it to world coordinates
-            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset);
+            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset / 6);
         }
 
         /// <summary>
@@ -34,9 +34,7 @@ namespace Platformer
         /// <returns>new Rectangle</returns>
         public Rectangle Translate(Rectangle rect)
         {
-            rect.X -= (int)camOffset.X;
-            rect.Y -= (int)camOffset.Y;
-            return rect;
+            return new Rectangle(rect.X - (int)camOffset.X, rect.Y - (int)camOffset.Y, rect.Width, rect.Height);
         }
     }
 }

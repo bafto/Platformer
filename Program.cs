@@ -7,8 +7,8 @@ namespace Platformer
         [STAThread]
         static void Main()
         {
-            using (var game = new Main())
-                game.Run();
+            var game = new Main();
+            game.Run();
         }
     }
 }
