@@ -21,6 +21,11 @@ namespace Platformer
             position = new Vector2(x, y);
             size = new Vector2(width, height);
         }
+        public RectangleF(Rectangle rect)
+        {
+            position = rect.Location.ToVector2();
+            size = rect.Size.ToVector2();
+        }
         public bool Intersects(Vector2 vec)
         {
             return vec.X > position.X && vec.X < position.X + size.X &&

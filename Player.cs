@@ -102,6 +102,9 @@ namespace Platformer
             }
             else
             {
+                //Handle collision by checking X first
+                //then Y then both and resolving
+                //it accordingly
                 RectangleF playerRect = new RectangleF((position + velocity).X, (position + velocity).Y, 50, 50);
                 for (int x = 0; x < Main.tilemap.width; x++)
                 {
@@ -130,15 +133,12 @@ namespace Platformer
                             }
                             if (!XorY)
                             {
-                                playerRect.position.X -= velocity.X;
-                                playerRect.position.Y -= velocity.Y;
+                                playerRect.position -= velocity;
                             }
                         }
                     }
                 }
-                Vector2 oldVelocity = velocity;
-                velocity.X = playerRect.position.X - lastPosition.X;
-                velocity.Y = playerRect.position.Y - lastPosition.Y;
+                velocity = playerRect.position - lastPosition;
                 position += velocity;
             }
         }
