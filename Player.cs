@@ -6,7 +6,7 @@ namespace Platformer
 {
     public class Player
     {
-        public Rectangle rect;
+        public RectangleF rect;
         public Vector2 position;
         public Vector2 lastPosition;
         public Color color;
@@ -27,7 +27,7 @@ namespace Platformer
         {
             spawnpoint = new Vector2(300, 490);
             position = spawnpoint;
-            rect = new Rectangle(0, 0, 50, 50);
+            rect = new RectangleF(0, 0, 50, 50);
             color = Color.Red;
             maxSpeed = 10f;
             acceleration = 2f;
@@ -144,8 +144,8 @@ namespace Platformer
         }
         public void Draw()
         {
-            rect.Location = position.ToPoint();
-            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(rect), color);
+            rect.position = position;
+            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(rect.toIntRect()), color);
         }
         public override string ToString()
         {

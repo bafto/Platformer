@@ -41,5 +41,9 @@ namespace Platformer
         {
             return position == other.position && size == other.size;
         }
+        public Rectangle toIntRect()
+        {
+            return new Rectangle(position.ToPoint(), size.ToPoint());
+        }
     }
 }
