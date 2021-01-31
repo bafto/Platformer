@@ -36,5 +36,9 @@ namespace Platformer
         {
             return new Rectangle(rect.X - (int)camOffset.X, rect.Y - (int)camOffset.Y, rect.Width, rect.Height);
         }
+        public Rectangle Translate(RectangleF rect)
+        {
+            return new RectangleF(rect.position.X - (int)camOffset.X, rect.position.Y - (int)camOffset.Y, rect.size.X, rect.size.Y).toIntRect();
+        }
     }
 }

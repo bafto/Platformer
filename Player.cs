@@ -165,7 +165,7 @@ namespace Platformer
         public void Draw()
         {
             rect.position = position;
-            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(rect.toIntRect()), color);
+            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(rect), color);
         }
         public override string ToString()
         {
