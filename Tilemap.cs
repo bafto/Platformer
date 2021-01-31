@@ -10,12 +10,11 @@ namespace Platformer
     {
         public Tile[,] tiles;
         private TextureMap texMap;//Holds all the Textures and handles loading them in
-        public readonly int width = 40;
-        public readonly int height = 22;
+        public int width;
+        public int height;
 
         public Tilemap(string file)
         {
-            tiles = new Tile[width, height];
             texMap = new TextureMap();
             Initialize(file);
         }
@@ -24,6 +23,10 @@ namespace Platformer
             string[] lines = File.ReadAllLines(file);
             //Load Textures from File (texMap handles this)
             texMap.Initialize(Main.currentDirectory + @"\\" + lines[0]);
+
+            height = lines.Length - 2;
+            width = lines[2].Length;
+            tiles = new Tile[width, height];
             //Read Map from File and construct tiles
             for (int y = 0; y < height; y++)
             {
