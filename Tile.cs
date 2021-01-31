@@ -27,7 +27,7 @@ namespace Platformer
         }
         public override string ToString()
         {
-            return Position + ", ID: " + TileID + ", index: " + (int)(Position.X / TileSize.X) + ", " +  (int)(Position.Y / TileSize.Y);
+            return Position + ", ID: " + TileID + ", index: " + (int)(Position.X / TileSize.X) + ", " + (int)(Position.Y / TileSize.Y);
         }
     }
 }

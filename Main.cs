@@ -130,7 +130,7 @@ namespace Platformer
             LeftClick = LeftReleased && lastmouse.LeftButton == ButtonState.Pressed;
             RightClick = RightReleased && lastmouse.RightButton == ButtonState.Pressed;
         }
-        
+
         /// <summary>
         /// Loads texture from file
         /// </summary>

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
 
 namespace Platformer
 {
@@ -25,7 +24,7 @@ namespace Platformer
         }
         public void Initialize()
         {
-            spawnpoint = new Vector2(300, 490);
+            spawnpoint = new Vector2(300, 1550);
             position = spawnpoint;
             rect = new RectangleF(0, 0, 50, 50);
             color = Color.Red;
@@ -39,7 +38,13 @@ namespace Platformer
         {
             lastPosition = position;
 
-            velocity.Y += 15f * Main.deltaTime; // gravity
+            grounded = Main.tilemap.Collides(new RectangleF(position.X, position.Y + 1, rect.size.X, rect.size.Y));
+
+            // gravity
+            if (!grounded)
+            {
+                velocity.Y += 15f * Main.deltaTime;
+            }
 
             if (velocity.X != 0)
             {
@@ -51,7 +56,8 @@ namespace Platformer
             // Clamp Velocity
             velocity = Vector2.Clamp(velocity, new Vector2(-maxSpeed), new Vector2(maxSpeed));
 
-            HandleCollision();//resolve collision and set position
+            //resolve collision and set position
+            HandleCollision();
         }
         private void HandleInput()
         {
@@ -67,7 +73,7 @@ namespace Platformer
             {
                 velocity.X += MathHelper.Lerp(velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
             }
-            if (/*grounded && */Main.keyboard.JustPressed(Keys.W))
+            if (grounded && Main.keyboard.JustPressed(Keys.W))
             {
                 velocity.Y -= jumpspeed * Main.deltaTime;
             }
@@ -96,13 +102,16 @@ namespace Platformer
                     {
                         bool XorY = false;
                         playerRect.position.X -= velocity.X;//try only x intersection
-                        if (playerRect.Intersects(Main.tilemap.hitboxes[i]))//still intersects?
+                        //still intersects?
+                        if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
                         {
                             playerRect.position.X += velocity.X;
                             playerRect.position.Y -= velocity.Y;//try only y intersection
-                            if (playerRect.Intersects(Main.tilemap.hitboxes[i]))//still intersects?
+                            //still intersects?
+                            if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
                             {
-                                playerRect.position.Y += velocity.Y;//revert it caus it must be X and Y
+                                //revert it cause it must be X and Y
+                                playerRect.position.Y += velocity.Y;
                             }
                             else//no? set the position accordingly
                             {
@@ -112,28 +121,29 @@ namespace Platformer
                                     playerRect.position.Y = Main.tilemap.hitboxes[i].Bottom();
                                     velocity.Y = 0;
                                 }
-                                else if(playerRect.position.Y + playerRect.size.Y < Main.tilemap.hitboxes[i].Top())
+                                else if (playerRect.position.Y + playerRect.size.Y < Main.tilemap.hitboxes[i].Top())
                                 {
                                     playerRect.position.Y = Main.tilemap.hitboxes[i].Top() - playerRect.size.Y;
                                     velocity.Y = 0;
                                 }
                             }
                         }
-                        else//no? set the position accordingly
+                        else //no? set the position accordingly
                         {
                             XorY = true;
-                            if(playerRect.position.X > Main.tilemap.hitboxes[i].Right())
+                            if (playerRect.position.X > Main.tilemap.hitboxes[i].Right())
                             {
                                 playerRect.position.X = Main.tilemap.hitboxes[i].Right();
                                 velocity.X = 0;
                             }
-                            else if(playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
+                            else if (playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
                             {
                                 playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
                                 velocity.X = 0;
                             }
                         }
-                        if (!XorY)//both must be needed
+                        //both must be needed
+                        if (!XorY)
                         {
                             playerRect.position -= velocity;
                             if (playerRect.position.X > Main.tilemap.hitboxes[i].Right())
@@ -159,7 +169,8 @@ namespace Platformer
                         }
                     }
                 }
-                position = playerRect.position;//set the new position
+                //set the new position
+                position = playerRect.position;
             }
         }
         public void Draw()
