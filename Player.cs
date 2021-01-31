@@ -6,7 +6,7 @@ namespace Platformer
 {
     public class Player
     {
-        public Rectangle rect;
+        public RectangleF rect;
         public Vector2 position;
         public Vector2 lastPosition;
         public Color color;
@@ -27,7 +27,7 @@ namespace Platformer
         {
             spawnpoint = new Vector2(300, 490);
             position = spawnpoint;
-            rect = new Rectangle(0, 0, 50, 50);
+            rect = new RectangleF(0, 0, 50, 50);
             color = Color.Red;
             maxSpeed = 10f;
             acceleration = 2f;
@@ -37,12 +37,9 @@ namespace Platformer
 
         public void Update()
         {
-            grounded = Tilemap.GetTileAtPos(rect.Center.ToVector2() - new Vector2(0, -50)).TileID != 0;
+            lastPosition = position;
 
-            //if (!grounded)
-            {
-                velocity.Y += 15f * Main.deltaTime; // gravity
-            }
+            velocity.Y += 15f * Main.deltaTime; // gravity
 
             if (velocity.X != 0)
             {
@@ -54,20 +51,9 @@ namespace Platformer
             // Clamp Velocity
             velocity = Vector2.Clamp(velocity, new Vector2(-maxSpeed), new Vector2(maxSpeed));
 
-            // Keep player in level bounds
-            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.tilemap.width * 50 - 50, Main.tilemap.height * 50 - 90)))
-            {
-                position = spawnpoint;
-            }
-            if (Collides())
-            {
-                velocity = -velocity;
-            }
-            // set position
-            lastPosition = position;
-            position += velocity;
+            HandleCollision();//resolve collision and set position
         }
-        public void HandleInput()
+        private void HandleInput()
         {
             // increment timer. value represents how fast the player will reach maxSpeed
             moveTimer += Main.deltaTime * 10;
@@ -81,35 +67,105 @@ namespace Platformer
             {
                 velocity.X += MathHelper.Lerp(velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
             }
-            if (grounded && Main.keyboard.JustPressed(Keys.W))
+            if (/*grounded && */Main.keyboard.JustPressed(Keys.W))
             {
-                velocity.Y -= jumpspeed + velocity.X * Main.deltaTime;
+                velocity.Y -= jumpspeed * Main.deltaTime;
             }
             if (moveTimer >= 1)
             {
                 moveTimer = 0;
             }
         }
-        public bool Collides()
+        private void HandleCollision()
         {
-            //go though all tiles
-            for (int x = 0; x < Main.tilemap.width; x++)
+            // Keep player in level bounds
+            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.tilemap.width * 50 - 50, Main.tilemap.height * 50 - 90)))
             {
-                for (int y = 0; y < Main.tilemap.height; y++)
+                position = spawnpoint;
+                velocity = Vector2.Zero;
+            }
+            else
+            {
+                //Handle collision by checking X first
+                //then Y then both and resolving
+                //it accordingly
+                RectangleF playerRect = new RectangleF((position + velocity).X, (position + velocity).Y, 50, 50);
+                for (int i = 0; i < Main.tilemap.hitboxes.Count; i++)
                 {
-                    // check if the tile is not air and if the player is inside a tile
-                    if (Main.tilemap.tiles[x, y].TileID != 0 && new Rectangle((int)(position + velocity).X, (int)(position + velocity).Y, 50, 50).Intersects(Main.tilemap.tiles[x, y].rect))
+                    if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
                     {
-                        return true;
+                        bool XorY = false;
+                        playerRect.position.X -= velocity.X;//try only x intersection
+                        if (playerRect.Intersects(Main.tilemap.hitboxes[i]))//still intersects?
+                        {
+                            playerRect.position.X += velocity.X;
+                            playerRect.position.Y -= velocity.Y;//try only y intersection
+                            if (playerRect.Intersects(Main.tilemap.hitboxes[i]))//still intersects?
+                            {
+                                playerRect.position.Y += velocity.Y;//revert it caus it must be X and Y
+                            }
+                            else//no? set the position accordingly
+                            {
+                                XorY = true;
+                                if (playerRect.position.Y > Main.tilemap.hitboxes[i].Bottom())
+                                {
+                                    playerRect.position.Y = Main.tilemap.hitboxes[i].Bottom();
+                                    velocity.Y = 0;
+                                }
+                                else if(playerRect.position.Y + playerRect.size.Y < Main.tilemap.hitboxes[i].Top())
+                                {
+                                    playerRect.position.Y = Main.tilemap.hitboxes[i].Top() - playerRect.size.Y;
+                                    velocity.Y = 0;
+                                }
+                            }
+                        }
+                        else//no? set the position accordingly
+                        {
+                            XorY = true;
+                            if(playerRect.position.X > Main.tilemap.hitboxes[i].Right())
+                            {
+                                playerRect.position.X = Main.tilemap.hitboxes[i].Right();
+                                velocity.X = 0;
+                            }
+                            else if(playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
+                            {
+                                playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
+                                velocity.X = 0;
+                            }
+                        }
+                        if (!XorY)//both must be needed
+                        {
+                            playerRect.position -= velocity;
+                            if (playerRect.position.X > Main.tilemap.hitboxes[i].Right())
+                            {
+                                playerRect.position.X = Main.tilemap.hitboxes[i].Right();
+                                velocity.X = 0;
+                            }
+                            else if (playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
+                            {
+                                playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
+                                velocity.X = 0;
+                            }
+                            if (playerRect.position.Y > Main.tilemap.hitboxes[i].Bottom())
+                            {
+                                playerRect.position.Y = Main.tilemap.hitboxes[i].Bottom();
+                                velocity.Y = 0;
+                            }
+                            else if (playerRect.position.Y + playerRect.size.Y < Main.tilemap.hitboxes[i].Top())
+                            {
+                                playerRect.position.Y = Main.tilemap.hitboxes[i].Top() - playerRect.size.Y;
+                                velocity.Y = 0;
+                            }
+                        }
                     }
                 }
+                position = playerRect.position;//set the new position
             }
-            return false;
         }
         public void Draw()
         {
-            rect.Location = position.ToPoint();
-            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(rect), color);
+            rect.position = position;
+            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(rect.toIntRect()), color);
         }
         public override string ToString()
         {
