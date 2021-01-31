@@ -79,7 +79,7 @@ namespace Platformer
         private void HandleCollision()
         {
             // Keep player in level bounds
-            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.tilemap.width * 50 - 50, Main.tilemap.height * 50 - 90)))
+            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.tilemap.width * Tile.TileSize.X - 50, Main.tilemap.height * Tile.TileSize.Y - 90)))
             {
                 position = spawnpoint;
                 velocity = Vector2.Zero;
@@ -89,7 +89,7 @@ namespace Platformer
                 //Handle collision by checking X first
                 //then Y then both and resolving
                 //it accordingly
-                RectangleF playerRect = new RectangleF((position + velocity).X, (position + velocity).Y, 50, 50);
+                RectangleF playerRect = new RectangleF((position + velocity).X, (position + velocity).Y, rect.size.X, rect.size.Y);
                 for (int i = 0; i < Main.tilemap.hitboxes.Count; i++)
                 {
                     if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
