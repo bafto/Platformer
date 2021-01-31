@@ -13,6 +13,10 @@ namespace Platformer
         {
             return Main.lastKeyboard.IsKeyUp(key) && Main.keyboard.IsKeyDown(key);
         }
+        public static Vector2 ToWorldCoords(this MouseState s)
+        {
+            return Main.camera.InverseTranslate(s.Position.ToVector2());
+        }
     }
     static class Helper
     {

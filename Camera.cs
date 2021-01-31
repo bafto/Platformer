@@ -40,5 +40,21 @@ namespace Platformer
         {
             return new RectangleF(rect.position.X - (int)camOffset.X, rect.position.Y - (int)camOffset.Y, rect.size.X, rect.size.Y).toIntRect();
         }
+        public Vector2 Translate(Vector2 vec)
+        {
+            return vec - camOffset;
+        }
+        public Rectangle InverseTranslate(Rectangle rect)
+        {
+            return new Rectangle(rect.X + (int)camOffset.X, rect.Y + (int)camOffset.Y, rect.Width, rect.Height);
+        }
+        public RectangleF InverseTranslate(RectangleF rect)
+        {
+            return new RectangleF(rect.position.X + camOffset.X, rect.position.Y + camOffset.Y, rect.size.X, rect.size.Y);
+        }
+        public Vector2 InverseTranslate(Vector2 vec)
+        {
+            return vec + camOffset;
+        }
     }
 }
