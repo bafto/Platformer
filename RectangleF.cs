@@ -42,6 +42,26 @@ namespace Platformer
             return rect.position.X + rect.size.X > position.X && rect.position.X < position.X + size.X &&
                 rect.position.Y + rect.size.Y > position.Y && rect.position.Y < position.Y + size.Y;
         }
+        public Vector2 Center()
+        {
+            return new Vector2(position.X + size.X / 2, position.Y + size.Y / 2);
+        }
+        public float Top()
+        {
+            return position.Y;
+        }
+        public float Bottom()
+        {
+            return position.Y + size.Y;
+        }
+        public float Left()
+        {
+            return position.X;
+        }
+        public float Right()
+        {
+            return position.X + size.X;
+        }
         public bool Equals(RectangleF other)
         {
             return position == other.position && size == other.size;
