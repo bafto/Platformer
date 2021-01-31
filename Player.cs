@@ -106,35 +106,32 @@ namespace Platformer
                 //then Y then both and resolving
                 //it accordingly
                 RectangleF playerRect = new RectangleF((position + velocity).X, (position + velocity).Y, 50, 50);
-                for (int x = 0; x < Main.tilemap.width; x++)
+                for (int i = 0; i < Main.tilemap.hitboxes.Count; i++)
                 {
-                    for (int y = 0; y < Main.tilemap.height; y++)
+                    if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
                     {
-                        if (Main.tilemap.tiles[x, y].TileID != 0 && playerRect.Intersects(Main.tilemap.tiles[x, y].rect))
+                        bool XorY = false;
+                        playerRect.position.X -= velocity.X;//try only x intersection
+                        if (playerRect.Intersects(Main.tilemap.hitboxes[i]))//still intersects?
                         {
-                            bool XorY = false;
-                            playerRect.position.X -= velocity.X;
-                            if (playerRect.Intersects(Main.tilemap.tiles[x, y].rect))
+                            playerRect.position.X += velocity.X;
+                            playerRect.position.Y -= velocity.Y;//try only y intersection
+                            if (playerRect.Intersects(Main.tilemap.hitboxes[i]))//still intersects?
                             {
-                                playerRect.position.X += velocity.X;
-                                playerRect.position.Y -= velocity.Y;
-                                if (playerRect.Intersects(Main.tilemap.tiles[x, y].rect))
-                                {
-                                    playerRect.position.Y += velocity.Y;
-                                }
-                                else
-                                {
-                                    XorY = true;
-                                }
+                                playerRect.position.Y += velocity.Y;
                             }
                             else
                             {
                                 XorY = true;
                             }
-                            if (!XorY)
-                            {
-                                playerRect.position -= velocity;
-                            }
+                        }
+                        else
+                        {
+                            XorY = true;
+                        }
+                        if (!XorY)//both must be needed
+                        {
+                            playerRect.position -= velocity;
                         }
                     }
                 }
