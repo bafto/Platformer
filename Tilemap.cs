@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace Platformer
@@ -11,12 +9,11 @@ namespace Platformer
         public Tile[,] tiles;
         private TextureMap texMap;//Holds all the Textures and handles loading them in
         public List<RectangleF> hitboxes;
-        public readonly int width = 40;
-        public readonly int height = 22;
+        public int width;
+        public int height;
 
         public Tilemap(string file)
         {
-            tiles = new Tile[width, height];
             texMap = new TextureMap();
             hitboxes = new List<RectangleF>();
             Initialize(file);
@@ -26,6 +23,10 @@ namespace Platformer
             string[] lines = File.ReadAllLines(file);
             //Load Textures from File (texMap handles this)
             texMap.Initialize(Main.currentDirectory + @"\\" + lines[0]);
+
+            height = lines.Length - 2;
+            width = lines[2].Length;
+            tiles = new Tile[width, height];
             //Read Map from File and construct tiles
             for (int y = 0; y < height; y++)
             {
@@ -45,22 +46,22 @@ namespace Platformer
         }
         private void MakeHitboxes()//Merge the tile rects together (Don't ask how it works. Please)
         {
-            for(int x = 0; x < width; x++)
+            for (int x = 0; x < width; x++)
             {
-                for(int y = 0; y < height; y++)
+                for (int y = 0; y < height; y++)
                 {
-                    if(tiles[x, y].TileID != 0 && !tiles[x, y].inHitbox)
+                    if (tiles[x, y].TileID != 0 && !tiles[x, y].inHitbox)
                     {
                         RectangleF newHitbox = new RectangleF(tiles[x, y].rect);
                         tiles[x, y].inHitbox = true;
                         bool firstLoop = true, breaked = false;
                         int xEnd = 0;
-                        for(int yy = y; yy < height; yy++)
+                        for (int yy = y; yy < height; yy++)
                         {
                             int xx = x + 1;
                             if (firstLoop)
                             {
-                                for(; xx < width && tiles[xx, yy].TileID != 0 && !tiles[xx, yy].inHitbox; xx++)
+                                for (; xx < width && tiles[xx, yy].TileID != 0 && !tiles[xx, yy].inHitbox; xx++)
                                 {
                                     newHitbox.size.X += Tile.TileSize.X;
                                     tiles[xx, yy].inHitbox = true;
@@ -75,7 +76,7 @@ namespace Platformer
                                     tiles[xx, yy].inHitbox = true;
                                 }
                             }
-                            if(xx != xEnd)
+                            if (xx != xEnd)
                             {
                                 newHitbox.size.Y -= Tile.TileSize.Y;
                                 breaked = true;
@@ -87,7 +88,7 @@ namespace Platformer
                             }
                             newHitbox.size.Y += Tile.TileSize.Y;
                         }
-                        if(!breaked)
+                        if (!breaked)
                         {
                             newHitbox.size.Y -= Tile.TileSize.Y;
                         }
@@ -99,6 +100,17 @@ namespace Platformer
         public static Tile GetTileAtPos(Vector2 pos)
         {
             return Main.tilemap.tiles[(int)(pos.X / Tile.TileSize.X), (int)(pos.Y / Tile.TileSize.Y)];
+        }
+        public bool Collides(RectangleF rect)
+        {
+            for (int i = 0; i < hitboxes.Count; i++)
+            {
+                if (rect.Intersects(hitboxes[i]))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         public void Update() //do we even need this? Maybe, so it will stay here.
         {

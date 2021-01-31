@@ -24,7 +24,7 @@ namespace Platformer
             camOffset = Main.player.position - ViewportSize - Main.player.rect.size / 2;
 
             //clamp it to world coordinates
-            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset / 6);
+            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset);
         }
 
         /// <summary>

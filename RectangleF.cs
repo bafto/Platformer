@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
 
 namespace Platformer
 {
@@ -11,6 +6,7 @@ namespace Platformer
     {
         public Vector2 position;
         public Vector2 size;
+
         public RectangleF(Vector2 pos, Vector2 size)
         {
             position = pos;
