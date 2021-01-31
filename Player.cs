@@ -9,13 +9,15 @@ namespace Platformer
         public Vector2 position;
         public Vector2 lastPosition;
         public Color color;
-        public float maxSpeed;
+        public float maxWalkSpeed;
         public Vector2 velocity;
         private float moveTimer;
         public float acceleration;
         public float drag;
         public bool grounded;
         public float jumpspeed;
+        public float maxJumpSpeed;
+        public float maxFallSpeed;
         public Vector2 spawnpoint;
 
         public Player()
@@ -28,10 +30,12 @@ namespace Platformer
             position = spawnpoint;
             rect = new RectangleF(0, 0, 50, 50);
             color = Color.Red;
-            maxSpeed = 10f;
+            maxWalkSpeed = 10f;
+            maxJumpSpeed = 1200f;
+            maxFallSpeed = -10f;
             acceleration = 2f;
             drag = 20;
-            jumpspeed = 450f;
+            jumpspeed = 1000f;
         }
 
         public void Update()
@@ -48,13 +52,13 @@ namespace Platformer
 
             if (velocity.X != 0)
             {
-                velocity = Vector2.Lerp(velocity, Vector2.Zero, moveTimer / drag);
+                velocity.X = MathHelper.Lerp(velocity.X, 0, moveTimer / drag);
             }
 
             HandleInput();
 
             // Clamp Velocity
-            velocity = Vector2.Clamp(velocity, new Vector2(-maxSpeed), new Vector2(maxSpeed));
+            velocity = Vector2.Clamp(velocity, new Vector2(-maxWalkSpeed, maxFallSpeed), new Vector2(maxWalkSpeed, maxJumpSpeed));
 
             //resolve collision and set position
             HandleCollision();
@@ -67,11 +71,11 @@ namespace Platformer
             // Handle input
             if (Main.keyboard.IsKeyDown(Keys.A))
             {
-                velocity.X -= MathHelper.Lerp(velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
+                velocity.X -= MathHelper.Lerp(velocity.X, maxWalkSpeed, moveTimer) * acceleration * Main.deltaTime;
             }
             if (Main.keyboard.IsKeyDown(Keys.D))
             {
-                velocity.X += MathHelper.Lerp(velocity.X, maxSpeed, moveTimer) * acceleration * Main.deltaTime;
+                velocity.X += MathHelper.Lerp(velocity.X, maxWalkSpeed, moveTimer) * acceleration * Main.deltaTime;
             }
             if (grounded && Main.keyboard.JustPressed(Keys.W))
             {
