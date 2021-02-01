@@ -32,11 +32,11 @@ namespace Platformer
             rect = new RectangleF(0, 0, 50, 50);
             color = Color.Red;
             maxWalkSpeed = 10f;
-            maxJumpSpeed = 700f;
-            maxFallSpeed = -15f;
+            maxJumpSpeed = 16f;//if the same as jumpspeed it does nothing, if lower it limits jumpspeed, if higher it enables a mechanic
+            maxFallSpeed = 15f;
             acceleration = 2f;
             drag = 20;
-            jumpspeed = 700f;
+            jumpspeed = 12.5f;
         }
 
         public void Update()
@@ -48,18 +48,22 @@ namespace Platformer
             // gravity
             if (!grounded)
             {
-                velocity.Y += 25f * Main.deltaTime;
+                //at 25 ceiling is sticky, but at 26 it seems fixed? needs further investigation.
+                //we could use this as a mechanic later on tho
+                velocity.Y += 26f * Main.deltaTime;
             }
 
+            //drag so the player slows on X movement
             if (velocity.X != 0)
             {
                 velocity.X = MathHelper.Lerp(velocity.X, 0, moveTimer / drag);
             }
 
+            //mainly handles jumping and movement
             HandleInput();
 
             // Clamp Velocity
-            velocity = Vector2.Clamp(velocity, new Vector2(-maxWalkSpeed, maxFallSpeed), new Vector2(maxWalkSpeed, maxJumpSpeed));
+            velocity = Vector2.Clamp(velocity, new Vector2(-maxWalkSpeed, -maxJumpSpeed), new Vector2(maxWalkSpeed, maxFallSpeed));
 
             //resolve collision and set position
             HandleCollision();
@@ -86,7 +90,7 @@ namespace Platformer
             }
             if (grounded && Main.keyboard.JustPressed(Keys.W))
             {
-                velocity.Y -= jumpspeed * Main.deltaTime;
+                velocity.Y -= jumpspeed;
             }
             if (moveTimer >= 1)
             {
@@ -113,13 +117,11 @@ namespace Platformer
                     {
                         bool XorY = false;
                         playerRect.position.X -= velocity.X;//try only x intersection
-                                                            //still intersects?
-                        if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
+                        if (playerRect.Intersects(Main.tilemap.hitboxes[i]))//still intersects?
                         {
                             playerRect.position.X += velocity.X;
                             playerRect.position.Y -= velocity.Y;//try only y intersection
-                                                                //still intersects?
-                            if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
+                            if (playerRect.Intersects(Main.tilemap.hitboxes[i]))//still intersects?
                             {
                                 //revert it cause it must be X and Y
                                 playerRect.position.Y += velocity.Y;
@@ -178,7 +180,7 @@ namespace Platformer
                                 velocity.Y = 0;
                             }
                         }
-                        if(playerRect.Intersects(Main.tilemap.hitboxes[i]))
+                        if(playerRect.Intersects(Main.tilemap.hitboxes[i]))//if he still intersects(aka velocity was 0) set him ontop of the Hitbox
                         {
                             playerRect.position = new Vector2(playerRect.position.X, Main.tilemap.hitboxes[i].position.Y - rect.size.Y);
                         }
