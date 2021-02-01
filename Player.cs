@@ -110,22 +110,64 @@ namespace Platformer
                 {
                     if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
                     {
-                        bool XorY = false;
-                        playerRect.position.X -= velocity.X;//try only x intersection
-                        //still intersects?
-                        if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
+                        if (velocity != Vector2.Zero)
                         {
-                            playerRect.position.X += velocity.X;
-                            playerRect.position.Y -= velocity.Y;//try only y intersection
-                            //still intersects?
+                            bool XorY = false;
+                            playerRect.position.X -= velocity.X;//try only x intersection
+                                                                //still intersects?
                             if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
                             {
-                                //revert it cause it must be X and Y
-                                playerRect.position.Y += velocity.Y;
+                                playerRect.position.X += velocity.X;
+                                playerRect.position.Y -= velocity.Y;//try only y intersection
+                                                                    //still intersects?
+                                if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
+                                {
+                                    //revert it cause it must be X and Y
+                                    playerRect.position.Y += velocity.Y;
+                                }
+                                else//no? set the position accordingly
+                                {
+                                    XorY = true;
+                                    if (playerRect.position.Y > Main.tilemap.hitboxes[i].Bottom())
+                                    {
+                                        playerRect.position.Y = Main.tilemap.hitboxes[i].Bottom();
+                                        velocity.Y = 0;
+                                    }
+                                    else if (playerRect.position.Y + playerRect.size.Y < Main.tilemap.hitboxes[i].Top())
+                                    {
+                                        playerRect.position.Y = Main.tilemap.hitboxes[i].Top() - playerRect.size.Y;
+                                        velocity.Y = 0;
+                                    }
+                                }
                             }
-                            else//no? set the position accordingly
+                            else //no? set the position accordingly
                             {
                                 XorY = true;
+                                if (playerRect.position.X > Main.tilemap.hitboxes[i].Right())
+                                {
+                                    playerRect.position.X = Main.tilemap.hitboxes[i].Right();
+                                    velocity.X = 0;
+                                }
+                                else if (playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
+                                {
+                                    playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
+                                    velocity.X = 0;
+                                }
+                            }
+                            //both must be needed
+                            if (!XorY)
+                            {
+                                playerRect.position -= velocity;
+                                if (playerRect.position.X > Main.tilemap.hitboxes[i].Right())
+                                {
+                                    playerRect.position.X = Main.tilemap.hitboxes[i].Right();
+                                    velocity.X = 0;
+                                }
+                                else if (playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
+                                {
+                                    playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
+                                    velocity.X = 0;
+                                }
                                 if (playerRect.position.Y > Main.tilemap.hitboxes[i].Bottom())
                                 {
                                     playerRect.position.Y = Main.tilemap.hitboxes[i].Bottom();
@@ -138,44 +180,9 @@ namespace Platformer
                                 }
                             }
                         }
-                        else //no? set the position accordingly
+                        else
                         {
-                            XorY = true;
-                            if (playerRect.position.X > Main.tilemap.hitboxes[i].Right())
-                            {
-                                playerRect.position.X = Main.tilemap.hitboxes[i].Right();
-                                velocity.X = 0;
-                            }
-                            else if (playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
-                            {
-                                playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
-                                velocity.X = 0;
-                            }
-                        }
-                        //both must be needed
-                        if (!XorY)
-                        {
-                            playerRect.position -= velocity;
-                            if (playerRect.position.X > Main.tilemap.hitboxes[i].Right())
-                            {
-                                playerRect.position.X = Main.tilemap.hitboxes[i].Right();
-                                velocity.X = 0;
-                            }
-                            else if (playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
-                            {
-                                playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
-                                velocity.X = 0;
-                            }
-                            if (playerRect.position.Y > Main.tilemap.hitboxes[i].Bottom())
-                            {
-                                playerRect.position.Y = Main.tilemap.hitboxes[i].Bottom();
-                                velocity.Y = 0;
-                            }
-                            else if (playerRect.position.Y + playerRect.size.Y < Main.tilemap.hitboxes[i].Top())
-                            {
-                                playerRect.position.Y = Main.tilemap.hitboxes[i].Top() - playerRect.size.Y;
-                                velocity.Y = 0;
-                            }
+
                         }
                     }
                 }
