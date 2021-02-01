@@ -25,11 +25,7 @@ namespace Platformer
             for (int i = 0; i < lines.Length; i++)
             {
                 string[] line = lines[i].Split(' ');
-                if (line.Length == 2)//Loading a single png without srcRect like before
-                {
-                    textures.Add(int.Parse(line[0]), Main.LoadTexture(line[1]));
-                }
-                else if (line.Length == 6)//Loading from a Tileset with a srcRect
+                if (line.Length == 6) //Loading from a Tileset with a srcRect
                 {
                     Rectangle srcRect = new Rectangle(int.Parse(line[2]), int.Parse(line[3]), int.Parse(line[4]), int.Parse(line[5]));
                     textures.Add(int.Parse(line[0]), Main.LoadTexturePart(line[1], srcRect));
