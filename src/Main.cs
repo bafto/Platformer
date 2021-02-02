@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace Platformer
+namespace Platformer.src
 {
     public class Main : Game
     {
@@ -58,7 +58,7 @@ namespace Platformer
         protected override void Initialize()
         {
             player = new Player();
-            tilemap = new Tilemap(currentDirectory + @"\level0.level");
+            tilemap = new Tilemap(currentDirectory + @"\levels\level0.level");
             camera = new Camera();
 
             var evt = new EventTrigger(new Rectangle(500, 1000, 500, 500));

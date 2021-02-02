@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace Platformer
+namespace Platformer.src
 {
     //The whole class is essentially a wrapper
     //for a <int, Texture2D> Dictionary and handles

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Platformer
+namespace Platformer.src
 {
     public static class Program
     {

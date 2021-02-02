@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Platformer
+namespace Platformer.src
 {
     class EventTrigger
     {

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 
-namespace Platformer
+namespace Platformer.src
 {
     public class Player
     {
@@ -37,7 +37,7 @@ namespace Platformer
             maxFallSpeed = 15f;
             acceleration = 2f;
             drag = 5;
-            jumpspeed = 12.5f;
+            jumpspeed = 13f;
             gravity = 25f;
         }
 

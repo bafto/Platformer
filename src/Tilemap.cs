@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Platformer
+namespace Platformer.src
 {
     public class Tilemap
     {
@@ -22,7 +22,7 @@ namespace Platformer
         {
             string[] lines = File.ReadAllLines(file);
             //Load Textures from File (texMap handles this)
-            texMap.Initialize(Main.currentDirectory + @"\\" + lines[0]);
+            texMap.Initialize(Main.currentDirectory + @"\levels\" + lines[0]);
 
             height = lines.Length - 2;
             width = lines[2].Length;
