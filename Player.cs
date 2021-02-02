@@ -10,15 +10,16 @@ namespace Platformer
         public Vector2 position;
         public Vector2 lastPosition;
         public Color color;
-        public float maxWalkSpeed;
         public Vector2 velocity;
-        private float moveTimer;
-        public float acceleration;
-        public float drag;
         public bool grounded;
+        private float moveTimer;
+        public float drag;
+        public float acceleration;
         public float jumpspeed;
         public float maxJumpSpeed;
         public float maxFallSpeed;
+        public float maxWalkSpeed;
+        public float gravity;
         public Vector2 spawnpoint;
 
         public Player()
@@ -35,8 +36,9 @@ namespace Platformer
             maxJumpSpeed = 16f;//if the same as jumpspeed it does nothing, if lower it limits jumpspeed, if higher it enables a mechanic
             maxFallSpeed = 15f;
             acceleration = 2f;
-            drag = 20;
+            drag = 5;
             jumpspeed = 12.5f;
+            gravity = 25f;
         }
 
         public void Update()
@@ -48,15 +50,7 @@ namespace Platformer
             // gravity
             if (!grounded)
             {
-                //at 25 ceiling is sticky, but at 26 it seems fixed? needs further investigation.
-                //we could use this as a mechanic later on tho
-                velocity.Y += 26f * Main.deltaTime;
-            }
-
-            //drag so the player slows on X movement
-            if (velocity.X != 0)
-            {
-                velocity.X = MathHelper.Lerp(velocity.X, 0, moveTimer / drag);
+                velocity.Y += gravity * Main.deltaTime;
             }
 
             //mainly handles jumping and movement
@@ -72,10 +66,14 @@ namespace Platformer
         {
             // increment timer. value represents how fast the player will reach maxSpeed
             moveTimer += Main.deltaTime * 10;
+            if (moveTimer > 1)
+            {
+                moveTimer = 0;
+            }
 
             // Handle input
 #if DEBUG
-            if(Main.LeftClick)
+            if (Main.LeftClick)
             {
                 position = Main.mouse.ToWorldCoords() - rect.size / 2;
             }
@@ -92,9 +90,10 @@ namespace Platformer
             {
                 velocity.Y -= jumpspeed;
             }
-            if (moveTimer >= 1)
+            //drag so the player slows on X movement
+            if(velocity.X != 0 && !(Main.keyboard.IsKeyDown(Keys.A) || Main.keyboard.IsKeyDown(Keys.D)) && grounded)
             {
-                moveTimer = 0;
+                velocity.X = MathHelper.Lerp(velocity.X, 0, moveTimer / 3);
             }
         }
         private void HandleCollision()
@@ -110,7 +109,7 @@ namespace Platformer
                 //Handle collision by checking X first
                 //then Y then both and resolving
                 //it accordingly
-                RectangleF playerRect = new RectangleF((position + velocity).X, (position + velocity).Y, rect.size.X, rect.size.Y);
+                RectangleF playerRect = new RectangleF(position + velocity, rect.size);
                 for (int i = 0; i < Main.tilemap.hitboxes.Count; i++)
                 {
                     if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
@@ -139,6 +138,10 @@ namespace Platformer
                                     playerRect.position.Y = Main.tilemap.hitboxes[i].Top() - playerRect.size.Y;
                                     velocity.Y = 0;
                                 }
+                                else
+                                {
+                                    velocity.Y = 0;
+                                }
                             }
                         }
                         else //no? set the position accordingly
@@ -152,6 +155,10 @@ namespace Platformer
                             else if (playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
                             {
                                 playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
+                                velocity.X = 0;
+                            }
+                            else
+                            {
                                 velocity.X = 0;
                             }
                         }
@@ -169,6 +176,10 @@ namespace Platformer
                                 playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
                                 velocity.X = 0;
                             }
+                            else
+                            {
+                                velocity.X = 0;
+                            }
                             if (playerRect.position.Y > Main.tilemap.hitboxes[i].Bottom())
                             {
                                 playerRect.position.Y = Main.tilemap.hitboxes[i].Bottom();
@@ -177,6 +188,10 @@ namespace Platformer
                             else if (playerRect.position.Y + playerRect.size.Y < Main.tilemap.hitboxes[i].Top())
                             {
                                 playerRect.position.Y = Main.tilemap.hitboxes[i].Top() - playerRect.size.Y;
+                                velocity.Y = 0;
+                            }
+                            else
+                            {
                                 velocity.Y = 0;
                             }
                         }
