@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace Platformer
@@ -17,6 +18,7 @@ namespace Platformer
         public static Rectangle screen;
         public static float deltaTime { get; private set; }
         public static string currentDirectory => Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        public static bool DebugMode = true;
 
         // input stuff
         public static MouseState mouse = Mouse.GetState();
@@ -60,7 +62,7 @@ namespace Platformer
             camera = new Camera();
 
             var evt = new EventTrigger(new Rectangle(500, 1000, 500, 500));
-            evt.OnPlayerInside += (plr) => Main.player.position = Vector2.Zero;
+            evt.OnPlayerExit += (plr) => Debug.WriteLine("yes");
             base.Initialize();
         }
 
@@ -89,15 +91,15 @@ namespace Platformer
             //Update Tilemap...Does nothing, but maybe we will add that later
             tilemap.Update();
 
+            // Update Event triggers
+            for (int i = 0; i < EventTrigger.triggers.Count; i++)
+                EventTrigger.triggers[i].Update();
+
             // Update Player
             player.Update();
 
             // Update Camera
             camera.Update();
-
-            // Update Event triggers
-            for (int i = 0; i < EventTrigger.triggers.Count; i++)
-                EventTrigger.triggers[i].Update();
 
             base.Update(gameTime);
         }
@@ -112,6 +114,11 @@ namespace Platformer
             tilemap.Draw();
             // Draw Player
             player.Draw();
+            if (DebugMode)
+            {
+                for (int i = 0; i < EventTrigger.triggers.Count; i++)
+                    EventTrigger.triggers[i].Draw();
+            }
 
             spriteBatch.End();
 
