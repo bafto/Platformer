@@ -35,11 +35,8 @@ namespace Platformer.src
 
         //Game Stuff
         public static Player player;
-        public static Tilemap tilemap;
+        public static Level level;
         public static Camera camera;
-
-        //Test Stuff revert later
-
 
         public Main()
         {
@@ -58,7 +55,7 @@ namespace Platformer.src
         protected override void Initialize()
         {
             player = new Player();
-            tilemap = new Tilemap(currentDirectory + @"\levels\level0.level");
+            level = new Level(currentDirectory + @"\levels\level0.level");
             camera = new Camera();
 
             base.Initialize();
@@ -87,7 +84,7 @@ namespace Platformer.src
             UpdateInput();
 
             //Update Tilemap...Does nothing, but maybe we will add that later
-            tilemap.Update();
+            level.Update();
 
             // Update Player
             player.Update();
@@ -105,7 +102,7 @@ namespace Platformer.src
             spriteBatch.Begin();
 
             // Draw Tiles before player to not cover him
-            tilemap.Draw();
+            level.Draw();
             // Draw Player
             player.Draw();
 

@@ -7,7 +7,13 @@ namespace Platformer.src
 {
     class EventTrigger
     {
-        public delegate void PlayerEventArgs(Player plr);
+        //the different event types as enum for readability if we have many
+        public enum EventType
+        {
+            LevelLoader = 0
+        }
+
+        public delegate void PlayerEventArgs();
         public Vector2 Position;
         public int Width;
         public int Height;
@@ -15,45 +21,50 @@ namespace Platformer.src
         public event PlayerEventArgs OnPlayerInside;
         public event PlayerEventArgs OnPlayerEnter;
         public event PlayerEventArgs OnPlayerExit;
+        public EventType eventType;
+        public string nextLevel;
 
-        public EventTrigger(Vector2 pos, int width, int height, List<EventTrigger> l)
+        public EventTrigger(Vector2 pos, int width, int height, EventType eventType)
         {
+            this.eventType = eventType;
+            nextLevel = new string("");
             Position = pos;
             Width = width;
             Height = height;
             bounds = new Rectangle(pos.ToPoint(), new Point(Width, Height));
-            l.Add(this);
         }
-        public EventTrigger(Vector2 pos, Vector2 size, List<EventTrigger> l)
+        public EventTrigger(Vector2 pos, Vector2 size, EventType eventType)
         {
+            this.eventType = eventType;
+            nextLevel = new string("");
             bounds = new Rectangle(pos.ToPoint(), size.ToPoint());
             Position = pos;
             Width = (int)size.X;
             Height = (int)size.Y;
-            l.Add(this);
         }
-        public EventTrigger(Rectangle rect, List<EventTrigger> l)
+        public EventTrigger(Rectangle rect, EventType eventType)
         {
+            this.eventType = eventType;
+            nextLevel = new string("");
             bounds = rect;
             Position = new Vector2(rect.X, rect.Y);
             Width = rect.Size.X;
             Height = rect.Size.Y;
-            l.Add(this);
         }
         public void Update()
         {
             var lastplayerrect = new Rectangle(Main.player.lastPosition.ToPoint(), new Point(50, 50));
             if (Main.player.rect.Intersects(bounds))
             {
-                OnPlayerInside?.Invoke(Main.player);
+                OnPlayerInside?.Invoke();
             }
             if (Main.player.rect.Intersects(bounds) && !lastplayerrect.Intersects(bounds))
             {
-                OnPlayerEnter?.Invoke(Main.player);
+                OnPlayerEnter?.Invoke();
             }
             if (!Main.player.rect.Intersects(bounds) && lastplayerrect.Intersects(bounds))
             {
-                OnPlayerExit?.Invoke(Main.player);
+                OnPlayerExit?.Invoke();
             }
         }
         public void Draw() => Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(bounds), Color.Red * 0.5f);

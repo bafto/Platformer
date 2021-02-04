@@ -12,17 +12,16 @@ namespace Platformer.src
         public int width;
         public int height;
 
-        public Tilemap(string file)
+        public Tilemap(string[] lines)
         {
             texMap = new TextureMap();
             hitboxes = new List<RectangleF>();
-            Initialize(file);
+            Initialize(lines);
         }
-        private void Initialize(string file)
+        private void Initialize(string[] lines)
         {
-            string[] lines = File.ReadAllLines(file);
             //Load Textures from File (texMap handles this)
-            texMap.Initialize(Main.currentDirectory + @"\levels\" + lines[0]);
+            texMap.Initialize(Main.currentDirectory + @"\levels\" + lines[1]);
 
             height = lines.Length - 2;
             width = lines[2].Length;
@@ -99,7 +98,7 @@ namespace Platformer.src
         }
         public static Tile GetTileAtPos(Vector2 pos)
         {
-            return Main.tilemap.tiles[(int)(pos.X / Tile.TileSize.X), (int)(pos.Y / Tile.TileSize.Y)];
+            return Main.level.tilemap.tiles[(int)(pos.X / Tile.TileSize.X), (int)(pos.Y / Tile.TileSize.Y)];
         }
         public bool Collides(RectangleF rect)
         {

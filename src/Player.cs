@@ -20,7 +20,6 @@ namespace Platformer.src
         public float maxFallSpeed;
         public float maxWalkSpeed;
         public float gravity;
-        public Vector2 spawnpoint;
 
         public Player()
         {
@@ -28,8 +27,7 @@ namespace Platformer.src
         }
         public void Initialize()
         {
-            spawnpoint = new Vector2(300, 1550);
-            position = spawnpoint;
+            position = Vector2.Zero;
             rect = new RectangleF(0, 0, 50, 50);
             color = Color.Red;
             maxWalkSpeed = 10f;
@@ -45,7 +43,7 @@ namespace Platformer.src
         {
             lastPosition = position;
 
-            grounded = Main.tilemap.Collides(new RectangleF(position.X, position.Y + 1, rect.size.X, rect.size.Y));
+            grounded = Main.level.tilemap.Collides(new RectangleF(position.X, position.Y + 1, rect.size.X, rect.size.Y));
 
             // gravity
             if (!grounded)
@@ -99,9 +97,9 @@ namespace Platformer.src
         private void HandleCollision()
         {
             // Keep player in level bounds
-            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.tilemap.width * Tile.TileSize.X - 50, Main.tilemap.height * Tile.TileSize.Y - 90)))
+            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.level.tilemap.width * Tile.TileSize.X - 50, Main.level.tilemap.height * Tile.TileSize.Y - 90)))
             {
-                position = spawnpoint;
+                position = Main.level.spawnPoint;
                 velocity = Vector2.Zero;
             }
             else
@@ -110,17 +108,17 @@ namespace Platformer.src
                 //then Y then both and resolving
                 //it accordingly
                 RectangleF playerRect = new RectangleF(position + velocity, rect.size);
-                for (int i = 0; i < Main.tilemap.hitboxes.Count; i++)
+                for (int i = 0; i < Main.level.tilemap.hitboxes.Count; i++)
                 {
-                    if (playerRect.Intersects(Main.tilemap.hitboxes[i]))
+                    if (playerRect.Intersects(Main.level.tilemap.hitboxes[i]))
                     {
                         bool XorY = false;
                         playerRect.position.X -= velocity.X;//try only x intersection
-                        if (playerRect.Intersects(Main.tilemap.hitboxes[i]))//still intersects?
+                        if (playerRect.Intersects(Main.level.tilemap.hitboxes[i]))//still intersects?
                         {
                             playerRect.position.X += velocity.X;
                             playerRect.position.Y -= velocity.Y;//try only y intersection
-                            if (playerRect.Intersects(Main.tilemap.hitboxes[i]))//still intersects?
+                            if (playerRect.Intersects(Main.level.tilemap.hitboxes[i]))//still intersects?
                             {
                                 //revert it cause it must be X and Y
                                 playerRect.position.Y += velocity.Y;
@@ -128,14 +126,14 @@ namespace Platformer.src
                             else//no? set the position accordingly
                             {
                                 XorY = true;
-                                if (playerRect.position.Y > Main.tilemap.hitboxes[i].Bottom())
+                                if (playerRect.position.Y > Main.level.tilemap.hitboxes[i].Bottom())
                                 {
-                                    playerRect.position.Y = Main.tilemap.hitboxes[i].Bottom();
+                                    playerRect.position.Y = Main.level.tilemap.hitboxes[i].Bottom();
                                     velocity.Y = 0;
                                 }
-                                else if (playerRect.position.Y + playerRect.size.Y < Main.tilemap.hitboxes[i].Top())
+                                else if (playerRect.position.Y + playerRect.size.Y < Main.level.tilemap.hitboxes[i].Top())
                                 {
-                                    playerRect.position.Y = Main.tilemap.hitboxes[i].Top() - playerRect.size.Y;
+                                    playerRect.position.Y = Main.level.tilemap.hitboxes[i].Top() - playerRect.size.Y;
                                     velocity.Y = 0;
                                 }
                                 else
@@ -147,14 +145,14 @@ namespace Platformer.src
                         else //no? set the position accordingly
                         {
                             XorY = true;
-                            if (playerRect.position.X > Main.tilemap.hitboxes[i].Right())
+                            if (playerRect.position.X > Main.level.tilemap.hitboxes[i].Right())
                             {
-                                playerRect.position.X = Main.tilemap.hitboxes[i].Right();
+                                playerRect.position.X = Main.level.tilemap.hitboxes[i].Right();
                                 velocity.X = 0;
                             }
-                            else if (playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
+                            else if (playerRect.position.X + playerRect.size.X < Main.level.tilemap.hitboxes[i].Left())
                             {
-                                playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
+                                playerRect.position.X = Main.level.tilemap.hitboxes[i].Left() - playerRect.size.X;
                                 velocity.X = 0;
                             }
                             else
@@ -166,28 +164,28 @@ namespace Platformer.src
                         if (!XorY)
                         {
                             playerRect.position -= velocity;
-                            if (playerRect.position.X > Main.tilemap.hitboxes[i].Right())
+                            if (playerRect.position.X > Main.level.tilemap.hitboxes[i].Right())
                             {
-                                playerRect.position.X = Main.tilemap.hitboxes[i].Right();
+                                playerRect.position.X = Main.level.tilemap.hitboxes[i].Right();
                                 velocity.X = 0;
                             }
-                            else if (playerRect.position.X + playerRect.size.X < Main.tilemap.hitboxes[i].Left())
+                            else if (playerRect.position.X + playerRect.size.X < Main.level.tilemap.hitboxes[i].Left())
                             {
-                                playerRect.position.X = Main.tilemap.hitboxes[i].Left() - playerRect.size.X;
+                                playerRect.position.X = Main.level.tilemap.hitboxes[i].Left() - playerRect.size.X;
                                 velocity.X = 0;
                             }
                             else
                             {
                                 velocity.X = 0;
                             }
-                            if (playerRect.position.Y > Main.tilemap.hitboxes[i].Bottom())
+                            if (playerRect.position.Y > Main.level.tilemap.hitboxes[i].Bottom())
                             {
-                                playerRect.position.Y = Main.tilemap.hitboxes[i].Bottom();
+                                playerRect.position.Y = Main.level.tilemap.hitboxes[i].Bottom();
                                 velocity.Y = 0;
                             }
-                            else if (playerRect.position.Y + playerRect.size.Y < Main.tilemap.hitboxes[i].Top())
+                            else if (playerRect.position.Y + playerRect.size.Y < Main.level.tilemap.hitboxes[i].Top())
                             {
-                                playerRect.position.Y = Main.tilemap.hitboxes[i].Top() - playerRect.size.Y;
+                                playerRect.position.Y = Main.level.tilemap.hitboxes[i].Top() - playerRect.size.Y;
                                 velocity.Y = 0;
                             }
                             else
@@ -195,9 +193,9 @@ namespace Platformer.src
                                 velocity.Y = 0;
                             }
                         }
-                        if(playerRect.Intersects(Main.tilemap.hitboxes[i]))//if he still intersects(aka velocity was 0) set him ontop of the Hitbox
+                        if(playerRect.Intersects(Main.level.tilemap.hitboxes[i]))//if he still intersects(aka velocity was 0) set him ontop of the Hitbox
                         {
-                            playerRect.position = new Vector2(playerRect.position.X, Main.tilemap.hitboxes[i].position.Y - rect.size.Y);
+                            playerRect.position = new Vector2(playerRect.position.X, Main.level.tilemap.hitboxes[i].position.Y - rect.size.Y);
                         }
                     }
                 }
