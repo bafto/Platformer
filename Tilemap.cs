@@ -18,7 +18,7 @@ namespace Platformer
             hitboxes = new List<RectangleF>();
             Initialize(file);
         }
-        public void Initialize(string file)
+        private void Initialize(string file)
         {
             string[] lines = File.ReadAllLines(file);
             //Load Textures from File (texMap handles this)

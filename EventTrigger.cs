@@ -15,31 +15,30 @@ namespace Platformer
         public event PlayerEventArgs OnPlayerInside;
         public event PlayerEventArgs OnPlayerEnter;
         public event PlayerEventArgs OnPlayerExit;
-        public static List<EventTrigger> triggers = new List<EventTrigger>();
 
-        public EventTrigger(Vector2 pos, int width, int height)
+        public EventTrigger(Vector2 pos, int width, int height, List<EventTrigger> l)
         {
             Position = pos;
             Width = width;
             Height = height;
             bounds = new Rectangle(pos.ToPoint(), new Point(Width, Height));
-            triggers.Add(this);
+            l.Add(this);
         }
-        public EventTrigger(Vector2 pos, Vector2 size)
+        public EventTrigger(Vector2 pos, Vector2 size, List<EventTrigger> l)
         {
             bounds = new Rectangle(pos.ToPoint(), size.ToPoint());
             Position = pos;
             Width = (int)size.X;
             Height = (int)size.Y;
-            triggers.Add(this);
+            l.Add(this);
         }
-        public EventTrigger(Rectangle rect)
+        public EventTrigger(Rectangle rect, List<EventTrigger> l)
         {
             bounds = rect;
             Position = new Vector2(rect.X, rect.Y);
             Width = rect.Size.X;
             Height = rect.Size.Y;
-            triggers.Add(this);
+            l.Add(this);
         }
         public void Update()
         {

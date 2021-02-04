@@ -59,8 +59,6 @@ namespace Platformer
             tilemap = new Tilemap(currentDirectory + @"\level0.level");
             camera = new Camera();
 
-            var evt = new EventTrigger(new Rectangle(500, 1000, 500, 500));
-            evt.OnPlayerInside += (plr) => Main.player.position = Vector2.Zero;
             base.Initialize();
         }
 
@@ -94,10 +92,6 @@ namespace Platformer
 
             // Update Camera
             camera.Update();
-
-            // Update Event triggers
-            for (int i = 0; i < EventTrigger.triggers.Count; i++)
-                EventTrigger.triggers[i].Update();
 
             base.Update(gameTime);
         }
