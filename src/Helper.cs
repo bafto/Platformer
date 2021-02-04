@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Platformer
+namespace Platformer.src
 {
     static class Extentions
     {

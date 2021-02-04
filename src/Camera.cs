@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Platformer
+namespace Platformer.src
 {
     public class Camera
     {

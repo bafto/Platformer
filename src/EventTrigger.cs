@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Platformer
+namespace Platformer.src
 {
     class EventTrigger
     {
@@ -42,18 +42,20 @@ namespace Platformer
         }
         public void Update()
         {
-            if (bounds.Contains(Main.player.position))
+            var lastplayerrect = new Rectangle(Main.player.lastPosition.ToPoint(), new Point(50, 50));
+            if (Main.player.rect.Intersects(bounds))
             {
                 OnPlayerInside?.Invoke(Main.player);
             }
-            if(bounds.Contains(Main.player.position)  && !bounds.Contains(Main.player.lastPosition))
+            if (Main.player.rect.Intersects(bounds) && !lastplayerrect.Intersects(bounds))
             {
                 OnPlayerEnter?.Invoke(Main.player);
             }
-            if (!bounds.Contains(Main.player.position) && bounds.Contains(Main.player.lastPosition))
+            if (!Main.player.rect.Intersects(bounds) && lastplayerrect.Intersects(bounds))
             {
                 OnPlayerExit?.Invoke(Main.player);
             }
         }
+        public void Draw() => Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(bounds), Color.Red * 0.5f);
     }
 }

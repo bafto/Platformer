@@ -2,9 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 using System.IO;
 
-namespace Platformer
+namespace Platformer.src
 {
     public class Main : Game
     {
@@ -17,6 +18,7 @@ namespace Platformer
         public static Rectangle screen;
         public static float deltaTime { get; private set; }
         public static string currentDirectory => Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        public static bool DebugMode = true;
 
         // input stuff
         public static MouseState mouse = Mouse.GetState();
@@ -56,7 +58,7 @@ namespace Platformer
         protected override void Initialize()
         {
             player = new Player();
-            tilemap = new Tilemap(currentDirectory + @"\level0.level");
+            tilemap = new Tilemap(currentDirectory + @"\levels\level0.level");
             camera = new Camera();
 
             base.Initialize();
