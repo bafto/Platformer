@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace Platformer.src
@@ -25,13 +24,13 @@ namespace Platformer.src
             Main.player.position = spawnPoint;
             Main.player.velocity = Vector2.Zero;
             //initialize the Events
-            for(int i = 2; i < lines.Length && lines[i] != "enemies:"; i++)
+            for (int i = 2; i < lines.Length && lines[i] != "enemies:"; i++)
             {
                 string[] Lines = lines[i].Split(' ');
                 //Add the Event with a Rectangle and a EventID
                 EventTriggers.Add(new EventTrigger(new Rectangle(int.Parse(Lines[1]), int.Parse(Lines[2]), int.Parse(Lines[3]), int.Parse(Lines[4])), (EventTrigger.EventType)int.Parse(Lines[0])));
                 //Add functionality to the Event
-                if(EventTriggers[EventTriggers.Count - 1].eventType == EventTrigger.EventType.LevelLoader)
+                if (EventTriggers[EventTriggers.Count - 1].eventType == EventTrigger.EventType.LevelLoader)
                 {
                     EventTriggers[EventTriggers.Count - 1].nextLevel = Lines[5];//set nextLevel to the filename of the Level that will be loaded
                     EventTriggers[EventTriggers.Count - 1].OnPlayerEnter += () => Main.level = new Level(Main.currentDirectory + @"\levels\" + EventTriggers[EventTriggers.Count - 1].nextLevel);
@@ -41,7 +40,7 @@ namespace Platformer.src
 
             //initialize the tilemap
             string[] mapLines = new string[lines.Length];
-            for(int i = lines.Length - 1; i > -1; i--)
+            for (int i = lines.Length - 1; i > -1; i--)
             {
                 if (lines[i] == "map:")
                 {
@@ -54,7 +53,7 @@ namespace Platformer.src
         public void Update()
         {
             tilemap.Update();
-            foreach(EventTrigger e in EventTriggers)
+            foreach (EventTrigger e in EventTriggers)
             {
                 e.Update();
             }
@@ -62,7 +61,7 @@ namespace Platformer.src
         public void Draw()
         {
             tilemap.Draw();
-            if(Main.DebugMode)
+            if (Main.DebugMode)
             {
                 foreach (EventTrigger e in EventTriggers)
                     e.Draw();

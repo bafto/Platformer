@@ -1,7 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Platformer.src
 {
@@ -27,7 +24,7 @@ namespace Platformer.src
         public EventTrigger(Vector2 pos, int width, int height, EventType eventType)
         {
             this.eventType = eventType;
-            nextLevel = new string("");
+            nextLevel = string.Empty;
             Position = pos;
             Width = width;
             Height = height;
@@ -36,7 +33,7 @@ namespace Platformer.src
         public EventTrigger(Vector2 pos, Vector2 size, EventType eventType)
         {
             this.eventType = eventType;
-            nextLevel = new string("");
+            nextLevel = string.Empty;
             bounds = new Rectangle(pos.ToPoint(), size.ToPoint());
             Position = pos;
             Width = (int)size.X;
@@ -45,7 +42,7 @@ namespace Platformer.src
         public EventTrigger(Rectangle rect, EventType eventType)
         {
             this.eventType = eventType;
-            nextLevel = new string("");
+            nextLevel = string.Empty;
             bounds = rect;
             Position = new Vector2(rect.X, rect.Y);
             Width = rect.Size.X;

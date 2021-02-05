@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
 
 namespace Platformer.src
 {
@@ -89,7 +88,7 @@ namespace Platformer.src
                 velocity.Y -= jumpspeed;
             }
             //drag so the player slows on X movement
-            if(velocity.X != 0 && !(Main.keyboard.IsKeyDown(Keys.A) || Main.keyboard.IsKeyDown(Keys.D)) && grounded)
+            if (velocity.X != 0 && !(Main.keyboard.IsKeyDown(Keys.A) || Main.keyboard.IsKeyDown(Keys.D)) && grounded)
             {
                 velocity.X = MathHelper.Lerp(velocity.X, 0, moveTimer / 3);
             }
@@ -193,7 +192,7 @@ namespace Platformer.src
                                 velocity.Y = 0;
                             }
                         }
-                        if(playerRect.Intersects(Main.level.tilemap.hitboxes[i]))//if he still intersects(aka velocity was 0) set him ontop of the Hitbox
+                        if (playerRect.Intersects(Main.level.tilemap.hitboxes[i]))//if he still intersects(aka velocity was 0) set him ontop of the Hitbox
                         {
                             playerRect.position = new Vector2(playerRect.position.X, Main.level.tilemap.hitboxes[i].position.Y - rect.size.Y);
                         }
