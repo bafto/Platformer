@@ -47,7 +47,7 @@ namespace Platformer.src
             // gravity
             if (!grounded)
             {
-                velocity.Y += gravity * Main.deltaTime;
+                velocity.Y += gravity * Main.DeltaTime;
             }
 
             //mainly handles jumping and movement
@@ -62,7 +62,7 @@ namespace Platformer.src
         private void HandleInput()
         {
             // increment timer. value represents how fast the player will reach maxSpeed
-            moveTimer += Main.deltaTime * 10;
+            moveTimer += Main.DeltaTime * 10;
             if (moveTimer > 1)
             {
                 moveTimer = 0;
@@ -77,11 +77,11 @@ namespace Platformer.src
 #endif
             if (Main.keyboard.IsKeyDown(Keys.A))
             {
-                velocity.X -= MathHelper.Lerp(velocity.X, maxWalkSpeed, moveTimer) * acceleration * Main.deltaTime;
+                velocity.X -= MathHelper.Lerp(velocity.X, maxWalkSpeed, moveTimer) * acceleration * Main.DeltaTime;
             }
             if (Main.keyboard.IsKeyDown(Keys.D))
             {
-                velocity.X += MathHelper.Lerp(velocity.X, maxWalkSpeed, moveTimer) * acceleration * Main.deltaTime;
+                velocity.X += MathHelper.Lerp(velocity.X, maxWalkSpeed, moveTimer) * acceleration * Main.DeltaTime;
             }
             if (grounded && Main.keyboard.JustPressed(Keys.W))
             {

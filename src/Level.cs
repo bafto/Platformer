@@ -33,7 +33,7 @@ namespace Platformer.src
                 if (EventTriggers[EventTriggers.Count - 1].eventType == EventTrigger.EventType.LevelLoader)
                 {
                     EventTriggers[EventTriggers.Count - 1].nextLevel = Lines[5];//set nextLevel to the filename of the Level that will be loaded
-                    EventTriggers[EventTriggers.Count - 1].OnPlayerEnter += () => Main.level = new Level(Main.currentDirectory + @"\levels\" + EventTriggers[EventTriggers.Count - 1].nextLevel);
+                    EventTriggers[EventTriggers.Count - 1].OnPlayerEnter += () => Main.level = new Level(Main.CurrentDirectory + @"\levels\" + EventTriggers[EventTriggers.Count - 1].nextLevel);
                 }
             }
             //initialize the Enemys
@@ -61,11 +61,13 @@ namespace Platformer.src
         public void Draw()
         {
             tilemap.Draw();
-            if (Main.DebugMode)
+
+#if DEBUG
+            foreach (EventTrigger e in EventTriggers) 
             {
-                foreach (EventTrigger e in EventTriggers)
-                    e.Draw();
+                e.Draw(); 
             }
+#endif
         }
     }
 }

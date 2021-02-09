@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Platformer.src.UI;
+using Platformer.src.UI.UIStates;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Platformer.src
@@ -10,20 +13,33 @@ namespace Platformer.src
     {
         // Engine Stuff
         public static Main instance { get; private set; }
-        public static GraphicsDeviceManager graphics { get; private set; }
-        public static SpriteBatch spriteBatch { get; private set; }
-        public static Texture2D solid { get; private set; }
-        public static SpriteFont font { get; private set; }
-        public static Rectangle screen;
-        public static float deltaTime { get; private set; }
-        public static string currentDirectory => Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-        public static bool DebugMode = true;
+        public static GraphicsDeviceManager graphics;
+        public static SpriteBatch spriteBatch;
+        public static Texture2D solid;
+        public static SpriteFont font;
+        public static Texture2D panel; // not implemented
+        public static Rectangle Screen
+        {
+            get
+            {
+                // Update Screen variable
+                var sex = System.Windows.Forms.Control.FromHandle(instance.Window.Handle).Bounds;
+                return new Rectangle(sex.X, sex.Y, sex.Width, sex.Height);
+            }
+        }
+        public static float DeltaTime { get; private set; }
+        public static string CurrentDirectory => Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        public static string? MouseText;
+        public static List<UIState> UIStates = new List<UIState>();
+        public static float UIScale = 1f;
+        public static Matrix UIScaleMatrix;
 
         // input stuff
         public static MouseState mouse = Mouse.GetState();
         public static MouseState lastmouse;
         public static KeyboardState keyboard;
         public static KeyboardState lastKeyboard;
+        public static float scrollwheel;
         public static bool LeftHeld;
         public static bool RightHeld;
         public static bool LeftReleased;
@@ -49,13 +65,22 @@ namespace Platformer.src
             // Maximize Window
             System.Windows.Forms.Form form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(Window.Handle);
             form.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+
+            var test = new TestState();
+            UIStates.Add(test);
         }
 
         protected override void Initialize()
         {
             player = new Player();
-            level = new Level(currentDirectory + @"\levels\level0.level");
+            level = new Level(CurrentDirectory + @"\levels\level0.level");
             camera = new Camera();
+
+            // initialize UIState
+            for (int i = 0; i < UIStates.Count; i++)
+            {
+                UIStates[i].Initialize();
+            }
 
             base.Initialize();
         }
@@ -65,6 +90,7 @@ namespace Platformer.src
             spriteBatch = new SpriteBatch(GraphicsDevice);
             solid = Content.Load<Texture2D>("solid");
             font = Content.Load<SpriteFont>("font");
+            panel = Content.Load<Texture2D>("panel");
         }
 
         protected override void Update(GameTime gameTime)
@@ -72,12 +98,8 @@ namespace Platformer.src
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // Update Screen variable
-            var sex = System.Windows.Forms.Control.FromHandle(Window.Handle).Bounds;
-            screen = new Rectangle(sex.X, sex.Y, sex.Width, sex.Height);
-
             // Update deltaTime
-            deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Update Mouse variables
             UpdateInput();
@@ -90,6 +112,12 @@ namespace Platformer.src
 
             // Update Camera
             camera.Update();
+
+            // Update UI
+            for (int i = 0; i < UIStates.Count; i++)
+            {
+                UIStates[i].UpdateSelf(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -107,6 +135,25 @@ namespace Platformer.src
 
             spriteBatch.End();
 
+            // UI
+            UIScaleMatrix = Matrix.CreateScale(UIScale);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, UIScaleMatrix);
+            {
+                for (int i = 0; i < UIStates.Count; i++)
+                {
+                    UIStates[i].DrawSelf(spriteBatch);
+                }
+
+                if (MouseText != null)
+                {
+                    spriteBatch.DrawString(font, MouseText, mouse.Position.ToVector2() + new Vector2(10), Color.White);
+                    MouseText = null;
+                }
+            }
+            spriteBatch.End();
+
+
+
             base.Draw(gameTime);
         }
 
@@ -120,6 +167,7 @@ namespace Platformer.src
             lastKeyboard = keyboard;
             keyboard = Keyboard.GetState();
             mouseMoved = mouse.Position != lastmouse.Position;
+            scrollwheel = (lastmouse.ScrollWheelValue - mouse.ScrollWheelValue) / 8000f;
 
             LeftHeld = mouse.LeftButton == ButtonState.Pressed;
             RightHeld = mouse.RightButton == ButtonState.Pressed;

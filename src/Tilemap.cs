@@ -20,7 +20,7 @@ namespace Platformer.src
         private void Initialize(string[] lines)
         {
             //Load Textures from File (texMap handles this)
-            texMap.Initialize(Main.currentDirectory + @"\levels\" + lines[1]);
+            texMap.Initialize(Main.CurrentDirectory + @"\levels\" + lines[1]);
 
             height = lines.Length - 2;
             width = lines[2].Length;
