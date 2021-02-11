@@ -8,13 +8,19 @@ namespace Platformer.src.UI.UIStates
 {
     class TestState : UIState
     {
+        private UIText playerInfo;
         public override void Initialize()
         {
             var panel = new UIPanel(400, 100, Color.Red);
             Append(panel);
-            var test = new UIText("yo wässup", Color.Black);
-            panel.Append(test);
+            playerInfo = new UIText("", Color.Black);
+            panel.Append(playerInfo);
             base.Initialize();
+        }
+        protected override void Update(GameTime gameTime)
+        {
+            playerInfo.Text = $"Player Position: {Main.player.position}\nPlayer Velocity: {Main.player.velocity}\n Is player grounded?: {Main.player.grounded}";
+            base.Update(gameTime);
         }
     }
 }
