@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Platformer.src
 {
@@ -53,9 +54,6 @@ namespace Platformer.src
             //mainly handles jumping and movement
             HandleInput();
 
-            // Clamp Velocity
-            velocity = Vector2.Clamp(velocity, new Vector2(-maxWalkSpeed, -maxJumpSpeed), new Vector2(maxWalkSpeed, maxFallSpeed));
-
             //resolve collision and set position
             HandleCollision();
         }
@@ -77,21 +75,21 @@ namespace Platformer.src
 #endif
             if (Main.keyboard.IsKeyDown(Keys.A))
             {
-                velocity.X -= MathHelper.Lerp(velocity.X, maxWalkSpeed, moveTimer) * acceleration * Main.DeltaTime;
+                velocity.X -= Math.Abs(velocity.X) * acceleration * Main.DeltaTime + 0.15f;
             }
             if (Main.keyboard.IsKeyDown(Keys.D))
             {
-                velocity.X += MathHelper.Lerp(velocity.X, maxWalkSpeed, moveTimer) * acceleration * Main.DeltaTime;
+                velocity.X += Math.Abs(velocity.X) * acceleration * Main.DeltaTime + 0.15f;
             }
             if (grounded && Main.keyboard.JustPressed(Keys.W))
             {
                 velocity.Y -= jumpspeed;
             }
             //drag so the player slows on X movement
-            if (velocity.X != 0 && !(Main.keyboard.IsKeyDown(Keys.A) || Main.keyboard.IsKeyDown(Keys.D)) && grounded)
-            {
-                velocity.X = MathHelper.Lerp(velocity.X, 0, moveTimer / 3);
-            }
+            velocity.X -= velocity.X / 40;
+
+            // Clamp Velocity
+            velocity = Vector2.Clamp(velocity, new Vector2(-maxWalkSpeed, -maxJumpSpeed), new Vector2(maxWalkSpeed, maxFallSpeed));
         }
         private void HandleCollision()
         {
