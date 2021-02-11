@@ -123,6 +123,11 @@ namespace Platformer.src
                     tiles[x, y].Draw();
                 }
             }
+            /*
+            for(int i = 0; i < hitboxes.Count; i++)
+            {
+                Main.spriteBatch.Draw(Main.outline, Main.camera.Translate(hitboxes[i].toIntRect()), Color.White);
+            }*/
         }
     }
 }

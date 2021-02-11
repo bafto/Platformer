@@ -17,7 +17,8 @@ namespace Platformer.src
         public static SpriteBatch spriteBatch;
         public static Texture2D solid;
         public static SpriteFont font;
-        public static Texture2D panel; // not implemented
+        public static Texture2D panel;
+        public static Texture2D outline;
         public static Rectangle Screen
         {
             get
@@ -33,12 +34,23 @@ namespace Platformer.src
         public static List<UIState> UIStates = new List<UIState>();
         public static float UIScale = 1f;
         public static Matrix UIScaleMatrix;
+        public static float GameScale = 1f;
+        public static Matrix GameMatrix;
+        public static long globalTimer;
+        public static byte gameSpeed = 1;
+        public static bool freeze = false;
 
         // input stuff
+        /// <summary>
+        /// The mouse relative to the screen
+        /// </summary>
         public static MouseState mouse = Mouse.GetState();
         public static MouseState lastmouse;
         public static KeyboardState keyboard;
         public static KeyboardState lastKeyboard;
+        /// <summary>
+        /// How much the scroll wheel has changed since the last frame
+        /// </summary>
         public static float scrollwheel;
         public static bool LeftHeld;
         public static bool RightHeld;
@@ -46,6 +58,9 @@ namespace Platformer.src
         public static bool RightReleased;
         public static bool LeftClick;
         public static bool RightClick;
+        /// <summary>
+        /// How much the mouse has moved since the last frame
+        /// </summary>
         public static bool mouseMoved;
 
         //Game Stuff
@@ -91,12 +106,14 @@ namespace Platformer.src
             solid = Content.Load<Texture2D>("solid");
             font = Content.Load<SpriteFont>("font");
             panel = Content.Load<Texture2D>("panel");
+            outline = Content.Load<Texture2D>("outline");
         }
-
+        private bool frameStep;
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            globalTimer++;
 
             // Update deltaTime
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -104,12 +121,30 @@ namespace Platformer.src
             // Update Mouse variables
             UpdateInput();
 
+            GameScale -= scrollwheel;
+            if (keyboard.JustPressed(Keys.F))
+            {
+                frameStep = true;
+                freeze = false;
+            }
+            if (keyboard.JustPressed(Keys.G))
+            {
+                frameStep = false;
+                freeze = false;
+            }
+
             //Update Tilemap...Does nothing, but maybe we will add that later
             level.Update();
 
-            // Update Player
-            player.Update();
-
+            if (globalTimer % gameSpeed == 0 && !freeze)
+            {
+                // Update Player
+                player.Update();
+            }
+            if (frameStep)
+            {
+                freeze = true;
+            }
             // Update Camera
             camera.Update();
 
@@ -126,7 +161,8 @@ namespace Platformer.src
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            GameMatrix = Matrix.CreateScale(GameScale);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, GameMatrix);
 
             // Draw Tiles before player to not cover him
             level.Draw();

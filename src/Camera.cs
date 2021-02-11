@@ -21,10 +21,10 @@ namespace Platformer.src
         public void Update()
         {
             //calculate the offset
-            camOffset = Main.player.position - ViewportSize - Main.player.rect.size / 2;
+            camOffset = Main.player.position - ViewportSize / Main.GameScale;
 
             //clamp it to world coordinates
-            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset);
+            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset * Main.GameScale);
         }
 
         /// <summary>
