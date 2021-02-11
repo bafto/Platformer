@@ -33,7 +33,7 @@ namespace Platformer.src
             maxWalkSpeed = 10f;
             maxJumpSpeed = 16f;//if the same as jumpspeed it does nothing, if lower it limits jumpspeed, if higher it enables a mechanic
             maxFallSpeed = 15f;
-            acceleration = 2f;
+            acceleration = 0.5f;
             drag = 5;
             jumpspeed = 13f;
             gravity = 25f;
@@ -75,18 +75,18 @@ namespace Platformer.src
 #endif
             if (Main.keyboard.IsKeyDown(Keys.A))
             {
-                velocity.X -= Math.Abs(velocity.X) * acceleration * Main.DeltaTime + 0.15f;
+                velocity.X -= Math.Abs(velocity.X) * Main.DeltaTime + acceleration;
             }
             if (Main.keyboard.IsKeyDown(Keys.D))
             {
-                velocity.X += Math.Abs(velocity.X) * acceleration * Main.DeltaTime + 0.15f;
+                velocity.X += Math.Abs(velocity.X) * Main.DeltaTime + acceleration;
             }
             if (grounded && Main.keyboard.JustPressed(Keys.W))
             {
                 velocity.Y -= jumpspeed;
             }
             //drag so the player slows on X movement
-            velocity.X -= velocity.X / 40;
+            velocity.X -= velocity.X / 30;
 
             // Clamp Velocity
             velocity = Vector2.Clamp(velocity, new Vector2(-maxWalkSpeed, -maxJumpSpeed), new Vector2(maxWalkSpeed, maxFallSpeed));
