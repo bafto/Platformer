@@ -14,14 +14,6 @@ namespace Platformer.src
         {
             return Main.lastKeyboard.IsKeyUp(key) && Main.keyboard.IsKeyDown(key);
         }
-        public static Vector2 ToWorldCoords(this Vector2 pos)
-        {
-            return Main.camera.InverseTranslate(pos / Main.GameScale);
-        }
-        public static Vector2 ToWorldCoords(this Point pos)
-        {
-            return Main.camera.InverseTranslate(pos.ToVector2() / Main.GameScale);
-        }
         public static bool IsValid(this char c)
         {
             char[] validChars = {

@@ -64,6 +64,6 @@ namespace Platformer.src
                 OnPlayerExit?.Invoke();
             }
         }
-        public void Draw() => Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(bounds), Color.Red * 0.5f);
+        public void Draw() => Main.spriteBatch.Draw(Main.solid, bounds, Color.Red * 0.5f);
     }
 }

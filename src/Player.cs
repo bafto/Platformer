@@ -53,7 +53,7 @@ namespace Platformer.src
 #if DEBUG
             if (Main.LeftClick)
             {
-                position = Main.mouse.Position.ToWorldCoords() - rect.Size / 2;
+                position = Main.InvertTranslate(Main.mouse.Position.ToVector2()) - rect.Size / 2;
             }
 #endif
             if (Main.keyboard.IsKeyDown(Keys.A))
@@ -79,13 +79,13 @@ namespace Platformer.src
         public override void Draw()
         {
             rect.Position = position;
-            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(rect), color);
+            Main.spriteBatch.Draw(Main.solid, rect.toIntRect(), color);
 #if DEBUG
-            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(new Rectangle(lastPosition.ToPoint(), rect.Size.ToPoint())), Color.Green * 0.3f);
-            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(new Rectangle((position + velocity).ToPoint(), rect.Size.ToPoint())), Color.Blue * 0.3f);
+            Main.spriteBatch.Draw(Main.solid, new Rectangle(lastPosition.ToPoint(), rect.Size.ToPoint()), Color.Green * 0.3f);
+            Main.spriteBatch.Draw(Main.solid, new Rectangle((position + velocity).ToPoint(), rect.Size.ToPoint()), Color.Blue * 0.3f);
 
             var groundedCheck = new Rectangle((int)position.X, (int)position.Y + 2, 50, 50);
-            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(new Rectangle((int)position.X, groundedCheck.Bottom, 50, 2)), Color.Yellow);
+            Main.spriteBatch.Draw(Main.solid, new Rectangle((int)position.X, groundedCheck.Bottom, 50, 2), Color.Yellow);
 #endif
         }
         public override string ToString()
