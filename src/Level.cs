@@ -10,6 +10,7 @@ namespace Platformer.src
         public Vector2 spawnPoint;
         private List<EventTrigger> EventTriggers;
         public Tilemap tilemap;
+        public float gravity = 25f;
         public Level(string file)
         {
             EventTriggers = new List<EventTrigger>();
