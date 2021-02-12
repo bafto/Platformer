@@ -19,6 +19,7 @@ namespace Platformer.src
         public static SpriteFont font;
         public static Texture2D panel;
         public static Texture2D outline;
+        public static Texture2D background;
         public static Rectangle Screen
         {
             get
@@ -28,6 +29,7 @@ namespace Platformer.src
                 return new Rectangle(sex.X, sex.Y, sex.Width, sex.Height);
             }
         }
+        public static Viewport ViewPort => graphics.GraphicsDevice.Viewport;
         public static float DeltaTime { get; private set; }
         public static string CurrentDirectory => Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         public static string? MouseText;
@@ -107,6 +109,7 @@ namespace Platformer.src
             font = Content.Load<SpriteFont>("font");
             panel = Content.Load<Texture2D>("panel");
             outline = Content.Load<Texture2D>("outline");
+            background = Content.Load<Texture2D>("background");
         }
         private bool frameStep;
         protected override void Update(GameTime gameTime)
@@ -161,7 +164,24 @@ namespace Platformer.src
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            spriteBatch.Begin();
+            spriteBatch.Draw(background, Screen, Color.White);
+            spriteBatch.End();
+
+            // Apply Zoom
             GameMatrix = Matrix.CreateScale(GameScale);
+
+            // Calculate Translation
+            Vector2 viewportSize = new Vector2(ViewPort.Width, ViewPort.Height);
+            Vector2 camOffset = player.position - viewportSize / 2 / GameScale;
+
+            // Prevent camera from going offscreen (bad)
+            Vector2 MaxOffset = new Vector2(level.tilemap.width * Tile.TileSize.X, level.tilemap.height * Tile.TileSize.Y) - viewportSize;
+            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset * GameScale);
+
+            // Apply Translation
+            GameMatrix.Translation -= new Vector3(camOffset.X * GameScale, camOffset.Y * GameScale, 0);
+
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, GameMatrix);
 
             // Draw Tiles before player to not cover him

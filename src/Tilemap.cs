@@ -130,7 +130,7 @@ namespace Platformer.src
                 var _sourcePatches = Helper.CreatePatches(Main.outline.Bounds);
                 for (var j = 0; j < _sourcePatches.Length; j++)
                 {
-                    Main.spriteBatch.Draw(Main.outline, Main.camera.Translate(destinationPatches[j]), _sourcePatches[j], Color.White);
+                    Main.spriteBatch.Draw(Main.outline, destinationPatches[j], _sourcePatches[j], Color.White);
                 }
             }
 #endif
