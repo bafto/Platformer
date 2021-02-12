@@ -9,10 +9,13 @@ namespace Platformer.src
     {
         public Vector2 spawnPoint;
         private List<EventTrigger> EventTriggers;
+        public List<Enemy> Enemies;
         public Tilemap tilemap;
+        public float gravity = 25f;
         public Level(string file)
         {
             EventTriggers = new List<EventTrigger>();
+            Enemies = new List<Enemy>();
             Initialize(file);
         }
         public void Initialize(string file)
@@ -24,9 +27,10 @@ namespace Platformer.src
             Main.player.position = spawnPoint;
             Main.player.velocity = Vector2.Zero;
             //initialize the Events
-            for (int i = 2; i < lines.Length && lines[i] != "enemies:"; i++)
+            int lIndex = 2;
+            for (lIndex = 2; lIndex < lines.Length && lines[lIndex] != "enemies:"; lIndex++)
             {
-                string[] Lines = lines[i].Split(' ');
+                string[] Lines = lines[lIndex].Split(' ');
                 //Add the Event with a Rectangle and a EventID
                 EventTriggers.Add(new EventTrigger(new Rectangle(int.Parse(Lines[1]), int.Parse(Lines[2]), int.Parse(Lines[3]), int.Parse(Lines[4])), (EventTrigger.EventType)int.Parse(Lines[0])));
                 //Add functionality to the Event
@@ -37,7 +41,22 @@ namespace Platformer.src
                 }
             }
             //initialize the Enemys
-
+            for(++lIndex; lIndex < lines.Length && lines[lIndex] != "map:"; lIndex++)
+            {
+                string[] Lines = lines[lIndex].Split(' ');
+                //switch on the enemy ID (temporary identification to see what type of enemy it is)
+                switch(int.Parse(Lines[0]))
+                {
+                    case 0:
+                    {
+                        Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
+                        Enemies.Add(new Enemy(pos));
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
             //initialize the tilemap
             string[] mapLines = new string[lines.Length];
             for (int i = lines.Length - 1; i > -1; i--)
@@ -57,6 +76,10 @@ namespace Platformer.src
             {
                 e.Update();
             }
+            foreach(Enemy e in Enemies)
+            {
+                e.Update();
+            }
         }
         public void Draw()
         {
@@ -68,6 +91,10 @@ namespace Platformer.src
                 e.Draw(); 
             }
 #endif
+            foreach(Enemy e in Enemies)
+            {
+                e.Draw();
+            }
         }
     }
 }
