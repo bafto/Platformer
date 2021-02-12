@@ -28,6 +28,7 @@ namespace Platformer.src
         public void Initialize()
         {
             position = Vector2.Zero;
+            nextPosition = Vector2.Zero;
             rect = new RectangleF(0, 0, 50, 50);
             color = Color.Red;
             maxWalkSpeed = 10f;
@@ -43,13 +44,13 @@ namespace Platformer.src
         {
             lastPosition = position;
 
-            grounded = Main.level.tilemap.Collides(new RectangleF(position.X, position.Y + 1, rect.size.X, rect.size.Y));
-
             // gravity
             if (!grounded)
             {
                 velocity.Y += gravity * Main.DeltaTime;
             }
+
+            grounded = Main.level.tilemap.Collides(new RectangleF(position.X, position.Y + 2, rect.Size.X, rect.Size.Y));
 
             // Mainly handles jumping and movement
             HandleInput();
@@ -63,7 +64,7 @@ namespace Platformer.src
 #if DEBUG
             if (Main.LeftClick)
             {
-                position = Main.mouse.Position.ToWorldCoords() - rect.size / 2;
+                position = Main.mouse.Position.ToWorldCoords() - rect.Size / 2;
             }
 #endif
             if (Main.keyboard.IsKeyDown(Keys.A))
@@ -92,42 +93,43 @@ namespace Platformer.src
             if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.level.tilemap.width * Tile.TileSize.X - 50, Main.level.tilemap.height * Tile.TileSize.Y - 90)))
             {
                 position = Main.level.spawnPoint;
+                nextPosition = Main.level.spawnPoint;
                 velocity = Vector2.Zero;
             }
             else
             {
                 // Handle collision by checking X first then Y then both and resolving it accordingly
-                RectangleF nextRect = new RectangleF(nextPosition, rect.size);
+                RectangleF nextRect = new RectangleF(nextPosition, rect.Size);
                 for (int i = 0; i < Main.level.tilemap.hitboxes.Count; i++)
                 {
                     if (nextRect.Intersects(Main.level.tilemap.hitboxes[i]))
                     {
                         //bool XorY = false;
                         // try only x intersection
-                        nextRect.position.X -= velocity.X;
+                        nextRect.Position.X -= velocity.X;
                         // still intersects?
                         if (nextRect.Intersects(Main.level.tilemap.hitboxes[i]))
                         {
-                            nextRect.position.X += velocity.X;
+                            nextRect.Position.X += velocity.X;
                             // try only y intersection
-                            nextRect.position.Y -= velocity.Y;
+                            nextRect.Position.Y -= velocity.Y;
                             // still intersects?
                             if (nextRect.Intersects(Main.level.tilemap.hitboxes[i]))
                             {
                                 // revert it cause it must be X and Y
-                                nextRect.position.Y += velocity.Y;
+                                nextRect.Position.Y += velocity.Y;
                             }
                             else // no? set the position accordingly
                             {
                                 //XorY = true;
-                                if (nextRect.position.Y > Main.level.tilemap.hitboxes[i].Bottom())
+                                if (nextRect.Position.Y > Main.level.tilemap.hitboxes[i].Bottom())
                                 {
-                                    nextRect.position.Y = Main.level.tilemap.hitboxes[i].Bottom();
+                                    nextRect.Position.Y = Main.level.tilemap.hitboxes[i].Bottom();
                                     velocity.Y = 0;
                                 }
-                                else if (nextRect.position.Y + nextRect.size.Y < Main.level.tilemap.hitboxes[i].Top())
+                                else if (nextRect.Position.Y + nextRect.Size.Y < Main.level.tilemap.hitboxes[i].Top())
                                 {
-                                    nextRect.position.Y = Main.level.tilemap.hitboxes[i].Top() - nextRect.size.Y;
+                                    nextRect.Position.Y = Main.level.tilemap.hitboxes[i].Top() - nextRect.Size.Y;
                                     velocity.Y = 0;
                                 }
                                 else
@@ -139,14 +141,14 @@ namespace Platformer.src
                         else // no? set the position accordingly
                         {
                             //XorY = true;
-                            if (nextRect.position.X > Main.level.tilemap.hitboxes[i].Right())
+                            if (nextRect.Position.X > Main.level.tilemap.hitboxes[i].Right())
                             {
-                                nextRect.position.X = Main.level.tilemap.hitboxes[i].Right();
+                                nextRect.Position.X = Main.level.tilemap.hitboxes[i].Right();
                                 velocity.X = 0;
                             }
-                            else if (nextRect.position.X + nextRect.size.X < Main.level.tilemap.hitboxes[i].Left())
+                            else if (nextRect.Position.X + nextRect.Size.X < Main.level.tilemap.hitboxes[i].Left())
                             {
-                                nextRect.position.X = Main.level.tilemap.hitboxes[i].Left() - nextRect.size.X;
+                                nextRect.Position.X = Main.level.tilemap.hitboxes[i].Left() - nextRect.Size.X;
                                 velocity.X = 0;
                             }
                             else
@@ -154,57 +156,22 @@ namespace Platformer.src
                                 velocity.X = 0;
                             }
                         }
-                        // both must be needed
-                        /*if (!XorY)
-                        {
-                            nextPosition.position -= velocity;
-                            if (nextPosition.position.X > Main.level.tilemap.hitboxes[i].Right())
-                            {
-                                nextPosition.position.X = Main.level.tilemap.hitboxes[i].Right();
-                                velocity.X = 0;
-                            }
-                            else if (nextPosition.position.X + nextPosition.size.X < Main.level.tilemap.hitboxes[i].Left())
-                            {
-                                nextPosition.position.X = Main.level.tilemap.hitboxes[i].Left() - nextPosition.size.X;
-                                velocity.X = 0;
-                            }
-                            else
-                            {
-                                velocity.X = 0;
-                            }*/
-                            /*if (nextPosition.position.Y > Main.level.tilemap.hitboxes[i].Bottom())
-                            {
-                                nextPosition.position.Y = Main.level.tilemap.hitboxes[i].Bottom();
-                                velocity.Y = 0;
-                            }
-                            else if (nextPosition.position.Y + nextPosition.size.Y < Main.level.tilemap.hitboxes[i].Top())
-                            {
-                                //nextPosition.position.Y = Main.level.tilemap.hitboxes[i].Top() - nextPosition.size.Y;
-                                //velocity.Y = 0;
-                            }
-                            else
-                            {
-                                velocity.Y = 0;
-                            }
-                        }*/
-                        /*// if he still intersects(aka velocity was 0) set him ontop of the Hitbox
-                        if (nextPosition.Intersects(Main.level.tilemap.hitboxes[i]))
-                        {
-                            nextPosition.position = lastPosition;
-                        }*/
                     }
                 }
                 // Set the new position
-                position = nextRect.position;
+                position = nextRect.Position;
             }
         }
         public void Draw()
         {
-            rect.position = position;
+            rect.Position = position;
             Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(rect), color);
 #if DEBUG
-            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(new Rectangle(lastPosition.ToPoint(), rect.size.ToPoint())), Color.Green * 0.3f);
-            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(new Rectangle(nextPosition.ToPoint(), rect.size.ToPoint())), Color.Blue * 0.3f);
+            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(new Rectangle(lastPosition.ToPoint(), rect.Size.ToPoint())), Color.Green * 0.3f);
+            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(new Rectangle((position + velocity).ToPoint(), rect.Size.ToPoint())), Color.Blue * 0.3f);
+
+            var groundedCheck = new Rectangle((int)position.X, (int)position.Y + 2, 50, 50);
+            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(new Rectangle((int)position.X, groundedCheck.Bottom, 50, 2)), Color.Yellow);
 #endif
         }
         public override string ToString()

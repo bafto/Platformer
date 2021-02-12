@@ -61,7 +61,7 @@ namespace Platformer.src
                             {
                                 for (; xx < width && tiles[xx, yy].TileID != 0 && !tiles[xx, yy].inHitbox; xx++)
                                 {
-                                    newHitbox.size.X += Tile.TileSize.X;
+                                    newHitbox.Size.X += Tile.TileSize.X;
                                     tiles[xx, yy].inHitbox = true;
                                 }
                                 xEnd = xx;
@@ -76,7 +76,7 @@ namespace Platformer.src
                             }
                             if (xx != xEnd)
                             {
-                                newHitbox.size.Y -= Tile.TileSize.Y;
+                                newHitbox.Size.Y -= Tile.TileSize.Y;
                                 breaked = true;
                                 for (int i = x; i < xx; i++)
                                 {
@@ -84,11 +84,11 @@ namespace Platformer.src
                                 }
                                 break;
                             }
-                            newHitbox.size.Y += Tile.TileSize.Y;
+                            newHitbox.Size.Y += Tile.TileSize.Y;
                         }
                         if (!breaked)
                         {
-                            newHitbox.size.Y -= Tile.TileSize.Y;
+                            newHitbox.Size.Y -= Tile.TileSize.Y;
                         }
                         hitboxes.Add(newHitbox);
                     }
@@ -123,11 +123,17 @@ namespace Platformer.src
                     tiles[x, y].Draw();
                 }
             }
-            /*
+#if DEBUG
             for(int i = 0; i < hitboxes.Count; i++)
             {
-                Main.spriteBatch.Draw(Main.outline, Main.camera.Translate(hitboxes[i].toIntRect()), Color.White);
-            }*/
+                var destinationPatches = Helper.CreatePatches(hitboxes[i].toIntRect());
+                var _sourcePatches = Helper.CreatePatches(Main.outline.Bounds);
+                for (var j = 0; j < _sourcePatches.Length; j++)
+                {
+                    Main.spriteBatch.Draw(Main.outline, Main.camera.Translate(destinationPatches[j]), _sourcePatches[j], Color.White);
+                }
+            }
+#endif
         }
     }
 }

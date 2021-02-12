@@ -38,7 +38,7 @@ namespace Platformer.src
         }
         public Rectangle Translate(RectangleF rect)
         {
-            return new RectangleF(rect.position.X - (int)camOffset.X, rect.position.Y - (int)camOffset.Y, rect.size.X, rect.size.Y).toIntRect();
+            return new RectangleF(rect.Position.X - (int)camOffset.X, rect.Position.Y - (int)camOffset.Y, rect.Size.X, rect.Size.Y).toIntRect();
         }
         public Vector2 Translate(Vector2 vec)
         {
@@ -50,7 +50,7 @@ namespace Platformer.src
         }
         public RectangleF InverseTranslate(RectangleF rect)
         {
-            return new RectangleF(rect.position.X + camOffset.X, rect.position.Y + camOffset.Y, rect.size.X, rect.size.Y);
+            return new RectangleF(rect.Position.X + camOffset.X, rect.Position.Y + camOffset.Y, rect.Size.X, rect.Size.Y);
         }
         public Vector2 InverseTranslate(Vector2 vec)
         {

@@ -4,67 +4,72 @@ namespace Platformer.src
 {
     public class RectangleF
     {
-        public Vector2 position;
-        public Vector2 size;
+        public Vector2 Position;
+        public Vector2 Size;
 
         public RectangleF(Vector2 pos, Vector2 size)
         {
-            position = pos;
-            this.size = size;
+            Position = pos;
+            Size = size;
+        }
+        public RectangleF(Vector2 pos, float width, float height)
+        {
+            Position = pos;
+            Size = new Vector2(width, height);
         }
         public RectangleF(float x, float y, float width, float height)
         {
-            position = new Vector2(x, y);
-            size = new Vector2(width, height);
+            Position = new Vector2(x, y);
+            Size = new Vector2(width, height);
         }
         public RectangleF(Rectangle rect)
         {
-            position = rect.Location.ToVector2();
-            size = rect.Size.ToVector2();
+            Position = rect.Location.ToVector2();
+            Size = rect.Size.ToVector2();
         }
         public bool Intersects(Vector2 vec)
         {
-            return vec.X > position.X && vec.X < position.X + size.X &&
-                vec.Y > position.Y && vec.Y < position.Y + size.Y;
+            return vec.X > Position.X && vec.X < Position.X + Size.X &&
+                vec.Y > Position.Y && vec.Y < Position.Y + Size.Y;
         }
         public bool Intersects(RectangleF rect)
         {
-            return rect.position.X + rect.size.X > position.X && rect.position.X < position.X + size.X &&
-                rect.position.Y + rect.size.Y > position.Y && rect.position.Y < position.Y + size.Y;
+            return rect.Position.X + rect.Size.X > Position.X && rect.Position.X < Position.X + Size.X &&
+                rect.Position.Y + rect.Size.Y > Position.Y && rect.Position.Y < Position.Y + Size.Y;
         }
         public bool Intersects(Rectangle other)
         {
             RectangleF rect = new RectangleF(other.X, other.Y, other.Width, other.Height);
-            return rect.position.X + rect.size.X > position.X && rect.position.X < position.X + size.X &&
-                rect.position.Y + rect.size.Y > position.Y && rect.position.Y < position.Y + size.Y;
+            return rect.Position.X + rect.Size.X > Position.X && rect.Position.X < Position.X + Size.X &&
+                rect.Position.Y + rect.Size.Y > Position.Y && rect.Position.Y < Position.Y + Size.Y;
         }
         public Vector2 Center()
         {
-            return new Vector2(position.X + size.X / 2, position.Y + size.Y / 2);
+            return new Vector2(Position.X + Size.X / 2, Position.Y + Size.Y / 2);
         }
         public float Top()
         {
-            return position.Y;
+            return Position.Y;
         }
         public float Bottom()
         {
-            return position.Y + size.Y;
+            return Position.Y + Size.Y;
         }
         public float Left()
         {
-            return position.X;
+            return Position.X;
         }
         public float Right()
         {
-            return position.X + size.X;
+            return Position.X + Size.X;
         }
         public bool Equals(RectangleF other)
         {
-            return position == other.position && size == other.size;
+            return Position == other.Position && Size == other.Size;
         }
         public Rectangle toIntRect()
         {
-            return new Rectangle(position.ToPoint(), size.ToPoint());
+            return new Rectangle(Position.ToPoint(), Size.ToPoint());
         }
     }
 }
