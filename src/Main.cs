@@ -253,7 +253,7 @@ namespace Platformer.src
             camOffset = player.position - viewportSize / 2 / GameScale;
 
             // Prevent camera from going offscreen (bad)
-            Vector2 MaxOffset = new Vector2(level.tilemap.width * Tile.TileSize.X, level.tilemap.height * Tile.TileSize.Y) - viewportSize;
+            Vector2 MaxOffset = level.bounds.VectorSize() - viewportSize;
             camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset * GameScale);
 
             // Apply Translation

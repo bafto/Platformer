@@ -2,7 +2,7 @@
 
 namespace Platformer.src
 {
-    public class RectangleF
+    public struct RectangleF
     {
         public Vector2 Position;
         public Vector2 Size;
