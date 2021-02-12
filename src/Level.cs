@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Platformer.src.Enemies;
 
 namespace Platformer.src
 {
@@ -51,6 +52,13 @@ namespace Platformer.src
                     {
                         Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
                         Enemies.Add(new Enemy(pos));
+                        break;
+                    }
+                    case 1:
+                    {
+                        Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
+                        int stop = int.Parse(Lines[3]);
+                        Enemies.Add(new PathEnemy(pos, stop, int.Parse(Lines[4])));
                         break;
                     }
                     default:
