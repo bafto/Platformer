@@ -67,7 +67,6 @@ namespace Platformer.src
         public static Player player;
         public static Level level;
         public static Camera camera;
-        public static Enemy enemy;
 
         public Main()
         {
@@ -91,7 +90,6 @@ namespace Platformer.src
             player = new Player();
             level = new Level(CurrentDirectory + @"\levels\level0.level");
             camera = new Camera();
-            enemy = new Enemy();
 
             // initialize UIState
             for (int i = 0; i < UIStates.Count; i++)
@@ -142,9 +140,6 @@ namespace Platformer.src
             {
                 // Update Player
                 player.Update();
-
-
-                enemy.Update();
             }
             if (frameStep)
             {
@@ -171,8 +166,6 @@ namespace Platformer.src
 
             // Draw Tiles before player to not cover him
             level.Draw();
-
-            enemy.Draw();
             // Draw Player
             player.Draw();
 
