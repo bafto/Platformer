@@ -116,7 +116,7 @@ namespace Platformer.src
         public virtual void Draw()
         {
             rect.Position = position;
-            Main.spriteBatch.Draw(Main.solid, Main.camera.Translate(rect.toIntRect()), color);
+            Main.spriteBatch.Draw(Main.solid, rect.toIntRect(), color);
         }
     }
 }

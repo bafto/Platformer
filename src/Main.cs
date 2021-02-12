@@ -68,7 +68,6 @@ namespace Platformer.src
         //Game Stuff
         public static Player player;
         public static Level level;
-        public static Camera camera;
 
         public Main()
         {
@@ -91,7 +90,6 @@ namespace Platformer.src
         {
             player = new Player();
             level = new Level(CurrentDirectory + @"\levels\level0.level");
-            camera = new Camera();
 
             // initialize UIState
             for (int i = 0; i < UIStates.Count; i++)
@@ -148,8 +146,6 @@ namespace Platformer.src
             {
                 freeze = true;
             }
-            // Update Camera
-            camera.Update();
 
             // Update UI
             for (int i = 0; i < UIStates.Count; i++)
@@ -170,19 +166,10 @@ namespace Platformer.src
 
             // Apply Zoom
             GameMatrix = Matrix.CreateScale(GameScale);
-
-            // Calculate Translation
-            Vector2 viewportSize = new Vector2(ViewPort.Width, ViewPort.Height);
-            Vector2 camOffset = player.position - viewportSize / 2 / GameScale;
-
-            // Prevent camera from going offscreen (bad)
-            Vector2 MaxOffset = new Vector2(level.tilemap.width * Tile.TileSize.X, level.tilemap.height * Tile.TileSize.Y) - viewportSize;
-            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset * GameScale);
-
             // Apply Translation
-            GameMatrix.Translation -= new Vector3(camOffset.X * GameScale, camOffset.Y * GameScale, 0);
+            GameMatrix = CameraTranslate(GameMatrix);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, GameMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, GameMatrix);
 
             // Draw Tiles before player to not cover him
             level.Draw();
@@ -193,7 +180,7 @@ namespace Platformer.src
 
             // UI
             UIScaleMatrix = Matrix.CreateScale(UIScale);
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, UIScaleMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, UIScaleMatrix);
             {
                 for (int i = 0; i < UIStates.Count; i++)
                 {
@@ -257,6 +244,27 @@ namespace Platformer.src
             wholeTex.GetData(0, srcRect, data, 0, data.Length);
             returnTex.SetData(data);
             return returnTex;
+        }
+        public static Vector2 camOffset;
+        public static Matrix CameraTranslate(Matrix matrix)
+        {
+            // Calculate Translation
+            Vector2 viewportSize = new Vector2(ViewPort.Width, ViewPort.Height);
+            camOffset = player.position - viewportSize / 2 / GameScale;
+
+            // Prevent camera from going offscreen (bad)
+            Vector2 MaxOffset = new Vector2(level.tilemap.width * Tile.TileSize.X, level.tilemap.height * Tile.TileSize.Y) - viewportSize;
+            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset * GameScale);
+
+            // Apply Translation
+            matrix.Translation -= new Vector3(camOffset.X * GameScale, camOffset.Y * GameScale, 0);
+
+            return matrix;
+        }
+        public static Vector2 InvertTranslate(Vector2 vector)
+        {
+            vector += new Vector2(camOffset.X / GameScale, camOffset.Y / GameScale);
+            return vector;
         }
     }
 }
