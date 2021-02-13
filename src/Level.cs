@@ -58,8 +58,8 @@ namespace Platformer.src
                     case 1:
                     {
                         Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
-                        int stop = int.Parse(Lines[3]);
-                        Enemies.Add(new PathEnemy(pos, stop, int.Parse(Lines[4])));
+                        int start = int.Parse(Lines[3]), stop = int.Parse(Lines[4]);
+                        Enemies.Add(new PathEnemy(pos, start, stop, float.Parse(Lines[5])));
                         break;
                     }
                     default:

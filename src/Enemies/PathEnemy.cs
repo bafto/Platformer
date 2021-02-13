@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
 
 namespace Platformer.src.Enemies
 {
@@ -11,13 +6,13 @@ namespace Platformer.src.Enemies
     {
         private int start, stop;
         private bool turn = true;
-        public PathEnemy(Vector2 pos, int Stop, float Speed)
+        public PathEnemy(Vector2 pos, int Start, int Stop, float Speed)
             :
             base(pos)
         {
             Initialize();
-            start = (int)pos.X;
-            stop = start + Stop;
+            start = Start; //set the start point (should be higher than the start position)
+            stop = Stop; //set the stop point (should be higher than start)
             speed = Speed;
         }
         protected override void Initialize()
@@ -27,25 +22,30 @@ namespace Platformer.src.Enemies
         }
         protected override void AI()
         {
-            velocity.X += speed * Main.DeltaTime;
-            velocity = Vector2.Clamp(velocity, new Vector2(-speed, 0f), new Vector2(speed, Main.level.gravity));
+            if (turn)
+                velocity.X += speed * Main.DeltaTime;
+            else
+                velocity.X -= speed * Main.DeltaTime;
+            velocity = Vector2.Clamp(velocity, new Vector2(-speed, 0f), new Vector2(speed, Main.level.gravity)); // clamp velocity  to speed. Maybe one wants to set a different value then <speed>
             nextPosition = position + velocity;
             if(turn)
             {
-                if(nextPosition.X + rect.Size.X > stop)
+                if(position.X + rect.Size.X > stop)
                 {
                     turn = false;
-                    speed = -speed;
-                    nextPosition.X = stop - rect.Size.X;
+                    // With this the enemy is in a invisible box, and bumps off the walls. Without it he first slows down.
+                    // If this is not enabled, the speed must be taken in account, or the enemie might fall of edges,
+                    // cause he cannot slow down quick enough.
+                    // Might set this in the constructor later
+                    velocity.X = 0;
                 }
             }
             else
             {
-                if(nextPosition.X < start)
+                if(position.X < start)
                 {
                     turn = true;
-                    speed = -speed;
-                    nextPosition.X = start;
+                    velocity.X = 0;
                 }
             }
         }

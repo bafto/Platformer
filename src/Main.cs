@@ -134,7 +134,7 @@ namespace Platformer.src
                 freeze = false;
             }
 
-            //Update Tilemap...Does nothing, but maybe we will add that later
+            //Update Tilemap(Don't need that yet but maybe later) and updates Enemies(definitely need that)
             level.Update();
 
             if (globalTimer % gameSpeed == 0 && !freeze)
