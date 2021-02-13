@@ -10,7 +10,6 @@ namespace Platformer.src.Enemies
             :
             base(pos)
         {
-            Initialize();
             start = Start; //set the start point (should be higher than the start position)
             stop = Stop; //set the stop point (should be higher than start)
             speed = Speed;

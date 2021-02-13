@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Diagnostics;
 using Platformer.src.Enemies;
 
 namespace Platformer.src
@@ -53,6 +54,7 @@ namespace Platformer.src
                     {
                         Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
                         Enemies.Add(new Enemy(pos));
+                        Debug.WriteLine(Enemies[Enemies.Count - 1].ToString());
                         break;
                     }
                     case 1:
@@ -60,6 +62,15 @@ namespace Platformer.src
                         Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
                         int start = int.Parse(Lines[3]), stop = int.Parse(Lines[4]);
                         Enemies.Add(new PathEnemy(pos, start, stop, float.Parse(Lines[5])));
+                        Debug.WriteLine(Enemies[Enemies.Count - 1].ToString());
+                        break;
+                    }
+                    case 2:
+                    {
+                        Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
+                        Vector2 area = new Vector2(int.Parse(Lines[3]), int.Parse(Lines[4]));
+                        Enemies.Add(new TrackEnemy(pos, area));
+                        Debug.WriteLine(Enemies[Enemies.Count - 1].ToString());
                         break;
                     }
                     default:
@@ -86,7 +97,7 @@ namespace Platformer.src
             {
                 e.Update();
             }
-            foreach(Enemy e in Enemies)
+            foreach (Enemy e in Enemies)
             {
                 e.Update();
             }
@@ -101,7 +112,7 @@ namespace Platformer.src
                 e.Draw(); 
             }
 #endif
-            foreach(Enemy e in Enemies)
+            foreach (Enemy e in Enemies)
             {
                 e.Draw();
             }

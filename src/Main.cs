@@ -41,6 +41,7 @@ namespace Platformer.src
         public static long globalTimer;
         public static byte gameSpeed = 1;
         public static bool freeze = false;
+        public static bool UIActive = true;
 
         // input stuff
         /// <summary>
@@ -133,6 +134,10 @@ namespace Platformer.src
                 frameStep = false;
                 freeze = false;
             }
+            if(keyboard.JustPressed(Keys.U))
+            {
+                UIActive = !UIActive;
+            }
 
             //Update Tilemap(Don't need that yet but maybe later) and updates Enemies(definitely need that)
             level.Update();
@@ -148,9 +153,12 @@ namespace Platformer.src
             }
 
             // Update UI
-            for (int i = 0; i < UIStates.Count; i++)
+            if (UIActive)
             {
-                UIStates[i].UpdateSelf(gameTime);
+                for (int i = 0; i < UIStates.Count; i++)
+                {
+                    UIStates[i].UpdateSelf(gameTime);
+                }
             }
 
             base.Update(gameTime);
@@ -179,21 +187,24 @@ namespace Platformer.src
             spriteBatch.End();
 
             // UI
-            UIScaleMatrix = Matrix.CreateScale(UIScale);
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, UIScaleMatrix);
+            if (UIActive)
             {
-                for (int i = 0; i < UIStates.Count; i++)
+                UIScaleMatrix = Matrix.CreateScale(UIScale);
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, UIScaleMatrix);
                 {
-                    UIStates[i].DrawSelf(spriteBatch);
-                }
+                    for (int i = 0; i < UIStates.Count; i++)
+                    {
+                        UIStates[i].DrawSelf(spriteBatch);
+                    }
 
-                if (MouseText != null)
-                {
-                    spriteBatch.DrawString(font, MouseText, mouse.Position.ToVector2() + new Vector2(10), Color.White);
-                    MouseText = null;
+                    if (MouseText != null)
+                    {
+                        spriteBatch.DrawString(font, MouseText, mouse.Position.ToVector2() + new Vector2(10), Color.White);
+                        MouseText = null;
+                    }
                 }
+                spriteBatch.End();
             }
-            spriteBatch.End();
 
 
 
