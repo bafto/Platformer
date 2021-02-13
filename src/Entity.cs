@@ -116,5 +116,9 @@ namespace Platformer.src
             rect.Position = position;
             Main.spriteBatch.Draw(Main.solid, rect.toIntRect(), color);
         }
+        public override string ToString()
+        {
+            return $"Position: {position} Velocity: {velocity}";
+        }
     }
 }

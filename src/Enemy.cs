@@ -19,18 +19,10 @@ namespace Platformer.src
             base.Initialize();
             color = Color.Red;
         }
-        public override void Update()
-        {
-            base.Update();
-        }
         protected override void AI()
         {
-            velocity = Vector2.Clamp(velocity, new Vector2(0f, 0f), new Vector2(0f, 15f));
+            velocity = Vector2.Clamp(velocity, Vector2.Zero, new Vector2(0f, Main.level.gravity));
             nextPosition = position + velocity;
-        }
-        public override void Draw()
-        {
-            base.Draw();
         }
     }
 }
