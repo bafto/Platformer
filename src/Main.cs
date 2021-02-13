@@ -134,18 +134,18 @@ namespace Platformer.src
                 frameStep = false;
                 freeze = false;
             }
-            if(keyboard.JustPressed(Keys.U))
+            if (keyboard.JustPressed(Keys.U))
             {
                 UIActive = !UIActive;
             }
-
-            //Update Tilemap(Don't need that yet but maybe later) and updates Enemies(definitely need that)
-            level.Update();
 
             if (globalTimer % gameSpeed == 0 && !freeze)
             {
                 // Update Player
                 player.Update();
+
+                // Update Tilemap(Don't need that yet but maybe later) and updates Enemies(definitely need that)
+                level.Update();
             }
             if (frameStep)
             {

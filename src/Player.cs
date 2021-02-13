@@ -22,7 +22,7 @@ namespace Platformer.src
             rect = new RectangleF(0, 0, 50, 50);
             color = Color.Red;
             maxWalkSpeed = 10f;
-            maxJumpSpeed = 200f; // If the same as jumpspeed it does nothing, if lower it limits jumpspeed, if higher it enables a mechanic
+            maxJumpSpeed = 200f;
             maxFallSpeed = 15f;
             acceleration = 0.5f;
             drag = 5;
@@ -44,9 +44,13 @@ namespace Platformer.src
             // Mainly handles jumping and movement
             HandleInput();
 
-            // Resolve collision and set position
+            // Handle collision and set position
             base.HandleCollision();
         }
+
+        /// <summary>
+        /// Jumping and Movement
+        /// </summary>
         private void HandleInput()
         {
             // Handle input
@@ -76,6 +80,7 @@ namespace Platformer.src
 
             nextPosition = position + velocity;
         }
+
         public override void Draw()
         {
             rect.Position = position;

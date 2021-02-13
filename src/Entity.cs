@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
 
 namespace Platformer.src
 {
@@ -20,25 +15,32 @@ namespace Platformer.src
         {
             Initialize();
         }
+
         protected virtual void Initialize()
         {
             rect = new RectangleF(new Vector2(0, 0), new Vector2(50, 50));
             position = Vector2.Zero;
         }
+
         public virtual void Update()
         {
-            if(!noGravity)
+            if (!noGravity)
             {
                 velocity.Y += Main.level.gravity * Main.DeltaTime;
             }
             AI();
             HandleCollision();
         }
-        protected virtual void AI() //For movement
+
+        /// <summary>
+        /// Movement
+        /// </summary>
+        protected virtual void AI()
         {
 
         }
-        protected virtual void HandleCollision() //might be altered for different collision behaviour
+
+        protected virtual void HandleCollision()
         {
             // Keep player in level bounds
             if (Helper.IsClamp(position, Vector2.Zero, Main.level.bounds.VectorSize()))
@@ -55,7 +57,6 @@ namespace Platformer.src
                 {
                     if (nextRect.Intersects(Main.level.tilemap.hitboxes[i]))
                     {
-                        //bool XorY = false;
                         // try only x intersection
                         nextRect.Position.X -= velocity.X;
                         // still intersects?
@@ -111,11 +112,13 @@ namespace Platformer.src
                 position = nextRect.Position;
             }
         }
+
         public virtual void Draw()
         {
             rect.Position = position;
             Main.spriteBatch.Draw(Main.solid, rect.toIntRect(), color);
         }
+
         public override string ToString()
         {
             return $"Position: {position} Velocity: {velocity}";
