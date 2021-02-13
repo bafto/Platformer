@@ -329,13 +329,12 @@ namespace Platformer.src.UI
             device.ScissorRectangle = original;
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, sampler, DepthStencilState.None, rasterizer, null, Main.UIScaleMatrix);
-
-            if (false)
-            {
-                if (OuterDimensions != Dimensions) spriteBatch.Draw(Main.solid, OuterDimensions, Color.Goldenrod * 0.5f);
-                spriteBatch.Draw(Main.solid, Dimensions, Color.LimeGreen * 0.5f);
-                if (InnerDimensions != Dimensions) spriteBatch.Draw(Main.solid, InnerDimensions, Color.LightBlue * 0.5f);
-            }
+            // Debug
+            /*
+            if (OuterDimensions != Dimensions) spriteBatch.Draw(Main.solid, OuterDimensions, Color.Goldenrod * 0.5f);
+            spriteBatch.Draw(Main.solid, Dimensions, Color.LimeGreen * 0.5f);
+            if (InnerDimensions != Dimensions) spriteBatch.Draw(Main.solid, InnerDimensions, Color.LightBlue * 0.5f);
+            // */
         }
         #endregion
         private void UpdateEvents()

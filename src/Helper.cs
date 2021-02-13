@@ -14,6 +14,15 @@ namespace Platformer.src
         {
             return Main.lastKeyboard.IsKeyUp(key) && Main.keyboard.IsKeyDown(key);
         }
+
+        public static Vector2 ToVector2(this Vector3 v)
+        {
+            return new Vector2(v.X, v.Y);
+        }
+        public static Vector2 VectorSize(this Rectangle r)
+        {
+            return r.Size.ToVector2();
+        }
         public static bool IsValid(this char c)
         {
             char[] validChars = {

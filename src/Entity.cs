@@ -41,7 +41,7 @@ namespace Platformer.src
         protected virtual void HandleCollision() //might be altered for different collision behaviour
         {
             // Keep player in level bounds
-            if (Helper.IsClamp(position, Vector2.Zero, new Vector2(Main.level.tilemap.width * Tile.TileSize.X - 50, Main.level.tilemap.height * Tile.TileSize.Y - 90)))
+            if (Helper.IsClamp(position, Vector2.Zero, Main.level.bounds.VectorSize()))
             {
                 position = Main.level.spawnPoint;
                 nextPosition = Main.level.spawnPoint;

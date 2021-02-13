@@ -13,6 +13,7 @@ namespace Platformer.src
         public List<Enemy> Enemies;
         public Tilemap tilemap;
         public float gravity = 25f;
+        public Rectangle bounds;
         public Level(string file)
         {
             EventTriggers = new List<EventTrigger>();
@@ -76,6 +77,7 @@ namespace Platformer.src
                 }
             }
             tilemap = new Tilemap(mapLines);
+            bounds = new Rectangle(0, 0, tilemap.width * (int)Tile.TileSize.X, tilemap.height * (int)Tile.TileSize.Y);
         }
         public void Update()
         {
