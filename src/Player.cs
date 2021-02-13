@@ -22,7 +22,7 @@ namespace Platformer.src
             rect = new RectangleF(0, 0, 50, 50);
             color = Color.Red;
             maxWalkSpeed = 10f;
-            maxJumpSpeed = 16f; // If the same as jumpspeed it does nothing, if lower it limits jumpspeed, if higher it enables a mechanic
+            maxJumpSpeed = 200f; // If the same as jumpspeed it does nothing, if lower it limits jumpspeed, if higher it enables a mechanic
             maxFallSpeed = 15f;
             acceleration = 0.5f;
             drag = 5;
@@ -69,7 +69,7 @@ namespace Platformer.src
                 velocity.Y -= jumpspeed;
             }
             // Drag so the player slows on X movement
-            velocity.X -= velocity.X / 30;
+            velocity.X -= velocity.X / 15;
 
             // Clamp Velocity
             velocity = Vector2.Clamp(velocity, new Vector2(-maxWalkSpeed, -maxJumpSpeed), new Vector2(maxWalkSpeed, maxFallSpeed));

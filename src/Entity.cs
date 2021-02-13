@@ -72,7 +72,6 @@ namespace Platformer.src
                             }
                             else // no? set the position accordingly
                             {
-                                //XorY = true;
                                 if (nextRect.Position.Y > Main.level.tilemap.hitboxes[i].Bottom())
                                 {
                                     nextRect.Position.Y = Main.level.tilemap.hitboxes[i].Bottom();
@@ -91,7 +90,6 @@ namespace Platformer.src
                         }
                         else // no? set the position accordingly
                         {
-                            //XorY = true;
                             if (nextRect.Position.X > Main.level.tilemap.hitboxes[i].Right())
                             {
                                 nextRect.Position.X = Main.level.tilemap.hitboxes[i].Right();

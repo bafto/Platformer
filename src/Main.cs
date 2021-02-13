@@ -252,18 +252,18 @@ namespace Platformer.src
             Vector2 viewportSize = new Vector2(ViewPort.Width, ViewPort.Height);
             camOffset = player.position - viewportSize / 2 / GameScale;
 
-            // Prevent camera from going offscreen (bad)
+            // Prevent camera from going offscreen
             Vector2 MaxOffset = level.bounds.VectorSize() - viewportSize;
             camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset * GameScale);
 
             // Apply Translation
-            matrix.Translation -= new Vector3(camOffset.X * GameScale, camOffset.Y * GameScale, 0);
+            matrix.Translation -= new Vector3(camOffset.X, camOffset.Y, 0) * GameScale;
 
             return matrix;
         }
         public static Vector2 InvertTranslate(Vector2 vector)
         {
-            vector += new Vector2(camOffset.X / GameScale, camOffset.Y / GameScale);
+            vector += (GameMatrix.Translation + new Vector3(camOffset.X, camOffset.Y, 0)).ToVector2();
             return vector;
         }
     }
