@@ -17,6 +17,7 @@ namespace Platformer.src
             hitboxes = new List<RectangleF>();
             Initialize(lines);
         }
+
         private void Initialize(string[] lines)
         {
             //Load Textures from File (texMap handles this)
@@ -42,6 +43,7 @@ namespace Platformer.src
             }
             MakeHitboxes();
         }
+
         private void MakeHitboxes()//Merge the tile rects together (Don't ask how it works. Please)
         {
             for (int x = 0; x < width; x++)
@@ -95,10 +97,12 @@ namespace Platformer.src
                 }
             }
         }
+
         public static Tile GetTileAtPos(Vector2 pos)
         {
             return Main.level.tilemap.tiles[(int)(pos.X / Tile.TileSize.X), (int)(pos.Y / Tile.TileSize.Y)];
         }
+
         public bool Collides(RectangleF rect)
         {
             for (int i = 0; i < hitboxes.Count; i++)
@@ -110,10 +114,12 @@ namespace Platformer.src
             }
             return false;
         }
+
         public void Update() //do we even need this? Maybe, so it will stay here.
         {
 
         }
+
         public void Draw()
         {
             for (int x = 0; x < width; x++)
@@ -124,7 +130,7 @@ namespace Platformer.src
                 }
             }
 #if DEBUG
-            for(int i = 0; i < hitboxes.Count; i++)
+            for (int i = 0; i < hitboxes.Count; i++)
             {
                 var destinationPatches = Helper.CreatePatches(hitboxes[i].toIntRect());
                 var _sourcePatches = Helper.CreatePatches(Main.outline.Bounds);

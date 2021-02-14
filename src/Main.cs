@@ -20,15 +20,7 @@ namespace Platformer.src
         public static Texture2D panel;
         public static Texture2D outline;
         public static Texture2D background;
-        public static Rectangle Screen
-        {
-            get
-            {
-                // Update Screen variable
-                var sex = System.Windows.Forms.Control.FromHandle(instance.Window.Handle).Bounds;
-                return new Rectangle(sex.X, sex.Y, sex.Width, sex.Height);
-            }
-        }
+        public static Vector2 WindowPos => System.Windows.Forms.Control.FromHandle(instance.Window.Handle).Location.ToVector2();
         public static Viewport ViewPort => graphics.GraphicsDevice.Viewport;
         public static float DeltaTime { get; private set; }
         public static string CurrentDirectory => Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
@@ -134,18 +126,18 @@ namespace Platformer.src
                 frameStep = false;
                 freeze = false;
             }
-            if(keyboard.JustPressed(Keys.U))
+            if (keyboard.JustPressed(Keys.U))
             {
                 UIActive = !UIActive;
             }
-
-            //Update Tilemap(Don't need that yet but maybe later) and updates Enemies(definitely need that)
-            level.Update();
 
             if (globalTimer % gameSpeed == 0 && !freeze)
             {
                 // Update Player
                 player.Update();
+
+                // Update Tilemap(Don't need that yet but maybe later) and updates Enemies(definitely need that)
+                level.Update();
             }
             if (frameStep)
             {
@@ -169,7 +161,7 @@ namespace Platformer.src
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(background, Screen, Color.White);
+            spriteBatch.Draw(background, ViewPort.Bounds, Color.White);
             spriteBatch.End();
 
             // Apply Zoom
@@ -263,19 +255,22 @@ namespace Platformer.src
             Vector2 viewportSize = new Vector2(ViewPort.Width, ViewPort.Height);
             camOffset = player.position - viewportSize / 2 / GameScale;
 
-            // Prevent camera from going offscreen (bad)
+            // Prevent camera from going offscreen
             Vector2 MaxOffset = level.bounds.VectorSize() - viewportSize;
             camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset * GameScale);
 
             // Apply Translation
-            matrix.Translation -= new Vector3(camOffset.X * GameScale, camOffset.Y * GameScale, 0);
+            matrix.Translation -= new Vector3(camOffset.X, camOffset.Y, 0) * GameScale;
 
             return matrix;
         }
         public static Vector2 InvertTranslate(Vector2 vector)
         {
-            vector += new Vector2(camOffset.X / GameScale, camOffset.Y / GameScale);
-            return vector;
+            return vector + camOffset;
+        }
+        public static Vector2 InvertTranslate(Point point)
+        {
+            return point.ToVector2() + camOffset;
         }
     }
 }

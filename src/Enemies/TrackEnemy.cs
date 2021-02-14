@@ -13,11 +13,13 @@ namespace Platformer.src.Enemies
             area = size;
             speed = Speed;
         }
+
         protected override void Initialize()
         {
             base.Initialize();
             color = Color.IndianRed;
         }
+
         protected override void AI()
         {
             if (running)

@@ -17,6 +17,7 @@ namespace Platformer.src
         {
             textures = new Dictionary<int, Texture2D>();
         }
+
         public void Initialize(string file)
         {
             //Load File

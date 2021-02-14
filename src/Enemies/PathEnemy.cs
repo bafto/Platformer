@@ -6,19 +6,20 @@ namespace Platformer.src.Enemies
     {
         private int start, stop;
         private bool turn = true;
-        public PathEnemy(Vector2 pos, int Start, int Stop, float Speed)
-            :
-            base(pos)
+
+        public PathEnemy(Vector2 pos, int Start, int Stop, float Speed) : base(pos)
         {
-            start = Start; //set the start point (should be higher than the start position)
-            stop = Stop; //set the stop point (should be higher than start)
+            start = Start; // set the start point (should be higher than the start position)
+            stop = Stop; // set the stop point (should be higher than start)
             speed = Speed;
         }
+
         protected override void Initialize()
         {
             base.Initialize();
             color = Color.DarkRed;
         }
+
         protected override void AI()
         {
             if (turn)
@@ -27,9 +28,9 @@ namespace Platformer.src.Enemies
                 velocity.X -= speed * Main.DeltaTime;
             velocity = Vector2.Clamp(velocity, new Vector2(-speed, 0f), new Vector2(speed, Main.level.gravity)); // clamp velocity  to speed. Maybe one wants to set a different value then <speed>
             nextPosition = position + velocity;
-            if(turn)
+            if (turn)
             {
-                if(position.X + rect.Size.X > stop)
+                if (position.X + rect.Size.X > stop)
                 {
                     turn = false;
                     // With this the enemy is in a invisible box, and bumps off the walls. Without it he first slows down.
@@ -41,7 +42,7 @@ namespace Platformer.src.Enemies
             }
             else
             {
-                if(position.X < start)
+                if (position.X < start)
                 {
                     turn = true;
                     velocity.X = 0;

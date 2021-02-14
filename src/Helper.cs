@@ -7,22 +7,29 @@ namespace Platformer.src
     static class Extentions
     {
         // for extention or helper methods
-        /// <summary>
-        /// returns true if the key has just been pressed
-        /// </summary>
+
+        /// <returns><b>true</b> if the key has just been pressed</returns>
         public static bool JustPressed(this KeyboardState s, Keys key)
         {
             return Main.lastKeyboard.IsKeyUp(key) && Main.keyboard.IsKeyDown(key);
         }
 
+        /// <returns>The X and Y components of a <b>Vector3</b> as a <b>Vector2</b></returns>
         public static Vector2 ToVector2(this Vector3 v)
         {
             return new Vector2(v.X, v.Y);
         }
+        public static Vector2 ToVector2(this System.Drawing.Point p)
+        {
+            return new Vector2(p.X, p.Y);
+        }
+        /// <returns> The Size of a Rectangle as a <b>Vector2</b></returns>
         public static Vector2 VectorSize(this Rectangle r)
         {
             return r.Size.ToVector2();
         }
+
+        /// <returns><b>true</b> if the character is valid (specified in an array)</returns>
         public static bool IsValid(this char c)
         {
             char[] validChars = {
@@ -45,7 +52,7 @@ namespace Platformer.src
         /// <summary>
         /// Checks if a Clamp would occur
         /// </summary>
-        /// <returns>if a clamp has occured</returns>
+        /// <returns><b>true</b> if a clamp has occured</returns>
         public static bool IsClamp(Vector2 value, Vector2 min, Vector2 max)
         {
             if (value.X < min.X || value.Y < min.Y)
@@ -58,6 +65,7 @@ namespace Platformer.src
             }
             return false;
         }
+
         public static Rectangle[] CreatePatches(Rectangle rectangle)
         {
             int padding = 10;

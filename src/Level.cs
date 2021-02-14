@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Platformer.src.Enemies;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Diagnostics;
-using Platformer.src.Enemies;
+using System.IO;
 
 namespace Platformer.src
 {
@@ -15,12 +15,14 @@ namespace Platformer.src
         public Tilemap tilemap;
         public float gravity = 25f;
         public Rectangle bounds;
+
         public Level(string file)
         {
             EventTriggers = new List<EventTrigger>();
             Enemies = new List<Enemy>();
             Initialize(file);
         }
+
         public void Initialize(string file)
         {
             string[] lines = File.ReadAllLines(file);
@@ -44,11 +46,11 @@ namespace Platformer.src
                 }
             }
             //initialize the Enemys
-            for(++lIndex; lIndex < lines.Length && lines[lIndex] != "map:"; lIndex++)
+            for (++lIndex; lIndex < lines.Length && lines[lIndex] != "map:"; lIndex++)
             {
                 string[] Lines = lines[lIndex].Split(' ');
                 //switch on the enemy ID (temporary identification to see what type of enemy it is)
-                switch(int.Parse(Lines[0]))
+                switch (int.Parse(Lines[0]))
                 {
                     case 0:
                     {
@@ -88,6 +90,7 @@ namespace Platformer.src
             tilemap = new Tilemap(mapLines);
             bounds = new Rectangle(0, 0, tilemap.width * (int)Tile.TileSize.X, tilemap.height * (int)Tile.TileSize.Y);
         }
+
         public void Update()
         {
             tilemap.Update();
@@ -100,14 +103,15 @@ namespace Platformer.src
                 e.Update();
             }
         }
+
         public void Draw()
         {
             tilemap.Draw();
 
 #if DEBUG
-            foreach (EventTrigger e in EventTriggers) 
+            foreach (EventTrigger e in EventTriggers)
             {
-                e.Draw(); 
+                e.Draw();
             }
 #endif
             foreach (Enemy e in Enemies)
