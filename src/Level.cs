@@ -72,28 +72,31 @@ namespace Platformer.src
             for (++counter; fileLine[counter] != "map:"; counter++)
             {
                 string[] enemyLine = fileLine[counter].Split(' ');
+                Vector2 pos = new Vector2(int.Parse(enemyLine[1]), int.Parse(enemyLine[2]));
                 //switch on the enemy ID (temporary identification to see what type of enemy it is)
                 switch (int.Parse(enemyLine[0]))
                 {
                     case 0:
                         {
-                            Vector2 pos = new Vector2(int.Parse(enemyLine[1]), int.Parse(enemyLine[2]));
                             Enemies.Add(new Enemy(pos));
                             break;
                         }
                     case 1:
                         {
-                            Vector2 pos = new Vector2(int.Parse(enemyLine[1]), int.Parse(enemyLine[2]));
                             int start = int.Parse(enemyLine[3]), stop = int.Parse(enemyLine[4]);
                             Enemies.Add(new PathEnemy(pos, start, stop, float.Parse(enemyLine[5])));
                             break;
                         }
                     case 2:
                         {
-                            Vector2 pos = new Vector2(int.Parse(enemyLine[1]), int.Parse(enemyLine[2]));
                             Vector2 area = new Vector2(int.Parse(enemyLine[3]), int.Parse(enemyLine[4]));
                             float speed = float.Parse(enemyLine[5]);
                             Enemies.Add(new TrackEnemy(pos, area, speed));
+                            break;
+                        }
+                    case 3:
+                        {
+                            Enemies.Add(new CopyEnemy(pos, float.Parse(enemyLine[3])));
                             break;
                         }
                     default:

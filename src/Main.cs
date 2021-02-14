@@ -159,10 +159,10 @@ namespace Platformer.src
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(2));
-            spriteBatch.Draw(background, ViewPort.Bounds, Color.White);
+            //spriteBatch.Draw(background, ViewPort.Bounds, Color.White);
             spriteBatch.End();
 
             // Apply Zoom

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 namespace Platformer.src
 {
@@ -14,6 +15,7 @@ namespace Platformer.src
         public float maxJumpSpeed;
         public float maxFallSpeed;
         public float maxWalkSpeed;
+        public List<Vector2> trail = new List<Vector2>();
 
         protected override void Initialize()
         {
@@ -32,6 +34,8 @@ namespace Platformer.src
         public override void Update()
         {
             lastPosition = position;
+            trail.Add(position);
+            if (Main.globalTimer > 60) trail.RemoveAt(0);
 
             // gravity
             if (!grounded)
@@ -88,6 +92,8 @@ namespace Platformer.src
 #if DEBUG
             Main.spriteBatch.Draw(Main.solid, new Rectangle(lastPosition.ToPoint(), rect.Size.ToPoint()), Color.Green * 0.3f);
             Main.spriteBatch.Draw(Main.solid, new Rectangle((position + velocity).ToPoint(), rect.Size.ToPoint()), Color.Blue * 0.3f);
+            for(int i = 0; i < trail.Count; i++)
+                Main.spriteBatch.Draw(Main.solid, new Rectangle(trail[i].ToPoint() + (rect.Size / 2).ToPoint(), new Point(4, 4)), Color.Red);
 
             var groundedCheck = new Rectangle((int)position.X, (int)position.Y + 2, 50, 50);
             Main.spriteBatch.Draw(Main.solid, new Rectangle((int)position.X, groundedCheck.Bottom, 50, 2), Color.Yellow);
