@@ -9,7 +9,7 @@ namespace Platformer.src.UI.UIStates
 
         public override void Initialize()
         {
-            var panel = new UIPanel(400, 100, Color.Red);
+            var panel = new UIPanel(400, 200, Color.Red);
             Append(panel);
             playerInfo = new UIText("", Color.Black);
             panel.Append(playerInfo);
@@ -18,7 +18,7 @@ namespace Platformer.src.UI.UIStates
 
         protected override void Update(GameTime gameTime)
         {
-            playerInfo.Text = $"Player Position: {Main.player.position}\nPlayer Velocity: {Main.player.velocity}\n Is player grounded?: {Main.player.grounded}\nZoom: {Main.GameScale}\n MousePos Rel. to scrn: {Main.InvertTranslate(Main.mouse.Position)}\n {Main.camOffset}";
+            playerInfo.Text = $"Player Position: {Main.player.position}\nPlayer Velocity: {Main.player.velocity}\nIs player grounded?: {Main.player.grounded}\nZoom: {Main.GameScale}\nMouseWorld: {Main.MouseWorld}\nMouseScreen: {Main.mouse.Position}\nScreen Position: {Camera.camOffset}";
             base.Update(gameTime);
         }
     }

@@ -57,7 +57,7 @@ namespace Platformer.src
 #if DEBUG
             if (Main.LeftClick)
             {
-                position = Main.InvertTranslate(Main.mouse.Position);
+                position = Main.MouseWorld - rect.Size / 2;
             }
 #endif
             if (Main.keyboard.IsKeyDown(Keys.A))

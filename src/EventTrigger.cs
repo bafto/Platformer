@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Platformer.src
 {
-    class EventTrigger
+    public class EventTrigger
     {
         //the different event types as enum for readability if we have many
         public enum EventType

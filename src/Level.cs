@@ -2,7 +2,6 @@
 using Platformer.src.Enemies;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace Platformer.src
@@ -10,103 +9,116 @@ namespace Platformer.src
     public class Level
     {
         public Vector2 spawnPoint;
-        private List<EventTrigger> EventTriggers;
+        public List<EventTrigger> EventTriggers;
         public List<Enemy> Enemies;
         public Tilemap tilemap;
         public float gravity = 25f;
         public Rectangle bounds;
         public string FilePath { get; private set; }
 
+        private string[] fileLine;
+        private uint counter;
         public Level(string file)
         {
             EventTriggers = new List<EventTrigger>();
             Enemies = new List<Enemy>();
             FilePath = file;
+            counter = 0;
             Initialize(file);
         }
-        private string[] lines;
         public void Initialize(string file)
         {
-            lines = File.ReadAllLines(file);
-            string[] spLine = lines[0].Split(' '); //The line where the spawnPoint is written
-            //reset the player
+            fileLine = File.ReadAllLines(file);
+
+            // Parse Spawnpoint
+            string[] spLine = fileLine[counter].Split(' ');
             spawnPoint = new Vector2(int.Parse(spLine[0]), int.Parse(spLine[1]));
+
+            // reset the player
             Main.player.position = spawnPoint;
             Main.player.velocity = Vector2.Zero;
-            //initialize the Events
-            int lIndex = 2;
-            for (lIndex = 2; lIndex < lines.Length && lines[lIndex] != "enemies:"; lIndex++)
-            {
-                string[] Lines = lines[lIndex].Split(' ');
-                //Add the Event                                                EventID,                           X Position     ,     Y Position     ,     Width          ,     Height          
-                EventTriggers.Add(new EventTrigger((EventTrigger.EventType)int.Parse(Lines[0]), new Rectangle(int.Parse(Lines[1]), int.Parse(Lines[2]), int.Parse(Lines[3]), int.Parse(Lines[4]))));
 
+            InitializeEvents();
+            InitializeEnemies();
+            InitializeTileMap();
+        }
+
+        private void InitializeEvents()
+        {
+            // goes through the file and stops once it hits "enemies:"
+            for (counter = 2; fileLine[counter] != "enemies:"; counter++)
+            {
+                string[] evtLine = fileLine[counter].Split(' ');
+
+                //Add the Event
+                EventTriggers.Add(new EventTrigger(
+                    (EventTrigger.EventType)int.Parse(evtLine[0]),    // ID
+                    new Rectangle(int.Parse(evtLine[1]), int.Parse(evtLine[2]), int.Parse(evtLine[3]), int.Parse(evtLine[4])))  // Bounds (x, y, w, h)
+                    );
 
                 //Add functionality to the Event
                 if (EventTriggers[^1].eventType == EventTrigger.EventType.LevelLoader)
                 {
                     //set nextLevel to the filename of the Level that will be loaded
-                    EventTriggers[^1].nextLevel = Lines[5];
+                    EventTriggers[^1].nextLevel = evtLine[5];
                     EventTriggers[^1].OnPlayerInside += () => Main.level = new Level(Main.CurrentDirectory + @"\levels\" + EventTriggers[^1].nextLevel);
                 }
             }
-            //initialize the Enemys
-            for (++lIndex; lIndex < lines.Length && lines[lIndex] != "map:"; lIndex++)
+        }
+
+        private void InitializeEnemies()
+        {
+            // increments the counter once, goes through the file and stops once it hits "map:" 
+            for (++counter; fileLine[counter] != "map:"; counter++)
             {
-                string[] Lines = lines[lIndex].Split(' ');
+                string[] enemyLine = fileLine[counter].Split(' ');
                 //switch on the enemy ID (temporary identification to see what type of enemy it is)
-                switch (int.Parse(Lines[0]))
+                switch (int.Parse(enemyLine[0]))
                 {
                     case 0:
-                    {
-                        Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
-                        Enemies.Add(new Enemy(pos));
-                        break;
-                    }
+                        {
+                            Vector2 pos = new Vector2(int.Parse(enemyLine[1]), int.Parse(enemyLine[2]));
+                            Enemies.Add(new Enemy(pos));
+                            break;
+                        }
                     case 1:
-                    {
-                        Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
-                        int start = int.Parse(Lines[3]), stop = int.Parse(Lines[4]);
-                        Enemies.Add(new PathEnemy(pos, start, stop, float.Parse(Lines[5])));
-                        break;
-                    }
+                        {
+                            Vector2 pos = new Vector2(int.Parse(enemyLine[1]), int.Parse(enemyLine[2]));
+                            int start = int.Parse(enemyLine[3]), stop = int.Parse(enemyLine[4]);
+                            Enemies.Add(new PathEnemy(pos, start, stop, float.Parse(enemyLine[5])));
+                            break;
+                        }
                     case 2:
-                    {
-                        Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
-                        Vector2 area = new Vector2(int.Parse(Lines[3]), int.Parse(Lines[4]));
-                            float speed = float.Parse(Lines[5]);
-                        Enemies.Add(new TrackEnemy(pos, area, speed));
-                        break;
-                    }
+                        {
+                            Vector2 pos = new Vector2(int.Parse(enemyLine[1]), int.Parse(enemyLine[2]));
+                            Vector2 area = new Vector2(int.Parse(enemyLine[3]), int.Parse(enemyLine[4]));
+                            float speed = float.Parse(enemyLine[5]);
+                            Enemies.Add(new TrackEnemy(pos, area, speed));
+                            break;
+                        }
                     default:
                         break;
                 }
             }
-            InitializeTileMap();
         }
-        private void InitializeEvents()
-        {
 
-        }
-        private void InitializeEnemies()
-        {
-
-        }
         private void InitializeTileMap()
         {
             //initialize the tilemap
-            string[] mapLines = new string[lines.Length];
-            for (int i = lines.Length - 1; i > -1; i--)
+            string[] mapLines = new string[fileLine.Length];
+
+            for (int i = fileLine.Length - 1; i > -1; i--)
             {
-                if (lines[i] == "map:")
+                if (fileLine[i] == "map:")
                 {
-                    mapLines = new string[lines.Length - i];
-                    Array.Copy(lines, i, mapLines, 0, lines.Length - i);
+                    mapLines = new string[fileLine.Length - i];
+                    Array.Copy(fileLine, i, mapLines, 0, fileLine.Length - i);
                 }
             }
             tilemap = new Tilemap(mapLines);
             bounds = new Rectangle(0, 0, tilemap.width * (int)Tile.TileSize.X, tilemap.height * (int)Tile.TileSize.Y);
         }
+
         public void Update()
         {
             tilemap.Update();

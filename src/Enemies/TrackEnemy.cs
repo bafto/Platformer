@@ -6,12 +6,10 @@ namespace Platformer.src.Enemies
     {
         Vector2 area;
         private bool running = false;
-        public TrackEnemy(Vector2 pos, Vector2 size, float Speed)
-            :
-            base(pos)
+        public TrackEnemy(Vector2 pos, Vector2 size, float speed) : base(pos)
         {
             area = size;
-            speed = Speed;
+            base.speed = speed;
         }
 
         protected override void Initialize()

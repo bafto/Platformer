@@ -57,6 +57,7 @@ namespace Platformer.src
         /// How much the mouse has moved since the last frame
         /// </summary>
         public static bool mouseMoved;
+        public static Vector2 MouseWorld => Camera.InvertTranslate(mouse.Position);
 
         //Game Stuff
         public static Player player;
@@ -166,8 +167,9 @@ namespace Platformer.src
 
             // Apply Zoom
             GameMatrix = Matrix.CreateScale(GameScale);
+
             // Apply Translation
-            GameMatrix = CameraTranslate(GameMatrix);
+            GameMatrix = Camera.Translate(GameMatrix);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, GameMatrix);
 
@@ -247,32 +249,6 @@ namespace Platformer.src
             wholeTex.GetData(0, srcRect, data, 0, data.Length);
             returnTex.SetData(data);
             return returnTex;
-        }
-        public static Vector2 camOffset;
-        public static Matrix CameraTranslate(Matrix matrix)
-        {
-            // Calculate Translation
-            Vector2 viewportSize = new Vector2(ViewPort.Width, ViewPort.Height);
-            camOffset = player.position - viewportSize / 2 / GameScale;
-
-            // Prevent camera from going offscreen
-            Vector2 MaxOffset = level.bounds.VectorSize() - viewportSize;
-            camOffset = Vector2.Clamp(camOffset, Vector2.Zero, MaxOffset * GameScale);
-
-            // Apply Translation
-            matrix.Translation -= new Vector3(camOffset.X, camOffset.Y, 0) * GameScale;
-
-            return matrix;
-        }
-        public static Vector2 InvertTranslate(Vector2 vector)
-        {
-            Matrix invMatrix = Matrix.Invert(GameMatrix);
-            return Vector2.Transform(vector, invMatrix);
-        }
-        public static Vector2 InvertTranslate(Point point)
-        {
-            Matrix invMatrix = Matrix.Invert(GameMatrix);
-            return Vector2.Transform(point.ToVector2(), invMatrix);
         }
     }
 }
