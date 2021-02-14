@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Diagnostics;
 
 namespace Platformer.src
 {
@@ -21,7 +22,7 @@ namespace Platformer.src
         public EventType eventType;
         public string nextLevel;
 
-        public EventTrigger(Vector2 pos, int width, int height, EventType eventType)
+        public EventTrigger(EventType eventType, Vector2 pos, int width, int height)
         {
             this.eventType = eventType;
             nextLevel = string.Empty;
@@ -30,7 +31,7 @@ namespace Platformer.src
             Height = height;
             bounds = new Rectangle(pos.ToPoint(), new Point(Width, Height));
         }
-        public EventTrigger(Vector2 pos, Vector2 size, EventType eventType)
+        public EventTrigger(EventType eventType, Vector2 pos, Vector2 size)
         {
             this.eventType = eventType;
             nextLevel = string.Empty;
@@ -39,7 +40,7 @@ namespace Platformer.src
             Width = (int)size.X;
             Height = (int)size.Y;
         }
-        public EventTrigger(Rectangle rect, EventType eventType)
+        public EventTrigger(EventType eventType, Rectangle rect)
         {
             this.eventType = eventType;
             nextLevel = string.Empty;

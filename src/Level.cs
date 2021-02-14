@@ -15,17 +15,19 @@ namespace Platformer.src
         public Tilemap tilemap;
         public float gravity = 25f;
         public Rectangle bounds;
+        public string FilePath { get; private set; }
 
         public Level(string file)
         {
             EventTriggers = new List<EventTrigger>();
             Enemies = new List<Enemy>();
+            FilePath = file;
             Initialize(file);
         }
-
+        private string[] lines;
         public void Initialize(string file)
         {
-            string[] lines = File.ReadAllLines(file);
+            lines = File.ReadAllLines(file);
             string[] spLine = lines[0].Split(' '); //The line where the spawnPoint is written
             //reset the player
             spawnPoint = new Vector2(int.Parse(spLine[0]), int.Parse(spLine[1]));
@@ -36,13 +38,16 @@ namespace Platformer.src
             for (lIndex = 2; lIndex < lines.Length && lines[lIndex] != "enemies:"; lIndex++)
             {
                 string[] Lines = lines[lIndex].Split(' ');
-                //Add the Event with a Rectangle and a EventID
-                EventTriggers.Add(new EventTrigger(new Rectangle(int.Parse(Lines[1]), int.Parse(Lines[2]), int.Parse(Lines[3]), int.Parse(Lines[4])), (EventTrigger.EventType)int.Parse(Lines[0])));
+                //Add the Event                                                EventID,                           X Position     ,     Y Position     ,     Width          ,     Height          
+                EventTriggers.Add(new EventTrigger((EventTrigger.EventType)int.Parse(Lines[0]), new Rectangle(int.Parse(Lines[1]), int.Parse(Lines[2]), int.Parse(Lines[3]), int.Parse(Lines[4]))));
+
+
                 //Add functionality to the Event
-                if (EventTriggers[EventTriggers.Count - 1].eventType == EventTrigger.EventType.LevelLoader)
+                if (EventTriggers[^1].eventType == EventTrigger.EventType.LevelLoader)
                 {
-                    EventTriggers[EventTriggers.Count - 1].nextLevel = Lines[5];//set nextLevel to the filename of the Level that will be loaded
-                    EventTriggers[EventTriggers.Count - 1].OnPlayerEnter += () => Main.level = new Level(Main.CurrentDirectory + @"\levels\" + EventTriggers[EventTriggers.Count - 1].nextLevel);
+                    //set nextLevel to the filename of the Level that will be loaded
+                    EventTriggers[^1].nextLevel = Lines[5];
+                    EventTriggers[^1].OnPlayerInside += () => Main.level = new Level(Main.CurrentDirectory + @"\levels\" + EventTriggers[^1].nextLevel);
                 }
             }
             //initialize the Enemys
@@ -77,6 +82,18 @@ namespace Platformer.src
                         break;
                 }
             }
+            InitializeTileMap();
+        }
+        private void InitializeEvents()
+        {
+
+        }
+        private void InitializeEnemies()
+        {
+
+        }
+        private void InitializeTileMap()
+        {
             //initialize the tilemap
             string[] mapLines = new string[lines.Length];
             for (int i = lines.Length - 1; i > -1; i--)
@@ -90,7 +107,6 @@ namespace Platformer.src
             tilemap = new Tilemap(mapLines);
             bounds = new Rectangle(0, 0, tilemap.width * (int)Tile.TileSize.X, tilemap.height * (int)Tile.TileSize.Y);
         }
-
         public void Update()
         {
             tilemap.Update();
