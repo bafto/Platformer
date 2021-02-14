@@ -100,7 +100,7 @@ namespace Platformer.src
             font = Content.Load<SpriteFont>("font");
             panel = Content.Load<Texture2D>("panel");
             outline = Content.Load<Texture2D>("outline");
-            background = Content.Load<Texture2D>("background");
+            background = Content.Load<Texture2D>("brikBackground");
         }
         private bool frameStep;
         protected override void Update(GameTime gameTime)
@@ -160,7 +160,7 @@ namespace Platformer.src
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(2));
             spriteBatch.Draw(background, ViewPort.Bounds, Color.White);
             spriteBatch.End();
 
