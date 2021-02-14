@@ -19,7 +19,10 @@ namespace Platformer.src
         {
             return new Vector2(v.X, v.Y);
         }
-
+        public static Vector2 ToVector2(this System.Drawing.Point p)
+        {
+            return new Vector2(p.X, p.Y);
+        }
         /// <returns> The Size of a Rectangle as a <b>Vector2</b></returns>
         public static Vector2 VectorSize(this Rectangle r)
         {

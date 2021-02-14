@@ -400,14 +400,14 @@ namespace Platformer.src.UI
 
         public virtual void Recalculate()
         {
-            Rectangle parent = Parent?.InnerDimensions ?? new Rectangle(0, 0, (int)(Main.Screen.Width * (1f / Main.UIScale)), (int)(Main.Screen.Height * (1f / Main.UIScale)));
+            Rectangle parent = Parent?.InnerDimensions ?? new Rectangle(0, 0, (int)(Main.ViewPort.Width * (1f / Main.UIScale)), (int)(Main.ViewPort.Height * (1f / Main.UIScale)));
 
             Rectangle dimensions = Rectangle.Empty;
 
             int minWidth = Math.Max(0, MinWidth ?? 0);
             int minHeight = Math.Max(0, MinHeight ?? 0);
-            int maxWidth = (int)Math.Min(Main.Screen.Width * (1f / Main.UIScale), MaxWidth ?? Main.Screen.Width * (1f / Main.UIScale));
-            int maxHeight = (int)Math.Min(Main.Screen.Height * (1f / Main.UIScale), MaxHeight ?? Main.Screen.Height * (1f / Main.UIScale));
+            int maxWidth = (int)Math.Min(Main.ViewPort.Width * (1f / Main.UIScale), MaxWidth ?? Main.ViewPort.Width * (1f / Main.UIScale));
+            int maxHeight = (int)Math.Min(Main.ViewPort.Height * (1f / Main.UIScale), MaxHeight ?? Main.ViewPort.Height * (1f / Main.UIScale));
 
             dimensions.Width = (int)(Width.Percent * parent.Width / 100f + Width.Pixels);
             if (dimensions.Width < minWidth) dimensions.Width = minWidth;

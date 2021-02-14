@@ -20,15 +20,7 @@ namespace Platformer.src
         public static Texture2D panel;
         public static Texture2D outline;
         public static Texture2D background;
-        public static Rectangle Screen
-        {
-            get
-            {
-                // Update Screen variable
-                var sex = System.Windows.Forms.Control.FromHandle(instance.Window.Handle).Bounds;
-                return new Rectangle(sex.X, sex.Y, sex.Width, sex.Height);
-            }
-        }
+        public static Vector2 WindowPos => System.Windows.Forms.Control.FromHandle(instance.Window.Handle).Location.ToVector2();
         public static Viewport ViewPort => graphics.GraphicsDevice.Viewport;
         public static float DeltaTime { get; private set; }
         public static string CurrentDirectory => Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
@@ -169,7 +161,7 @@ namespace Platformer.src
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(background, Screen, Color.White);
+            spriteBatch.Draw(background, ViewPort.Bounds, Color.White);
             spriteBatch.End();
 
             // Apply Zoom
@@ -274,8 +266,11 @@ namespace Platformer.src
         }
         public static Vector2 InvertTranslate(Vector2 vector)
         {
-            vector += (GameMatrix.Translation + new Vector3(camOffset.X, camOffset.Y, 0)).ToVector2();
-            return vector;
+            return vector + camOffset;
+        }
+        public static Vector2 InvertTranslate(Point point)
+        {
+            return point.ToVector2() + camOffset;
         }
     }
 }
