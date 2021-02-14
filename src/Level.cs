@@ -54,7 +54,6 @@ namespace Platformer.src
                     {
                         Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
                         Enemies.Add(new Enemy(pos));
-                        Debug.WriteLine(Enemies[Enemies.Count - 1].ToString());
                         break;
                     }
                     case 1:
@@ -62,15 +61,14 @@ namespace Platformer.src
                         Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
                         int start = int.Parse(Lines[3]), stop = int.Parse(Lines[4]);
                         Enemies.Add(new PathEnemy(pos, start, stop, float.Parse(Lines[5])));
-                        Debug.WriteLine(Enemies[Enemies.Count - 1].ToString());
                         break;
                     }
                     case 2:
                     {
                         Vector2 pos = new Vector2(int.Parse(Lines[1]), int.Parse(Lines[2]));
                         Vector2 area = new Vector2(int.Parse(Lines[3]), int.Parse(Lines[4]));
-                        Enemies.Add(new TrackEnemy(pos, area));
-                        Debug.WriteLine(Enemies[Enemies.Count - 1].ToString());
+                            float speed = float.Parse(Lines[5]);
+                        Enemies.Add(new TrackEnemy(pos, area, speed));
                         break;
                     }
                     default:

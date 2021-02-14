@@ -6,17 +6,17 @@ namespace Platformer.src.Enemies
     {
         Vector2 area;
         private bool running = false;
-        public TrackEnemy(Vector2 pos, Vector2 size)
+        public TrackEnemy(Vector2 pos, Vector2 size, float Speed)
             :
             base(pos)
         {
             area = size;
+            speed = Speed;
         }
         protected override void Initialize()
         {
             base.Initialize();
             color = Color.IndianRed;
-            speed = 10f;
         }
         protected override void AI()
         {
