@@ -266,11 +266,13 @@ namespace Platformer.src
         }
         public static Vector2 InvertTranslate(Vector2 vector)
         {
-            return vector + camOffset;
+            Matrix invMatrix = Matrix.Invert(GameMatrix);
+            return Vector2.Transform(vector, invMatrix);
         }
         public static Vector2 InvertTranslate(Point point)
         {
-            return point.ToVector2() + camOffset;
+            Matrix invMatrix = Matrix.Invert(GameMatrix);
+            return Vector2.Transform(point.ToVector2(), invMatrix);
         }
     }
 }
