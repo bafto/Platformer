@@ -45,9 +45,7 @@ namespace Platformer.src
             // Keep player in level bounds
             if (Helper.IsClamp(position, Vector2.Zero, Main.level.bounds.VectorSize()))
             {
-                position = Main.level.spawnPoint;
-                nextPosition = Main.level.spawnPoint;
-                velocity = Vector2.Zero;
+                Main.player.dead = true;
             }
             else
             {

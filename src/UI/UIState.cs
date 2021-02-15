@@ -8,6 +8,7 @@ namespace Platformer.src.UI
     public class UIState
     {
         public List<UIElement> elements = new List<UIElement>();
+        public bool Visible = true;
 
         #region virtual methods
         public virtual void Initialize()
@@ -34,12 +35,14 @@ namespace Platformer.src.UI
 
         internal void UpdateSelf(GameTime gameTime)
         {
-            Update(gameTime);
+            if (Visible)
+                Update(gameTime);
         }
 
         internal void DrawSelf(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch);
+            if (Visible)
+                Draw(spriteBatch);
         }
         #endregion
 

@@ -157,5 +157,11 @@ namespace Platformer.src
                 e.Draw();
             }
         }
+        public void Reset()
+        {
+            Main.player = new Player();
+            Main.level = new Level(FilePath);
+            Main.globalTimer = 0;
+        }
     }
 }

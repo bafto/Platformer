@@ -21,6 +21,8 @@ namespace Platformer.src
         private float hitTimer;
         public List<Vector2> trail = new List<Vector2>(60);
         private Rectangle healthbar;
+        public bool dead;
+        public float lastDeath;
 
         protected override void Initialize()
         {
@@ -42,46 +44,51 @@ namespace Platformer.src
 
         public override void Update()
         {
-            hitTimer += Main.DeltaTime;
-            vulnerable = hitTimer >= 3f;
-            color = vulnerable ? Color.Red : Color.Coral;
-            lastPosition = position;
-            trail.Add(position);
-            if (Main.globalTimer > 60) trail.RemoveAt(0);
-
-            // gravity
-            if (!grounded)
+            if (health <= 0 || dead == true)
             {
-                velocity.Y += Main.level.gravity * Main.DeltaTime;
+                dead = true;
+                Main.UIStates[1].Visible = true;
             }
-
-            grounded = Main.level.tilemap.Collides(new RectangleF(position.X, position.Y + 2, rect.Size.X, rect.Size.Y));
-
-            // Mainly handles jumping and movement
-            HandleInput();
-
-            // Handle collision and set position
-            base.HandleCollision();
-
-            //Experimental damage system
-            if (vulnerable)
+            else
             {
-                foreach (Enemy e in Main.level.Enemies)
+                lastDeath += Main.DeltaTime;
+                hitTimer += Main.DeltaTime;
+                vulnerable = hitTimer >= 0.5f;
+                color = vulnerable ? Color.Red : Color.Coral;
+                lastPosition = position;
+
+                // gravity
+                if (!grounded)
                 {
-                    if (e.rect.Intersects(rect) && vulnerable)
+                    velocity.Y += Main.level.gravity * Main.DeltaTime;
+                }
+
+                grounded = Main.level.tilemap.Collides(new RectangleF(position.X, position.Y + 2, rect.Size.X, rect.Size.Y));
+
+                // Mainly handles jumping and movement
+                HandleInput();
+
+                // Handle collision and set position
+                base.HandleCollision();
+
+                //Experimental damage system
+                if (vulnerable)
+                {
+                    foreach (Enemy e in Main.level.Enemies)
                     {
-                        health -= e.Damage;
-                        hitTimer = 0f;
-                        vulnerable = false;
-                        //velocity.X = maxWalkSpeed * Vector2.Normalize(position - e.position).X;
+                        if (e.rect.Intersects(rect) && vulnerable)
+                        {
+                            health -= e.Damage;
+                            hitTimer = 0f;
+                            vulnerable = false;
+                            //velocity.X = maxWalkSpeed * Vector2.Normalize(position - e.position).X;
+                        }
                     }
                 }
-            }
 
-            healthbar.Width = health * 50;
-            healthbar.Location = new Point(Main.ViewPort.Width / 2 - healthbar.Width / 2, 30);
-            if (health <= 0)
-                Main.level = new Level(Main.level.FilePath);
+                healthbar.Width = health * 50;
+                healthbar.Location = new Point(Main.ViewPort.Width / 2 - healthbar.Width / 2, 30);
+            }
         }
 
         /// <summary>
@@ -113,6 +120,9 @@ namespace Platformer.src
 
             // Clamp Velocity
             velocity = Vector2.Clamp(velocity, new Vector2(-maxWalkSpeed, -maxJumpSpeed), new Vector2(maxWalkSpeed, maxFallSpeed));
+
+            trail.Add(position);
+            if (Main.globalTimer > 60) trail.RemoveAt(0);
 
             nextPosition = position + velocity;
         }

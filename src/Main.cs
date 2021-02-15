@@ -76,8 +76,12 @@ namespace Platformer.src
             System.Windows.Forms.Form form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(Window.Handle);
             form.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 
-            var test = new TestState();
-            UIStates.Add(test);
+            var testState = new TestState();
+            UIStates.Add(testState);
+
+            var deathState = new DeathState();
+            deathState.Visible = false;
+            UIStates.Add(deathState);
         }
 
         protected override void Initialize()
@@ -199,9 +203,6 @@ namespace Platformer.src
                 }
                 spriteBatch.End();
             }
-
-
-
             base.Draw(gameTime);
         }
 
