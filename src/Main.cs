@@ -36,7 +36,7 @@ namespace Platformer.src
         public static float UIScale = 1f;
         public static Matrix UIScaleMatrix;
         public static float GameScale = 1f;
-        public static Matrix GameMatrix;
+        public static Matrix InGameMatrix;
         public static long globalTimer;
         public static byte gameSpeed = 1;
         public static bool freeze = false;
@@ -72,8 +72,9 @@ namespace Platformer.src
         public static Level level;
 
         //UIStates
-        TestState testState;
-        DeathState deathState;
+        public static MainMenu mainMenu;
+        public static TestState testState;
+        public static DeathState deathState;
 
         public Main()
         {
@@ -88,19 +89,15 @@ namespace Platformer.src
             System.Windows.Forms.Form form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(Window.Handle);
             form.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 
+            mainMenu = new MainMenu();
             testState = new TestState();
-
             deathState = new DeathState();
         }
 
         protected override void Initialize()
         {
-            player = new Player();
-            level = new Level(CurrentDirectory + @"\levels\level0.level");
-
             // initialize UIState
-            testState.Initialize();
-            deathState.Initialize();
+            mainMenu.Initialize();
 
             gameMode = Main.GameMode.MainMenu;
 
@@ -133,7 +130,7 @@ namespace Platformer.src
             {
                 case GameMode.MainMenu:
                     {
-
+                        mainMenu.UpdateSelf(gameTime);
                         break;
                     }
                 case GameMode.InGame:
@@ -187,45 +184,78 @@ namespace Platformer.src
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(2));
-            //spriteBatch.Draw(background, ViewPort.Bounds, Color.White);
-            spriteBatch.End();
+            UIScaleMatrix = Matrix.CreateScale(UIScale);
 
-            // Apply Zoom
-            GameMatrix = Matrix.CreateScale(GameScale);
-
-            // Apply Translation
-            GameMatrix = Camera.Translate(GameMatrix);
-
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, GameMatrix);
-
-            // Draw Tiles before player to not cover him
-            level.Draw();
-            // Draw Player
-            player.Draw();
-
-            spriteBatch.End();
-
-            // UI
-            if (UIActive)
+            switch (gameMode)
             {
-                UIScaleMatrix = Matrix.CreateScale(UIScale);
-                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, UIScaleMatrix);
-                {
-                    for (int i = 0; i < UIStates.Count; i++)
+                case GameMode.MainMenu:
                     {
-                        UIStates[i].DrawSelf(spriteBatch);
+                        spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, UIScaleMatrix);
+                        mainMenu.DrawSelf(spriteBatch);
+                        spriteBatch.End();
+                        break;
                     }
+                case GameMode.InGame:
+                    {
+                        // Apply Zoom
+                        InGameMatrix = Matrix.CreateScale(GameScale);
 
-                    if (MouseText != null)
-                    {
-                        spriteBatch.DrawString(font, MouseText, mouse.Position.ToVector2() + new Vector2(10), Color.White);
-                        MouseText = null;
+                        // Apply Translation
+                        InGameMatrix = Camera.Translate(InGameMatrix);
+
+                        spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(2));
+                        //spriteBatch.Draw(background, ViewPort.Bounds, Color.White);
+                        spriteBatch.End();
+
+                        spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, InGameMatrix);
+
+                        // Draw Tiles before player to not cover him
+                        level.Draw();
+                        player.Draw();
+
+                        spriteBatch.End();
+
+                        //Test state for Debug Info
+                        if (UIActive)
+                        {
+                            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, UIScaleMatrix);
+                            testState.DrawSelf(spriteBatch);
+                            spriteBatch.End();
+                        }
+                        break;
                     }
-                }
-                spriteBatch.End();
+                case GameMode.DeathScreen:
+                    {
+                        spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, UIScaleMatrix);
+                        deathState.DrawSelf(spriteBatch);
+                        spriteBatch.End();
+                        break;
+                    }
+                default:
+                    throw new Exception("Tried to update Invalid GameMode");
+            }
+            if (MouseText != null)
+            {
+                spriteBatch.DrawString(font, MouseText, mouse.Position.ToVector2() + new Vector2(10), Color.White);
+                MouseText = null;
             }
             base.Draw(gameTime);
+        }
+
+        public static void StartGame(string file)
+        {
+            player = new Player();
+            level = new Level(file);
+            testState.Initialize();
+            deathState.Initialize();
+            gameMode = GameMode.InGame;
+        }
+
+        public static void ResetGame(string file)
+        {
+            player = new Player();
+            level = new Level(file);
+            gameMode = GameMode.InGame;
         }
 
         /// <summary>

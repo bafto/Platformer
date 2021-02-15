@@ -19,7 +19,7 @@ namespace Platformer.src.Enemies
         }
         protected override void AI()
         {
-            if (Main.globalTimer > 60)
+            if (Main.player.trail.Count >= 60)
             {
                 position = Main.player.trail[(int)(Main.player.trail.Count / distanceToPlayer) - 1];
             }

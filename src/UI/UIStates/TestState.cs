@@ -3,7 +3,7 @@ using Platformer.src.UI.UIElements;
 
 namespace Platformer.src.UI.UIStates
 {
-    class TestState : UIState
+    public class TestState : UIState
     {
         private UIText playerInfo;
 

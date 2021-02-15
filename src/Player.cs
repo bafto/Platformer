@@ -122,7 +122,7 @@ namespace Platformer.src
             velocity = Vector2.Clamp(velocity, new Vector2(-maxWalkSpeed, -maxJumpSpeed), new Vector2(maxWalkSpeed, maxFallSpeed));
 
             trail.Add(position);
-            if (Main.globalTimer > 60) trail.RemoveAt(0);
+            if (trail.Count > 60) trail.RemoveAt(0);
 
             nextPosition = position + velocity;
         }

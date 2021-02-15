@@ -23,13 +23,13 @@ namespace Platformer.src
 
         public static Vector2 InvertTranslate(Vector2 vector)
         {
-            Matrix invMatrix = Matrix.Invert(Main.GameMatrix);
+            Matrix invMatrix = Matrix.Invert(Main.InGameMatrix);
             return Vector2.Transform(vector, invMatrix);
         }
 
         public static Vector2 InvertTranslate(Point point)
         {
-            Matrix invMatrix = Matrix.Invert(Main.GameMatrix);
+            Matrix invMatrix = Matrix.Invert(Main.InGameMatrix);
             return Vector2.Transform(point.ToVector2(), invMatrix);
         }
     }

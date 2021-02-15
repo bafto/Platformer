@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Platformer.src.UI.UIStates
 {
-    class MainMenu : UIState
+    public class MainMenu : UIState
     {
         public override void Initialize()
         {
@@ -18,7 +18,7 @@ namespace Platformer.src.UI.UIStates
             var newGameBtn = new UIButton(new UIText("New Game", Color.White), 100, 50, Color.Gray);
             newGameBtn.X.Percent = 50;
             newGameBtn.Y.Percent = 30;
-            newGameBtn.OnClick += (evt, elm) => Main.level = new Level(Main.CurrentDirectory + @"\levels\level0.level");
+            newGameBtn.OnClick += (evt, elm) => Main.StartGame(Main.CurrentDirectory + @"\levels\level0.level");
             Append(newGameBtn);
 
             var loadLevelBtn = new UIButton(new UIText("Load Level", Color.White), 100, 50, Color.Gray);
@@ -35,7 +35,7 @@ namespace Platformer.src.UI.UIStates
 
                 if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 { 
-                    Main.level = new Level(openFileDialog.FileName);
+                    Main.StartGame(openFileDialog.FileName);
                 }
             };
             Append(loadLevelBtn);

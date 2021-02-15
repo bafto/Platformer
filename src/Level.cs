@@ -62,7 +62,7 @@ namespace Platformer.src
                 {
                     //set nextLevel to the filename of the Level that will be loaded
                     EventTriggers[^1].nextLevel = evtLine[5];
-                    EventTriggers[^1].OnPlayerInside += () => Main.level = new Level(Main.CurrentDirectory + @"\levels\" + EventTriggers[^1].nextLevel);
+                    EventTriggers[^1].OnPlayerInside += () => Main.ResetGame(Main.CurrentDirectory + @"\levels\" + EventTriggers[^1].nextLevel);
                 }
             }
         }
