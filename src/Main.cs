@@ -70,6 +70,7 @@ namespace Platformer.src
         public static GameMode gameMode;
         public static Player player;
         public static Level level;
+        public static byte difficulty;
 
         //UIStates
         public static MainMenu mainMenu;
@@ -99,7 +100,7 @@ namespace Platformer.src
             // initialize UIState
             mainMenu.Initialize();
 
-            gameMode = Main.GameMode.MainMenu;
+            gameMode = GameMode.MainMenu;
 
             base.Initialize();
         }

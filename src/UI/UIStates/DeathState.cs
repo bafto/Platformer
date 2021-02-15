@@ -29,19 +29,23 @@ namespace Platformer.src.UI.UIStates
             var retyBtn = new UIButton(new UIText("Retry", Color.Black), 100, 50, Color.Gray);
             retyBtn.X.Percent = 25;
             retyBtn.Y.Percent = 50;
-            retyBtn.OnClick += (evt, elm) => { Main.ResetGame(Main.CurrentDirectory + @"\levels\level0.level"); };
+            retyBtn.OnClick += (evt, elm) => Main.ResetGame(Main.CurrentDirectory + @"\levels\level0.level");
             deathPanel.Append(retyBtn);
 
             var retyLvlBtn = new UIButton(new UIText("Retry Level", Color.Black), 100, 50, Color.Gray);
             retyLvlBtn.X.Percent = 50;
             retyLvlBtn.Y.Percent = 50;
-            retyLvlBtn.OnClick += (evt, elm) => { Main.ResetGame(Main.level.FilePath); };
+            retyLvlBtn.OnClick += (evt, elm) => Main.ResetGame(Main.level.FilePath);
             deathPanel.Append(retyLvlBtn);
 
             var quitBtn = new UIButton(new UIText("Quit", Color.Black), 100, 50, Color.Gray);
             quitBtn.X.Percent = 75;
             quitBtn.Y.Percent = 50;
-            quitBtn.OnClick += (evt, elm) => Main.gameMode = Main.GameMode.MainMenu;
+            quitBtn.OnClick += (evt, elm) =>
+            {
+                Main.gameMode = Main.GameMode.MainMenu;
+                Main.mainMenu.Initialize();
+            };
             deathPanel.Append(quitBtn);
             base.Initialize();
         }

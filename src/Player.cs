@@ -53,7 +53,7 @@ namespace Platformer.src
             {
                 lastDeath += Main.DeltaTime;
                 hitTimer += Main.DeltaTime;
-                vulnerable = hitTimer >= 1f;
+                vulnerable = hitTimer >= 1f / Main.difficulty;
                 color = vulnerable ? Color.Red : Color.Coral;
                 lastPosition = position;
 

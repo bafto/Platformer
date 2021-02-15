@@ -55,6 +55,10 @@ namespace Platformer.src.UI.UIElements
                 {
                     valid = char.IsDigit(args.Character);
                 }
+                else if (typeof(T) == typeof(byte))
+                {
+                    valid = char.IsDigit(args.Character);
+                }
                 else if (typeof(T) == typeof(char))
                 {
                     valid = args.Character.IsValid() && _text.Length == 0;

@@ -18,7 +18,7 @@ namespace Platformer.src
         {
             base.Initialize();
             color = Color.Red;
-            Damage = 1;
+            Damage = 1 * Main.difficulty;
         }
 
         protected override void AI()
