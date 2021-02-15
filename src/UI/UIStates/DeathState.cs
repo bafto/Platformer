@@ -26,13 +26,19 @@ namespace Platformer.src.UI.UIStates
             timeAlive.Y.Percent = 20;
             deathPanel.Append(timeAlive);
 
-            var retyBtn = new UIButton(new UIText("retry", Color.Black), 100, 50, Color.Gray);
+            var retyBtn = new UIButton(new UIText("Retry", Color.Black), 100, 50, Color.Gray);
             retyBtn.X.Percent = 25;
             retyBtn.Y.Percent = 50;
-            retyBtn.OnClick += (evt, elm) => { Main.level.Reset(); Visible = false; };
+            retyBtn.OnClick += (evt, elm) => { Main.level = new Level(Main.CurrentDirectory + @"\levels\level0.level");  Main.level.Reset(); Visible = false; };
             deathPanel.Append(retyBtn);
 
-            var quitBtn = new UIButton(new UIText("quit", Color.Black), 100, 50, Color.Gray);
+            var retyLvlBtn = new UIButton(new UIText("Retry Level", Color.Black), 100, 50, Color.Gray);
+            retyLvlBtn.X.Percent = 50;
+            retyLvlBtn.Y.Percent = 50;
+            retyLvlBtn.OnClick += (evt, elm) => { Main.level.Reset(); Visible = false; };
+            deathPanel.Append(retyLvlBtn);
+
+            var quitBtn = new UIButton(new UIText("Quit", Color.Black), 100, 50, Color.Gray);
             quitBtn.X.Percent = 75;
             quitBtn.Y.Percent = 50;
             quitBtn.OnClick += (evt, elm) => Main.instance.Exit();
