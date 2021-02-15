@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Linq;
 
 namespace Platformer.src
@@ -28,7 +29,16 @@ namespace Platformer.src
         {
             return r.Size.ToVector2();
         }
-
+        public static Vector2 RotatedBy(this Vector2 spinningpoint, double radians, Vector2 center = default)
+        {
+            float cos = (float)Math.Cos(radians);
+            float sin = (float)Math.Sin(radians);
+            Vector2 vector = spinningpoint - center;
+            Vector2 result = center;
+            result.X += vector.X * cos - vector.Y * sin;
+            result.Y += vector.X * sin + vector.Y * cos;
+            return result;
+        }
         /// <returns><b>true</b> if the character is valid (specified in an array)</returns>
         public static bool IsValid(this char c)
         {

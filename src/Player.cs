@@ -15,7 +15,7 @@ namespace Platformer.src
         public float maxJumpSpeed;
         public float maxFallSpeed;
         public float maxWalkSpeed;
-        public List<Vector2> trail = new List<Vector2>();
+        public List<Vector2> trail = new List<Vector2>(60);
 
         protected override void Initialize()
         {
@@ -62,6 +62,10 @@ namespace Platformer.src
             if (Main.LeftClick)
             {
                 position = Main.MouseWorld - rect.Size / 2;
+            }
+            if (Main.keyboard.JustPressed(Keys.R))
+            {
+                position = trail[0];
             }
 #endif
             if (Main.keyboard.IsKeyDown(Keys.A))

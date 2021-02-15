@@ -99,6 +99,11 @@ namespace Platformer.src
                             Enemies.Add(new CopyEnemy(pos, float.Parse(enemyLine[3])));
                             break;
                         }
+                    case 4:
+                        {
+                            Enemies.Add(new SpinEnemy(pos, float.Parse(enemyLine[3]), float.Parse(enemyLine[4])));
+                            break;
+                        }
                     default:
                         break;
                 }

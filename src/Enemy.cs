@@ -5,9 +5,10 @@ namespace Platformer.src
     public class Enemy : Entity
     {
         public float speed = 20f;
-
+        public Vector2 startPosition;
         public Enemy(Vector2 pos)
         {
+            startPosition = pos;
             position = pos;
         }
 
