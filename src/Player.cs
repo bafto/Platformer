@@ -47,7 +47,7 @@ namespace Platformer.src
             if (health <= 0 || dead == true)
             {
                 dead = true;
-                Main.UIStates[1].Visible = true;
+                Main.gameMode = Main.GameMode.DeathScreen;
             }
             else
             {

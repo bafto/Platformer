@@ -11,6 +11,14 @@ namespace Platformer.src
 {
     public class Main : Game
     {
+        //GameMode Enum
+        public enum GameMode
+        {
+            MainMenu = 0,
+            InGame,
+            DeathScreen
+        }
+
         // Engine Stuff
         public static Main instance { get; private set; }
         public static GraphicsDeviceManager graphics;
@@ -25,7 +33,6 @@ namespace Platformer.src
         public static float DeltaTime { get; private set; }
         public static string CurrentDirectory => Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         public static string? MouseText;
-        public static List<UIState> UIStates = new List<UIState>();
         public static float UIScale = 1f;
         public static Matrix UIScaleMatrix;
         public static float GameScale = 1f;
@@ -60,8 +67,13 @@ namespace Platformer.src
         public static Vector2 MouseWorld => Camera.InvertTranslate(mouse.Position);
 
         //Game Stuff
+        public static GameMode gameMode;
         public static Player player;
         public static Level level;
+
+        //UIStates
+        TestState testState;
+        DeathState deathState;
 
         public Main()
         {
@@ -76,12 +88,9 @@ namespace Platformer.src
             System.Windows.Forms.Form form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(Window.Handle);
             form.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 
-            var testState = new TestState();
-            UIStates.Add(testState);
+            testState = new TestState();
 
-            var deathState = new DeathState();
-            deathState.Visible = false;
-            UIStates.Add(deathState);
+            deathState = new DeathState();
         }
 
         protected override void Initialize()
@@ -90,10 +99,10 @@ namespace Platformer.src
             level = new Level(CurrentDirectory + @"\levels\level0.level");
 
             // initialize UIState
-            for (int i = 0; i < UIStates.Count; i++)
-            {
-                UIStates[i].Initialize();
-            }
+            testState.Initialize();
+            deathState.Initialize();
+
+            gameMode = Main.GameMode.MainMenu;
 
             base.Initialize();
         }
@@ -120,42 +129,55 @@ namespace Platformer.src
             // Update Mouse variables
             UpdateInput();
 
-            GameScale -= scrollwheel;
-            if (keyboard.JustPressed(Keys.F))
+            switch (gameMode)
             {
-                frameStep = true;
-                freeze = false;
-            }
-            if (keyboard.JustPressed(Keys.G))
-            {
-                frameStep = false;
-                freeze = false;
-            }
-            if (keyboard.JustPressed(Keys.U))
-            {
-                UIActive = !UIActive;
-            }
+                case GameMode.MainMenu:
+                    {
 
-            if (globalTimer % gameSpeed == 0 && !freeze)
-            {
-                // Update Player
-                player.Update();
+                        break;
+                    }
+                case GameMode.InGame:
+                    {
+                        GameScale -= scrollwheel;
+                        if (keyboard.JustPressed(Keys.F))
+                        {
+                            frameStep = true;
+                            freeze = false;
+                        }
+                        if (keyboard.JustPressed(Keys.G))
+                        {
+                            frameStep = false;
+                            freeze = false;
+                        }
+                        if (keyboard.JustPressed(Keys.U))
+                        {
+                            UIActive = !UIActive;
+                        }
+                        if (globalTimer % gameSpeed == 0 && !freeze)
+                        {
+                            // Update Player
+                            player.Update();
 
-                // Update Tilemap(Don't need that yet but maybe later) and updates Enemies(definitely need that)
-                level.Update();
-            }
-            if (frameStep)
-            {
-                freeze = true;
-            }
-
-            // Update UI
-            if (UIActive)
-            {
-                for (int i = 0; i < UIStates.Count; i++)
-                {
-                    UIStates[i].UpdateSelf(gameTime);
-                }
+                            // Update Tilemap(Don't need that yet but maybe later) and updates Enemies(definitely need that)
+                            level.Update();
+                        }
+                        if (frameStep)
+                        {
+                            freeze = true;
+                        }
+                        if (UIActive)
+                        {
+                            testState.UpdateSelf(gameTime);
+                        }
+                        break;
+                    }
+                case GameMode.DeathScreen:
+                    {
+                        deathState.UpdateSelf(gameTime);
+                        break;
+                    }
+                default:
+                    throw new Exception("Tried to update Invalid GameMode");
             }
 
             base.Update(gameTime);
