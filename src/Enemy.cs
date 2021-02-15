@@ -5,10 +5,10 @@ namespace Platformer.src
     public class Enemy : Entity
     {
         public float speed = 20f;
-        public Vector2 startPosition;
+        public int damage { get; protected set; }
+
         public Enemy(Vector2 pos)
         {
-            startPosition = pos;
             position = pos;
         }
 
@@ -16,6 +16,7 @@ namespace Platformer.src
         {
             base.Initialize();
             color = Color.Red;
+            damage = 1;
         }
 
         protected override void AI()
