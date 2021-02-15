@@ -18,7 +18,7 @@ namespace Platformer.src.Enemies
         {
             base.Initialize();
             color = Color.DarkRed;
-            damage = 2;
+            Damage = 2;
         }
 
         protected override void AI()

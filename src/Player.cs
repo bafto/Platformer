@@ -19,7 +19,7 @@ namespace Platformer.src
         public const int maxHealth = 5;
         public bool vulnerable;
         private float hitTimer;
-        public List<Vector2> trail = new List<Vector2>();
+        public List<Vector2> trail = new List<Vector2>(60);
         private Rectangle healthbar;
 
         protected override void Initialize()
@@ -70,7 +70,7 @@ namespace Platformer.src
                 {
                     if (e.rect.Intersects(rect) && vulnerable)
                     {
-                        health -= e.damage;
+                        health -= e.Damage;
                         hitTimer = 0f;
                         vulnerable = false;
                         //velocity.X = maxWalkSpeed * Vector2.Normalize(position - e.position).X;
