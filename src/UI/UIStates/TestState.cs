@@ -18,7 +18,7 @@ namespace Platformer.src.UI.UIStates
 
         protected override void Update(GameTime gameTime)
         {
-            playerInfo.Text = $"Player Position: {Main.player.position}\nPlayer Velocity: {Main.player.velocity}\nIs player grounded?: {Main.player.grounded}\nZoom: {Main.GameScale}\nMouseWorld: {Main.MouseWorld}\nMouseScreen: {Main.mouse.Position}\nScreen Position: {Camera.camOffset}";
+            playerInfo.Text = $"Player Position: {Main.player.position}\nPlayer Velocity: {Main.player.velocity}\nIs player grounded?: {Main.player.grounded}\nPlayer Health: {Main.player.health}\nZoom: {Main.GameScale}\nMouseWorld: {Main.MouseWorld}\nMouseScreen: {Main.mouse.Position}\nScreen Position: {Camera.camOffset}";
             base.Update(gameTime);
         }
     }

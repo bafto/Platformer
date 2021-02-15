@@ -15,7 +15,12 @@ namespace Platformer.src
         public float maxJumpSpeed;
         public float maxFallSpeed;
         public float maxWalkSpeed;
+        public int health;
+        public const int maxHealth = 5;
+        public bool vulnerable;
+        private float hitTimer;
         public List<Vector2> trail = new List<Vector2>();
+        private Rectangle healthbar;
 
         protected override void Initialize()
         {
@@ -29,10 +34,17 @@ namespace Platformer.src
             acceleration = 0.5f;
             drag = 5;
             jumpspeed = 13f;
+            health = 5;
+            vulnerable = true;
+            hitTimer = 0f;
+            healthbar = new Rectangle(Main.ViewPort.Width / 2 - healthbar.Width / 2, 30, health * 50, 30);
         }
 
         public override void Update()
         {
+            hitTimer += Main.DeltaTime;
+            vulnerable = hitTimer >= 3f;
+            color = vulnerable ? Color.Red : Color.Coral;
             lastPosition = position;
             trail.Add(position);
             if (Main.globalTimer > 60) trail.RemoveAt(0);
@@ -50,6 +62,26 @@ namespace Platformer.src
 
             // Handle collision and set position
             base.HandleCollision();
+
+            //Experimental damage system
+            if (vulnerable)
+            {
+                foreach (Enemy e in Main.level.Enemies)
+                {
+                    if (e.rect.Intersects(rect) && vulnerable)
+                    {
+                        health -= e.damage;
+                        hitTimer = 0f;
+                        vulnerable = false;
+                        //velocity.X = maxWalkSpeed * Vector2.Normalize(position - e.position).X;
+                    }
+                }
+            }
+
+            healthbar.Width = health * 50;
+            healthbar.Location = new Point(Main.ViewPort.Width / 2 - healthbar.Width / 2, 30);
+            if (health <= 0)
+                Main.level = new Level(Main.level.FilePath);
         }
 
         /// <summary>
@@ -88,7 +120,9 @@ namespace Platformer.src
         public override void Draw()
         {
             rect.Position = position;
+            healthbar.Location = Camera.InvertTranslate(healthbar.Location.ToVector2()).ToPoint();
             Main.spriteBatch.Draw(Main.solid, rect.toIntRect(), color);
+            Main.spriteBatch.Draw(Main.solid, healthbar, Color.Red);
 #if DEBUG
             Main.spriteBatch.Draw(Main.solid, new Rectangle(lastPosition.ToPoint(), rect.Size.ToPoint()), Color.Green * 0.3f);
             Main.spriteBatch.Draw(Main.solid, new Rectangle((position + velocity).ToPoint(), rect.Size.ToPoint()), Color.Blue * 0.3f);
@@ -101,7 +135,7 @@ namespace Platformer.src
         }
         public override string ToString()
         {
-            return $"pos: {position}, vel: {velocity}";
+            return $"pos: {position}, vel: {velocity}, health: {health}";
         }
     }
 }

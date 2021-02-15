@@ -110,6 +110,7 @@ namespace Platformer.src
                 }
                 // Set the new position
                 position = nextRect.Position;
+                rect.Position = position;
             }
         }
 

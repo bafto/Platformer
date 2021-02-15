@@ -37,6 +37,7 @@ namespace Platformer.src
             // reset the player
             Main.player.position = spawnPoint;
             Main.player.velocity = Vector2.Zero;
+            Main.player.health = Player.maxHealth;
 
             InitializeEvents();
             InitializeEnemies();
@@ -84,7 +85,8 @@ namespace Platformer.src
                     case 1:
                         {
                             int start = int.Parse(enemyLine[3]), stop = int.Parse(enemyLine[4]);
-                            Enemies.Add(new PathEnemy(pos, start, stop, float.Parse(enemyLine[5])));
+                            float speed = float.Parse(enemyLine[5]);
+                            Enemies.Add(new PathEnemy(pos, start, stop, speed));
                             break;
                         }
                     case 2:
