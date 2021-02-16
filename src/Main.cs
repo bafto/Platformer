@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using Platformer.src.UI;
 using Platformer.src.UI.UIStates;
 using System;
@@ -76,7 +78,6 @@ namespace Platformer.src
         public static MainMenu mainMenu;
         public static TestState testState;
         public static DeathState deathState;
-
         public Main()
         {
             instance = this;
@@ -93,6 +94,7 @@ namespace Platformer.src
             mainMenu = new MainMenu();
             testState = new TestState();
             deathState = new DeathState();
+            
         }
 
         protected override void Initialize()
@@ -303,6 +305,15 @@ namespace Platformer.src
             wholeTex.GetData(0, srcRect, data, 0, data.Length);
             returnTex.SetData(data);
             return returnTex;
+        }
+
+        public static SoundEffect LoadSoundEffect(string file)
+        {
+            return instance.Content.Load<SoundEffect>(file);
+        }
+        public static Song LoadSong(string file)
+        {
+            return instance.Content.Load<Song>(file);
         }
     }
 }

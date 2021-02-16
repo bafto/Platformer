@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 
@@ -23,6 +24,7 @@ namespace Platformer.src
         private Rectangle healthbar;
         public bool dead;
         public float lastDeath;
+        SoundEffect onHit, onJump, onDeath;
 
         protected override void Initialize()
         {
@@ -40,6 +42,9 @@ namespace Platformer.src
             vulnerable = true;
             hitTimer = 0f;
             healthbar = new Rectangle(Main.ViewPort.Width / 2 - healthbar.Width / 2, 30, health * 50, 30);
+            onHit = Main.LoadSoundEffect("explosion");
+            onJump = Main.LoadSoundEffect("jump");
+            onDeath = Main.LoadSoundEffect("death");
         }
 
         public override void Update()
@@ -48,6 +53,7 @@ namespace Platformer.src
             {
                 dead = true;
                 Main.gameMode = Main.GameMode.DeathScreen;
+                onDeath.Play();
             }
             else
             {
@@ -81,6 +87,7 @@ namespace Platformer.src
                             health -= e.Damage;
                             hitTimer = 0f;
                             vulnerable = false;
+                            onHit.Play();
                             //velocity.X = maxWalkSpeed * Vector2.Normalize(position - e.position).X;
                         }
                     }
@@ -114,6 +121,7 @@ namespace Platformer.src
             if (grounded && Main.keyboard.JustPressed(Keys.W))
             {
                 velocity.Y -= jumpspeed;
+                onJump.Play();
             }
             // Drag so the player slows on X movement
             velocity.X -= velocity.X / 15;
