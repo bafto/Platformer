@@ -31,13 +31,16 @@ namespace Platformer.src
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if ((int)char.GetNumericValue(lines[lines.Length - height + y][x]) != 0) //with texture (in textures)
+                    Vector2 worldPos = new Vector2(x * Tile.TileSize.X, y * Tile.TileSize.Y);
+                    int tileID = (int)char.GetNumericValue(lines[lines.Length - height + y][x]);
+
+                    if (tileID != 0) //with texture (in textures)
                     {
-                        tiles[x, y] = new Tile(new Vector2(x * Tile.TileSize.X, y * Tile.TileSize.Y), (int)char.GetNumericValue(lines[lines.Length - height + y][x]), texMap.textures[(int)char.GetNumericValue(lines[lines.Length - height + y][x])]);
+                        tiles[x, y] = new Tile(worldPos, tileID, texMap.textures[(int)char.GetNumericValue(lines[lines.Length - height + y][x])]);
                     }
                     else //without texture (0)
                     {
-                        tiles[x, y] = new Tile(new Vector2(x * Tile.TileSize.X, y * Tile.TileSize.Y), (int)char.GetNumericValue(lines[lines.Length - height + y][x]));
+                        tiles[x, y] = new Tile(worldPos, tileID);
                     }
                 }
             }

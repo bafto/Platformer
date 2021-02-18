@@ -51,8 +51,8 @@ namespace Platformer.src
         {
             if (health <= 0 || dead == true)
             {
-                deathtimer++;
                 Kill();
+                deathtimer++;
             }
             else
             {
@@ -100,7 +100,7 @@ namespace Platformer.src
         {
             if (Helper.IsClamp(position, Vector2.Zero, Main.level.bounds.VectorSize()))
             {
-                Main.player.Kill();
+                Main.player.dead = true;
             }
             else
             {
