@@ -51,9 +51,7 @@ namespace Platformer.src
         {
             if (health <= 0 || dead == true)
             {
-                dead = true;
-                Main.gameMode = Main.GameMode.DeathScreen;
-                onDeath.Play();
+                Kill();
             }
             else
             {
@@ -75,7 +73,7 @@ namespace Platformer.src
                 HandleInput();
 
                 // Handle collision and set position
-                base.HandleCollision();
+                HandleCollision();
 
                 //Experimental damage system
                 if (vulnerable)
@@ -97,7 +95,17 @@ namespace Platformer.src
                 healthbar.Location = new Point(Main.ViewPort.Width / 2 - healthbar.Width / 2, 30);
             }
         }
-
+        protected override void HandleCollision()
+        {
+            if (Helper.IsClamp(position, Vector2.Zero, Main.level.bounds.VectorSize()))
+            {
+                Main.player.Kill();
+            }
+            else
+            {
+                base.HandleCollision();
+            }
+        }
         /// <summary>
         /// Jumping and Movement
         /// </summary>
@@ -150,6 +158,12 @@ namespace Platformer.src
             var groundedCheck = new Rectangle((int)position.X, (int)position.Y + 2, 50, 50);
             Main.spriteBatch.Draw(Main.solid, new Rectangle((int)position.X, groundedCheck.Bottom, 50, 2), Color.Yellow);
 #endif
+        }
+        public void Kill()
+        {
+            dead = true;
+            Main.gameMode = Main.GameMode.DeathScreen;
+            onDeath.Play();
         }
         public override string ToString()
         {
