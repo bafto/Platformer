@@ -46,11 +46,12 @@ namespace Platformer.src
             onJump = Main.LoadSoundEffect("jump");
             onDeath = Main.LoadSoundEffect("death");
         }
-
+        private int deathtimer = 0;
         public override void Update()
         {
             if (health <= 0 || dead == true)
             {
+                deathtimer++;
                 Kill();
             }
             else
@@ -161,9 +162,18 @@ namespace Platformer.src
         }
         public void Kill()
         {
-            dead = true;
-            Main.gameMode = Main.GameMode.DeathScreen;
-            onDeath.Play();
+            if (deathtimer == 0)
+            {
+                dead = true;
+                onDeath.Play();
+
+                // some effect goes here
+            }
+            if (deathtimer == 50)
+            {
+                Main.gameMode = Main.GameMode.DeathScreen;
+                deathtimer = 0;
+            }
         }
         public override string ToString()
         {
