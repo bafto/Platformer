@@ -34,19 +34,116 @@ namespace Platformer.src
                     Vector2 worldPos = new Vector2(x * Tile.TileSize.X, y * Tile.TileSize.Y);
                     int tileID = (int)char.GetNumericValue(lines[lines.Length - height + y][x]);
 
-                    if (tileID != 0) //with texture (in textures)
+                    tiles[x, y] = new Tile(worldPos, tileID);
+                }
+            }
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int tileID = (int)char.GetNumericValue(lines[lines.Length - height + y][x]);
+
+                    // tiles[x, y].texture = texMap.textures[tileID][0];
+                    bool topAir = y == 0 || tiles[x, y - 1].TileID == 0;
+                    bool leftAir = x == 0 || tiles[x - 1, y].TileID == 0;
+                    bool rightAir = x == width - 1 || tiles[x + 1, y].TileID == 0;
+                    bool bottomAir = y == height - 1 || tiles[x, y + 1].TileID == 0;
+
+                    if (topAir && bottomAir)
                     {
-                        tiles[x, y] = new Tile(worldPos, tileID, texMap.textures[(int)char.GetNumericValue(lines[lines.Length - height + y][x])]);
+                        if (leftAir)
+                        {
+                            if (rightAir)
+                            {
+                                tiles[x, y].texture = texMap.textures[tileID][15];
+                            }
+                            else
+                            {
+                                tiles[x, y].texture = texMap.textures[tileID][12];
+                            }
+                        }
+                        else if (rightAir)
+                        {
+                            tiles[x, y].texture = texMap.textures[tileID][14];
+                        }
+                        else
+                        {
+                            tiles[x, y].texture = texMap.textures[tileID][13];
+                        }
                     }
-                    else //without texture (0)
+                    else
                     {
-                        tiles[x, y] = new Tile(worldPos, tileID);
+                        if (topAir)
+                        {
+                            if (leftAir)
+                            {
+                                if (rightAir)
+                                {
+                                    tiles[x, y].texture = texMap.textures[tileID][3];
+                                }
+                                else
+                                {
+                                    tiles[x, y].texture = texMap.textures[tileID][0];
+                                }
+                            }
+                            else if (rightAir)
+                            {
+                                tiles[x, y].texture = texMap.textures[tileID][2];
+                            }
+                            else
+                            {
+                                tiles[x, y].texture = texMap.textures[tileID][1];
+                            }
+                        }
+                        else if (bottomAir)
+                        {
+                            if (leftAir)
+                            {
+                                if (rightAir)
+                                {
+                                    tiles[x, y].texture = texMap.textures[tileID][11];
+                                }
+                                else
+                                {
+                                    tiles[x, y].texture = texMap.textures[tileID][8];
+                                }
+                            }
+                            else if (rightAir)
+                            {
+                                tiles[x, y].texture = texMap.textures[tileID][10];
+                            }
+                            else
+                            {
+                                tiles[x, y].texture = texMap.textures[tileID][9];
+                            }
+                        }
+                        else
+                        {
+                            if (leftAir)
+                            {
+                                if (rightAir)
+                                {
+                                    tiles[x, y].texture = texMap.textures[tileID][7];
+                                }
+                                else
+                                {
+                                    tiles[x, y].texture = texMap.textures[tileID][4];
+                                }
+                            }
+                            else if (rightAir)
+                            {
+                                tiles[x, y].texture = texMap.textures[tileID][6];
+                            }
+                            else
+                            {
+                                tiles[x, y].texture = texMap.textures[tileID][5];
+                            }
+                        }
                     }
                 }
             }
             MakeHitboxes();
         }
-
         private void MakeHitboxes()//Merge the tile rects together (Don't ask how it works. Please)
         {
             for (int x = 0; x < width; x++)

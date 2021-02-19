@@ -7,7 +7,7 @@ namespace Platformer.src
     {
         public Rectangle rect;
         public readonly int TileID;
-        private Texture2D texture;
+        public Texture2D texture;
         public Vector2 Position; //we don't need this, it's just nice for the toString
         public static readonly Vector2 TileSize = new Vector2(50, 50);//for less magic numbers
         public bool inHitbox;

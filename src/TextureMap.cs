@@ -11,11 +11,12 @@ namespace Platformer.src
     //the texture loading from a .texmap file
     public class TextureMap
     {
-        public Dictionary<int, Texture2D> textures;//The Dictianory holding the Textures
+        //The Dictianory holding the Textures
+        public Dictionary<int, Texture2D[]> textures;
 
         public TextureMap()
         {
-            textures = new Dictionary<int, Texture2D>();
+            textures = new Dictionary<int, Texture2D[]>();
         }
 
         public void Initialize(string file)
@@ -26,15 +27,17 @@ namespace Platformer.src
             for (int i = 0; i < lines.Length; i++)
             {
                 string[] line = lines[i].Split(' ');
-                if (line.Length == 6) //Loading from a Tileset with a srcRect
+
+                List<Texture2D> sliced = new List<Texture2D>();
+                for(int y = 0; y < 4; y++)
                 {
-                    Rectangle srcRect = new Rectangle(int.Parse(line[2]), int.Parse(line[3]), int.Parse(line[4]), int.Parse(line[5]));
-                    textures.Add(int.Parse(line[0]), Main.LoadTexturePart(line[1], srcRect));
+                    for (int x = 0; x < 4; x++)
+                    {
+                        Rectangle srcRect = new Rectangle(x * 16, y * 16, 16, 16);
+                        sliced.Add(Main.LoadTexturePart(line[1], srcRect));
+                    }
                 }
-                else
-                {
-                    Debug.WriteLine($"File \"{file}\" is written in a wrong way");
-                }
+                textures.Add(int.Parse(line[0]), sliced.ToArray());
             }
         }
     }
