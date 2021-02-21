@@ -37,13 +37,18 @@ namespace Platformer.src
                     tiles[x, y] = new Tile(worldPos, tileID);
                 }
             }
+            LoadTextures();
+            MakeHitboxes();
+        }
+
+        private void LoadTextures()
+        {
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    int tileID = (int)char.GetNumericValue(lines[lines.Length - height + y][x]);
+                    int tileID = tiles[x, y].TileID;
 
-                    // tiles[x, y].texture = texMap.textures[tileID][0];
                     bool topAir = y == 0 || tiles[x, y - 1].TileID == 0;
                     bool leftAir = x == 0 || tiles[x - 1, y].TileID == 0;
                     bool rightAir = x == width - 1 || tiles[x + 1, y].TileID == 0;
@@ -142,8 +147,8 @@ namespace Platformer.src
                     }
                 }
             }
-            MakeHitboxes();
         }
+
         private void MakeHitboxes()//Merge the tile rects together (Don't ask how it works. Please)
         {
             for (int x = 0; x < width; x++)
