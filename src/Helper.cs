@@ -12,7 +12,7 @@ namespace Platformer.src
         /// <returns><b>true</b> if the key has just been pressed</returns>
         public static bool JustPressed(this KeyboardState s, Keys key)
         {
-            return Main.lastKeyboard.IsKeyUp(key) && Main.keyboard.IsKeyDown(key);
+            return Input.lastKeyboard.IsKeyUp(key) && Input.keyboard.IsKeyDown(key);
         }
 
         /// <returns>The X and Y components of a <b>Vector3</b> as a <b>Vector2</b></returns>
@@ -20,15 +20,18 @@ namespace Platformer.src
         {
             return new Vector2(v.X, v.Y);
         }
+
         public static Vector2 ToVector2(this System.Drawing.Point p)
         {
             return new Vector2(p.X, p.Y);
         }
+
         /// <returns> The Size of a Rectangle as a <b>Vector2</b></returns>
         public static Vector2 VectorSize(this Rectangle r)
         {
             return r.Size.ToVector2();
         }
+
         public static Vector2 RotatedBy(this Vector2 spinningpoint, double radians, Vector2 center = default)
         {
             float cos = (float)Math.Cos(radians);
@@ -39,6 +42,7 @@ namespace Platformer.src
             result.Y += vector.X * sin + vector.Y * cos;
             return result;
         }
+
         /// <returns><b>true</b> if the character is valid (specified in an array)</returns>
         public static bool IsValid(this char c)
         {
@@ -57,6 +61,7 @@ namespace Platformer.src
             return false;
         }
     }
+
     static class Helper
     {
         /// <summary>

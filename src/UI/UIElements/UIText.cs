@@ -7,16 +7,19 @@ namespace Platformer.src.UI.UIElements
     {
         public string Text { get; set; }
         public Color TextColor { get; set; }
+
         public UIText(string text, Color textColor)
         {
             Text = text;
             TextColor = textColor;
         }
+
         public UIText(int text, Color textColor)
         {
             Text = text.ToString();
             TextColor = textColor;
         }
+
         protected override void Draw(SpriteBatch spriteBatch)
         {
             Width.Pixels = (int)Main.font.MeasureString(Text).X;

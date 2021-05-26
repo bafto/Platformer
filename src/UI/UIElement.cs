@@ -291,7 +291,7 @@ namespace Platformer.src.UI
                 if (current.Display != Display.None) current.InternalUpdate(gameTime);
             }
 
-            IsMouseHovering = ContainsPoint(Main.mouse.Position.ToVector2());
+            IsMouseHovering = ContainsPoint(Input.mouse.Position.ToVector2());
 
             UpdateEvents();
         }
@@ -341,18 +341,18 @@ namespace Platformer.src.UI
         {
             if (IsMouseHovering)
             {
-                MouseOver(Main.mouse, this);
-                if (Main.mouseMoved)
+                MouseOver(Input.mouse, this);
+                if (Input.mouseMoved)
                 {
-                    MouseMove(Main.mouse, this);
+                    MouseMove(Input.mouse, this);
                 }
-                if (Main.scrollwheel != 0)
+                if (Input.scrollwheel != 0)
                 {
-                    MouseScroll(Main.mouse, this);
+                    MouseScroll(Input.mouse, this);
                 }
-                if (Main.LeftClick)
+                if (Input.LeftClick)
                 {
-                    MouseClick(Main.mouse, this);
+                    MouseClick(Input.mouse, this);
                 }
                 // literally how
                 //if ()
@@ -363,38 +363,38 @@ namespace Platformer.src.UI
                 //{
                 //    TripleClick(Main.mouse, this);
                 //}
-                if (Main.LeftHeld)
+                if (Input.LeftHeld)
                 {
-                    MouseDown(Main.mouse, this);
+                    MouseDown(Input.mouse, this);
                 }
-                if (Main.LeftReleased)
+                if (Input.LeftReleased)
                 {
-                    MouseUp(Main.mouse, this);
+                    MouseUp(Input.mouse, this);
                 }
-                if (!Dimensions.Contains(Main.lastmouse.Position))
+                if (!Dimensions.Contains(Input.lastmouse.Position))
                 {
-                    MouseEnter(Main.mouse, this);
+                    MouseEnter(Input.mouse, this);
                 }
             }
             else
             {
-                MouseOut(Main.mouse, this);
-                if (Dimensions.Contains(Main.lastmouse.Position))
+                MouseOut(Input.mouse, this);
+                if (Dimensions.Contains(Input.lastmouse.Position))
                 {
-                    MouseLeave(Main.mouse, this);
+                    MouseLeave(Input.mouse, this);
                 }
-                if (Main.LeftClick)
+                if (Input.LeftClick)
                 {
-                    ClickAway(Main.mouse, this);
+                    ClickAway(Input.mouse, this);
                 }
             }
-            if (Main.keyboard.GetPressedKeyCount() > 0)
+            if (Input.keyboard.GetPressedKeyCount() > 0)
             {
-                KeyPressed(Main.keyboard, this);
+                KeyPressed(Input.keyboard, this);
             }
             else
             {
-                KeyReleased(Main.keyboard, this);
+                KeyReleased(Input.keyboard, this);
             }
         }
 

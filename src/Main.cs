@@ -1,12 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Media;
-using Platformer.src.UI;
 using Platformer.src.UI.UIStates;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Platformer.src
@@ -44,30 +39,6 @@ namespace Platformer.src
         public static bool freeze = false;
         public static bool UIActive = true;
 
-        // input stuff
-        /// <summary>
-        /// The mouse relative to the screen
-        /// </summary>
-        public static MouseState mouse = Mouse.GetState();
-        public static MouseState lastmouse;
-        public static KeyboardState keyboard;
-        public static KeyboardState lastKeyboard;
-        /// <summary>
-        /// How much the scroll wheel has changed since the last frame
-        /// </summary>
-        public static float scrollwheel;
-        public static bool LeftHeld;
-        public static bool RightHeld;
-        public static bool LeftReleased;
-        public static bool RightReleased;
-        public static bool LeftClick;
-        public static bool RightClick;
-        /// <summary>
-        /// How much the mouse has moved since the last frame
-        /// </summary>
-        public static bool mouseMoved;
-        public static Vector2 MouseWorld => Camera.InvertTranslate(mouse.Position);
-
         //Game Stuff
         public static GameMode gameMode;
         public static Player player;
@@ -78,6 +49,7 @@ namespace Platformer.src
         public static MainMenu mainMenu;
         public static TestState testState;
         public static DeathState deathState;
+
         public Main()
         {
             instance = this;
@@ -94,7 +66,7 @@ namespace Platformer.src
             mainMenu = new MainMenu();
             testState = new TestState();
             deathState = new DeathState();
-            
+
         }
 
         protected override void Initialize()
@@ -116,18 +88,17 @@ namespace Platformer.src
             outline = Content.Load<Texture2D>("outline");
             background = Content.Load<Texture2D>("brikBackground");
         }
-        private bool frameStep;
+
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            Hotkeys.Update();
             globalTimer++;
 
             // Update deltaTime
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Update Mouse variables
-            UpdateInput();
+            Input.UpdateInput();
 
             switch (gameMode)
             {
@@ -138,21 +109,6 @@ namespace Platformer.src
                     }
                 case GameMode.InGame:
                     {
-                        GameScale -= scrollwheel;
-                        if (keyboard.JustPressed(Keys.F))
-                        {
-                            frameStep = true;
-                            freeze = false;
-                        }
-                        if (keyboard.JustPressed(Keys.G))
-                        {
-                            frameStep = false;
-                            freeze = false;
-                        }
-                        if (keyboard.JustPressed(Keys.U))
-                        {
-                            UIActive = !UIActive;
-                        }
                         if (globalTimer % gameSpeed == 0 && !freeze)
                         {
                             // Update Player
@@ -160,10 +116,6 @@ namespace Platformer.src
 
                             // Update Tilemap(Don't need that yet but maybe later) and updates Enemies(definitely need that)
                             level.Update();
-                        }
-                        if (frameStep)
-                        {
-                            freeze = true;
                         }
                         if (UIActive)
                         {
@@ -213,8 +165,8 @@ namespace Platformer.src
                         spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, InGameMatrix);
 
                         // Draw Tiles before player to not cover him
-                        level.Draw();
-                        player.Draw();
+                        level.Draw(spriteBatch);
+                        player.Draw(spriteBatch);
 
                         spriteBatch.End();
 
@@ -237,9 +189,10 @@ namespace Platformer.src
                 default:
                     throw new Exception("Tried to update Invalid GameMode");
             }
+
             if (MouseText != null)
             {
-                spriteBatch.DrawString(font, MouseText, mouse.Position.ToVector2() + new Vector2(10), Color.White);
+                spriteBatch.DrawString(font, MouseText, Input.mouse.Position.ToVector2() + new Vector2(10), Color.White);
                 MouseText = null;
             }
             base.Draw(gameTime);
@@ -259,61 +212,6 @@ namespace Platformer.src
             player = new Player();
             level = new Level(file);
             gameMode = GameMode.InGame;
-        }
-
-        /// <summary>
-        /// Updates input variables
-        /// </summary>
-        private void UpdateInput()
-        {
-            lastmouse = mouse;
-            mouse = Mouse.GetState();
-            lastKeyboard = keyboard;
-            keyboard = Keyboard.GetState();
-            mouseMoved = mouse.Position != lastmouse.Position;
-            scrollwheel = (lastmouse.ScrollWheelValue - mouse.ScrollWheelValue) / 8000f;
-
-            LeftHeld = mouse.LeftButton == ButtonState.Pressed;
-            RightHeld = mouse.RightButton == ButtonState.Pressed;
-            LeftReleased = mouse.LeftButton == ButtonState.Released;
-            RightReleased = mouse.RightButton == ButtonState.Released;
-            LeftClick = LeftReleased && lastmouse.LeftButton == ButtonState.Pressed;
-            RightClick = RightReleased && lastmouse.RightButton == ButtonState.Pressed;
-        }
-
-        /// <summary>
-        /// Loads texture from file
-        /// </summary>
-        /// <param name="path">absolute file path</param>
-        /// <returns>the loaded Texture</returns>
-        public static Texture2D LoadTexture(string path)
-        {
-            return instance.Content.Load<Texture2D>(path);
-        }
-
-        /// <summary>
-        /// Loads a part of a Texture from path defined by a sourceRectangle
-        /// </summary>
-        /// <param name="path">absolute file path</param>
-        /// <param name="srcRect">source Rectangle which defines what Part of the Texture is loaded</param>
-        /// <returns>A Texture2D containing the specified part</returns>
-        public static Texture2D LoadTexturePart(string path, Rectangle srcRect)
-        {
-            Texture2D wholeTex = instance.Content.Load<Texture2D>(path);
-            Texture2D returnTex = new Texture2D(instance.GraphicsDevice, srcRect.Width, srcRect.Height);
-            Color[] data = new Color[srcRect.Width * srcRect.Height];
-            wholeTex.GetData(0, srcRect, data, 0, data.Length);
-            returnTex.SetData(data);
-            return returnTex;
-        }
-
-        public static SoundEffect LoadSoundEffect(string file)
-        {
-            return instance.Content.Load<SoundEffect>(file);
-        }
-        public static Song LoadSong(string file)
-        {
-            return instance.Content.Load<Song>(file);
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Platformer.src.Enemies;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Platformer.src.ID;
 
 namespace Platformer.src
 {
@@ -18,6 +20,7 @@ namespace Platformer.src
 
         private string[] fileLine;
         private uint counter;
+
         public Level(string file)
         {
             EventTriggers = new List<EventTrigger>();
@@ -26,6 +29,7 @@ namespace Platformer.src
             counter = 0;
             Initialize(file);
         }
+
         public void Initialize(string file)
         {
             fileLine = File.ReadAllLines(file);
@@ -53,12 +57,12 @@ namespace Platformer.src
 
                 //Add the Event
                 EventTriggers.Add(new EventTrigger(
-                    (EventTrigger.EventType)int.Parse(evtLine[0]),    // ID
+                    (EventID)int.Parse(evtLine[0]),    // ID
                     new Rectangle(int.Parse(evtLine[1]), int.Parse(evtLine[2]), int.Parse(evtLine[3]), int.Parse(evtLine[4])))  // Bounds (x, y, w, h)
                     );
 
                 //Add functionality to the Event
-                if (EventTriggers[^1].eventType == EventTrigger.EventType.LevelLoader)
+                if (EventTriggers[^1].eventType == EventID.LevelLoader)
                 {
                     //set nextLevel to the filename of the Level that will be loaded
                     EventTriggers[^1].nextLevel = evtLine[5];
@@ -77,31 +81,31 @@ namespace Platformer.src
                 //switch on the enemy ID (temporary identification to see what type of enemy it is)
                 switch (int.Parse(enemyLine[0]))
                 {
-                    case 0:
+                    case (int)EnemyID.Default:
                         {
                             Enemies.Add(new Enemy(pos));
                             break;
                         }
-                    case 1:
+                    case (int)EnemyID.Path:
                         {
                             int start = int.Parse(enemyLine[3]), stop = int.Parse(enemyLine[4]);
                             float speed = float.Parse(enemyLine[5]);
                             Enemies.Add(new PathEnemy(pos, start, stop, speed));
                             break;
                         }
-                    case 2:
+                    case (int)EnemyID.Track:
                         {
                             Vector2 area = new Vector2(int.Parse(enemyLine[3]), int.Parse(enemyLine[4]));
                             float speed = float.Parse(enemyLine[5]);
                             Enemies.Add(new TrackEnemy(pos, area, speed));
                             break;
                         }
-                    case 3:
+                    case (int)EnemyID.Copy:
                         {
                             Enemies.Add(new CopyEnemy(pos, float.Parse(enemyLine[3])));
                             break;
                         }
-                    case 4:
+                    case (int)EnemyID.Spin:
                         {
                             Enemies.Add(new SpinEnemy(pos, float.Parse(enemyLine[3]), float.Parse(enemyLine[4])));
                             break;
@@ -142,21 +146,22 @@ namespace Platformer.src
             }
         }
 
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch)
         {
-            tilemap.Draw();
+            tilemap.Draw(spriteBatch);
 
 #if DEBUG
-            foreach (EventTrigger e in EventTriggers)
+            foreach (EventTrigger trigger in EventTriggers)
             {
-                e.Draw();
+                trigger.Draw(spriteBatch);
             }
 #endif
-            foreach (Enemy e in Enemies)
+            foreach (Enemy enemy in Enemies)
             {
-                e.Draw();
+                enemy.Draw(spriteBatch);
             }
         }
+
         public void Reset()
         {
             Main.player = new Player();

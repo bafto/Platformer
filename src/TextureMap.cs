@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace Platformer.src
@@ -29,12 +28,12 @@ namespace Platformer.src
                 string[] line = lines[i].Split(' ');
 
                 List<Texture2D> sliced = new List<Texture2D>();
-                for(int y = 0; y < 4; y++)
+                for (int y = 0; y < 4; y++)
                 {
                     for (int x = 0; x < 4; x++)
                     {
                         Rectangle srcRect = new Rectangle(x * 16, y * 16, 16, 16);
-                        sliced.Add(Main.LoadTexturePart(line[1], srcRect));
+                        sliced.Add(ContentManager.LoadTexturePart(line[1], srcRect));
                     }
                 }
                 textures.Add(int.Parse(line[0]), sliced.ToArray());

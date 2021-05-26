@@ -2,9 +2,10 @@
 
 namespace Platformer.src
 {
-    class Camera
+    public class Camera
     {
         public static Vector2 camOffset;
+
         public static Matrix Translate(Matrix matrix)
         {
             // Calculate Translation

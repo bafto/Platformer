@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace Platformer.src
@@ -26,6 +27,7 @@ namespace Platformer.src
             height = lines.Length - 2;
             width = lines[2].Length;
             tiles = new Tile[width, height];
+
             //Read Map from File and construct tiles
             for (int y = 0; y < height; y++)
             {
@@ -163,6 +165,7 @@ namespace Platformer.src
                         tiles[x, y].inHitbox = true; //the tile will definitely be in a hitbox, even if it is alone
                         bool firstLoop = true, breaked = false; //temporary bools for later
                         int xEnd = 0; //the X-Coordinate to determine where the Hitbox will end
+
                         for (int yy = y; yy < height; yy++) //loop from top to bottom starting at the detected Tile (which isn't already in a Hitbox and is non-solid)
                         {
                             int xx = x + 1; //declared here to determine the width of the hitbox later
@@ -183,10 +186,12 @@ namespace Platformer.src
                                     tiles[xx, yy].inHitbox = true; //just add them to the hitbox, the width of it is already set correctly
                                 }
                             }
+
                             if (xx != xEnd) //did we reach the full width of the hitbox?
                             {
                                 newHitbox.Size.Y -= Tile.TileSize.Y; //no, so we don't have to increase the height
                                 breaked = true; //we had to end cause it was no perfect rectangle anymore
+
                                 for (int i = x; i < xx; i++) // those hitboxes where added, but now we have to remove them
                                 {
                                     tiles[i, yy].inHitbox = false;
@@ -195,11 +200,12 @@ namespace Platformer.src
                             }
                             newHitbox.Size.Y += Tile.TileSize.Y; //we reached the width of the hitbox so we increase the height
                         }
+
                         if (!breaked)
                         {
                             newHitbox.Size.Y -= Tile.TileSize.Y; //it wasn't a perfect rectangle so we decrease the height
                         }
-                        hitboxes.Add(newHitbox); //just add the Hitbox
+                        hitboxes.Add(newHitbox); //add the Hitbox
                     }
                 }
             }
@@ -227,23 +233,23 @@ namespace Platformer.src
 
         }
 
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch)
         {
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    tiles[x, y].Draw();
+                    tiles[x, y].Draw(spriteBatch);
                 }
             }
 #if DEBUG
             for (int i = 0; i < hitboxes.Count; i++)
             {
-                var destinationPatches = Helper.CreatePatches(hitboxes[i].toIntRect());
+                var destinationPatches = Helper.CreatePatches(hitboxes[i].ToIntRect());
                 var _sourcePatches = Helper.CreatePatches(Main.outline.Bounds);
                 for (var j = 0; j < _sourcePatches.Length; j++)
                 {
-                    Main.spriteBatch.Draw(Main.outline, destinationPatches[j], _sourcePatches[j], Color.White);
+                    spriteBatch.Draw(Main.outline, destinationPatches[j], _sourcePatches[j], Color.White);
                 }
             }
 #endif

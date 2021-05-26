@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
@@ -42,10 +43,11 @@ namespace Platformer.src
             vulnerable = true;
             hitTimer = 0f;
             healthbar = new Rectangle(Main.ViewPort.Width / 2 - healthbar.Width / 2, 30, health * 50, 30);
-            onHit = Main.LoadSoundEffect("explosion");
-            onJump = Main.LoadSoundEffect("jump");
-            onDeath = Main.LoadSoundEffect("death");
+            onHit = ContentManager.LoadSoundEffect("explosion");
+            onJump = ContentManager.LoadSoundEffect("jump");
+            onDeath = ContentManager.LoadSoundEffect("death");
         }
+
         private int deathtimer = 0;
         public override void Update()
         {
@@ -96,6 +98,7 @@ namespace Platformer.src
                 healthbar.Location = new Point(Main.ViewPort.Width / 2 - healthbar.Width / 2, 30);
             }
         }
+
         protected override void HandleCollision()
         {
             if (Helper.IsClamp(position, Vector2.Zero, Main.level.bounds.VectorSize()))
@@ -107,6 +110,7 @@ namespace Platformer.src
                 base.HandleCollision();
             }
         }
+
         /// <summary>
         /// Jumping and Movement
         /// </summary>
@@ -114,20 +118,20 @@ namespace Platformer.src
         {
             // Handle input
 #if DEBUG
-            if (Main.LeftClick)
+            if (Input.LeftClick)
             {
-                position = Main.MouseWorld - rect.Size / 2;
+                position = Input.MouseWorld - rect.Size / 2;
             }
 #endif
-            if (Main.keyboard.IsKeyDown(Keys.A))
+            if (Input.keyboard.IsKeyDown(Keys.A))
             {
                 velocity.X -= 10 * Math.Abs(velocity.X) * Main.DeltaTime + acceleration;
             }
-            if (Main.keyboard.IsKeyDown(Keys.D))
+            if (Input.keyboard.IsKeyDown(Keys.D))
             {
                 velocity.X += 10 * Math.Abs(velocity.X) * Main.DeltaTime + acceleration;
             }
-            if (grounded && Main.keyboard.JustPressed(Keys.W))
+            if (grounded && Input.keyboard.JustPressed(Keys.W))
             {
                 velocity.Y -= jumpspeed;
                 onJump.Play();
@@ -144,22 +148,28 @@ namespace Platformer.src
             nextPosition = position + velocity;
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch spriteBatch)
         {
             rect.Position = position;
             healthbar.Location = Camera.InvertTranslate(healthbar.Location.ToVector2()).ToPoint();
-            Main.spriteBatch.Draw(Main.solid, rect.toIntRect(), color);
-            Main.spriteBatch.Draw(Main.solid, healthbar, Color.Red);
+
+            spriteBatch.Draw(Main.solid, rect.ToIntRect(), color);
+            spriteBatch.Draw(Main.solid, healthbar, Color.Red);
+
 #if DEBUG
-            Main.spriteBatch.Draw(Main.solid, new Rectangle(lastPosition.ToPoint(), rect.Size.ToPoint()), Color.Green * 0.3f);
-            Main.spriteBatch.Draw(Main.solid, new Rectangle((position + velocity).ToPoint(), rect.Size.ToPoint()), Color.Blue * 0.3f);
-            for(int i = 0; i < trail.Count; i++)
-                Main.spriteBatch.Draw(Main.solid, new Rectangle(trail[i].ToPoint() + (rect.Size / 2).ToPoint(), new Point(4, 4)), Color.Red);
+            spriteBatch.Draw(Main.solid, new Rectangle(lastPosition.ToPoint(), rect.Size.ToPoint()), Color.Green * 0.3f);
+            spriteBatch.Draw(Main.solid, new Rectangle((position + velocity).ToPoint(), rect.Size.ToPoint()), Color.Blue * 0.3f);
+
+            for (int i = 0; i < trail.Count; i++)
+            {
+                spriteBatch.Draw(Main.solid, new Rectangle(trail[i].ToPoint() + (rect.Size / 2).ToPoint(), new Point(4, 4)), Color.Red);
+            }
 
             var groundedCheck = new Rectangle((int)position.X, (int)position.Y + 2, 50, 50);
-            Main.spriteBatch.Draw(Main.solid, new Rectangle((int)position.X, groundedCheck.Bottom, 50, 2), Color.Yellow);
+            spriteBatch.Draw(Main.solid, new Rectangle((int)position.X, groundedCheck.Bottom, 50, 2), Color.Yellow);
 #endif
         }
+
         public void Kill()
         {
             if (deathtimer == 0)
@@ -175,6 +185,7 @@ namespace Platformer.src
                 deathtimer = 0;
             }
         }
+
         public override string ToString()
         {
             return $"pos: {position}, vel: {velocity}, health: {health}";

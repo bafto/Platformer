@@ -1,16 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using System.Diagnostics;
+using Microsoft.Xna.Framework.Graphics;
+using Platformer.src.ID;
 
 namespace Platformer.src
 {
     public class EventTrigger
     {
-        //the different event types as enum for readability if we have many
-        public enum EventType
-        {
-            LevelLoader = 0
-        }
-
         public delegate void PlayerEventArgs();
         public Vector2 Position;
         public int Width;
@@ -19,10 +14,10 @@ namespace Platformer.src
         public event PlayerEventArgs OnPlayerInside;
         public event PlayerEventArgs OnPlayerEnter;
         public event PlayerEventArgs OnPlayerExit;
-        public EventType eventType;
+        public EventID eventType;
         public string nextLevel;
 
-        public EventTrigger(EventType eventType, Vector2 pos, int width, int height)
+        public EventTrigger(EventID eventType, Vector2 pos, int width, int height)
         {
             this.eventType = eventType;
             nextLevel = string.Empty;
@@ -31,7 +26,8 @@ namespace Platformer.src
             Height = height;
             bounds = new Rectangle(pos.ToPoint(), new Point(Width, Height));
         }
-        public EventTrigger(EventType eventType, Vector2 pos, Vector2 size)
+
+        public EventTrigger(EventID eventType, Vector2 pos, Vector2 size)
         {
             this.eventType = eventType;
             nextLevel = string.Empty;
@@ -40,7 +36,8 @@ namespace Platformer.src
             Width = (int)size.X;
             Height = (int)size.Y;
         }
-        public EventTrigger(EventType eventType, Rectangle rect)
+
+        public EventTrigger(EventID eventType, Rectangle rect)
         {
             this.eventType = eventType;
             nextLevel = string.Empty;
@@ -49,6 +46,7 @@ namespace Platformer.src
             Width = rect.Size.X;
             Height = rect.Size.Y;
         }
+
         public void Update()
         {
             var lastplayerrect = new Rectangle(Main.player.lastPosition.ToPoint(), new Point(50, 50));
@@ -65,6 +63,10 @@ namespace Platformer.src
                 OnPlayerExit?.Invoke();
             }
         }
-        public void Draw() => Main.spriteBatch.Draw(Main.solid, bounds, Color.Red * 0.5f);
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Main.solid, bounds, Color.Red * 0.5f);
+        }
     }
 }

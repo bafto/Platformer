@@ -96,7 +96,7 @@ namespace Platformer.src.UI.UIElements
                 Input.Text = _text;
                 if (prevText != Input.Text)
                 {
-                    TextChanged?.Invoke(Main.keyboard, this);
+                    TextChanged?.Invoke(Platformer.src.Input.keyboard, this);
                 }
             }
             else

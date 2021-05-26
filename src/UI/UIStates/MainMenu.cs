@@ -8,6 +8,7 @@ namespace Platformer.src.UI.UIStates
     {
         private HomeScreen homescreen;
         private ChooseDifficulty chooseDifficulty;
+
         public override void Initialize()
         {
             homescreen = new HomeScreen();
@@ -19,18 +20,21 @@ namespace Platformer.src.UI.UIStates
             chooseDifficulty.Visible = false;
             base.Initialize();
         }
+
         protected override void Draw(SpriteBatch spriteBatch)
         {
             homescreen.DrawSelf(spriteBatch);
             chooseDifficulty.DrawSelf(spriteBatch);
             base.Draw(spriteBatch);
         }
+
         protected override void Update(GameTime gameTime)
         {
             homescreen.UpdateSelf(gameTime);
             chooseDifficulty.UpdateSelf(gameTime);
             base.Update(gameTime);
         }
+
         internal class HomeScreen : UIState
         {
             public override void Initialize()
@@ -43,7 +47,8 @@ namespace Platformer.src.UI.UIStates
                 var newGameBtn = new UIButton(new UIText("New Game", Color.White), 100, 50, Color.Gray);
                 newGameBtn.X.Percent = 50;
                 newGameBtn.Y.Percent = 30;
-                newGameBtn.OnClick += (evt, elm) => { 
+                newGameBtn.OnClick += (evt, elm) =>
+                {
                     Visible = false;
                     Main.mainMenu.chooseDifficulty.Visible = true;
                 };
@@ -76,6 +81,7 @@ namespace Platformer.src.UI.UIStates
                 base.Initialize();
             }
         }
+
         protected class ChooseDifficulty : UIState
         {
             public override void Initialize()
@@ -93,7 +99,7 @@ namespace Platformer.src.UI.UIStates
                 var startGameBtn = new UIButton(new UIText("Start Game", Color.White), 100, 50, Color.Gray);
                 startGameBtn.X.Percent = 50;
                 startGameBtn.Y.Percent = 30;
-                startGameBtn.OnClick += (evt, elm) => 
+                startGameBtn.OnClick += (evt, elm) =>
                 {
                     if (byte.TryParse(difficulty.Input.Text, out byte result))
                     {
